@@ -1,0 +1,2223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="icon" href="img/icon.png">
+<title>QRazyBox - QR Code Analysis and Recovery Toolkit</title>
+</head>
+<body>
+	<!-- START HEADER MENU -->
+	<div class="header noselect">
+		<div class="left">
+			<img src="img/icon.png" class="icon">
+			<h3>QRazyBox</h3>
+		</div>
+		
+		<div class="right">
+			<a id="menu-new" href="javascript:void(0);"><h4>New</h4></a>
+			<a id="menu-load" href="javascript:void(0);"><h4>Load</h4></a>
+			<a id="menu-save" href="javascript:void(0);"><h4>Save</h4></a>
+			<a id="menu-tools" href="javascript:void(0);"><h4>Tools</h4></a>
+			<a id="menu-help" href="help/index.html" target="_blank"><h4>Help</h4></a>
+			<a id="menu-about" href="javascript:void(0);" onclick="$('#div-about').show();"><h4>About</h4></a>
+		</div>
+	</div>
+	<!-- END HEADER MENU -->
+
+	<!-- START LEFT TOOLBOX -->
+	<div class="left-box">
+
+		<div style="height:60px;"></div>
+
+		<div class="side-box  noselect" id="box-mode">
+		<center><button id="btn-switch-mode" style="width:100%;">Editor Mode</button></center>
+		</div>
+
+		<!-- START EDITOR TOOLBOX -->
+		<div class="side-box  noselect" id="box-work">
+			<div id="div-tool-work">
+				<h5>Painter :</h5>
+				<div class="painter-box" id="painter-box">
+					<div class="active" index="0" id="painter-black"><img src="img/pixel-black.png"></div>
+					<div index="1" id="painter-white"><img src="img/pixel-white.png"></div>
+					<div index="2" id="painter-eraser"><img src="img/eraser-tool.png"></div>
+				</div>
+				<div class="painter-box">
+					<div id="painter-fill"><img src="img/fill-tool.png"></div>
+				</div>
+				<div class="clear"></div>
+				<h5>QR-Code version :</h5>
+				<input id="qr-version" type="text" readonly value="21x21 (ver. 1)">
+				<div class="toolbox">
+					<div id="btn-version-min" class="minus"><img src="img/minus.png"></div>
+					<div id="btn-version-plus" class="plus"><img src="img/plus.png"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<h5>Module Size :</h5>
+			<input id="qr-size" type="text" readonly value="15px">
+			<div class="toolbox">
+				<div id="btn-size-min" class="minus"><img src="img/minus.png"></div>
+				<div id="btn-size-plus" class="plus"><img src="img/plus.png"></div>
+			</div>
+			<div class="clear"></div>
+			<div id="div-tool-result" class="hide">
+				<h5>Grey Modules :</h5>
+				<button class="toggle active" id="btn-show-grey-pixel">Show</button>
+				<h5>QR Decoder :</h5>
+				<button id="btn-qr-decode">Decode</button>
+				<h6 id="h6-brute-force-msg">*Decoding will brute-forcing <br>possible format info pattern</h6>
+				<div class="clear"></div>
+				<!--<h5>Save as Image :</h5>
+				<button class="" id="btn-save-as-image">Download</button>-->
+			</div>
+		</div>
+		<!-- END EDITOR TOOLBOX -->
+
+		<!-- START EXTRACT QR INFO TOOLBOX -->
+		<div id="box-tools-extract" class="side-box hide">
+			<h5>Error Correction log : </h5>
+			<button id="btn-extract-show-rs" class="toggle">Show</button>
+			<h5>Decoding Error : </h5>
+			<div class="clear"></div>
+			<button id="btn-extract-show-error" class="toggle">Show</button>
+			<div class="clear"></div>
+			<div class="space"></div>
+			<div><center><button id="btn-tools-extract">Back to editor</button></center></div>
+		</div>
+		<!-- END EXTRACT QR INFO TOOLBOX -->
+
+		<!-- START DATA UNMASKING TOOLBOX -->
+		<div id="box-tools-masking" class="side-box hide">
+			<h5>Mask Pattern : </h5>
+			<input id="mask-pattern" type="text" readonly value="Pattern 0">
+			<div class="toolbox">
+				<div id="btn-mask-min" class="minus"><img src="img/minus.png"></div>
+				<div id="btn-mask-plus" class="plus"><img src="img/plus.png"></div>
+			</div>
+			<div class="clear"></div>
+			<h5>Mask Pattern Area : </h5>
+			<button id="btn-mask-show-pattern-area" class="toggle">Show</button>
+			<div class="clear"></div>
+			<div class="space"></div>
+			<center><button id="btn-tools-mask" class="toggle">Show unmasked</button></center>
+		</div>
+		<!-- END DATA UNMASKING TOOLBOX -->
+		</div>
+	<!-- END LEFT TOOLBOX -->
+
+	<!-- START RIGHT TOOLBOX -->	
+	<div class="right-box">
+
+		<div style="height:60px;"></div>
+
+		<!-- START IMAGE SAMPLE TOOLBOX -->
+		<div class="side-box  noselect" id="box-sample">
+			<h5>Original Sample :</h5>
+			<div class="sample-box">
+				<img src="#" id="img-sample">
+			</div>
+			<input id="sample-file" type="file" class="hide">
+			<div class="space"></div>
+			<center>
+				<label for="sample-file" class="sample-btn">
+				Load Sample
+				</label>
+			</center>
+		</div>
+		<!-- END IMAGE SAMPLE TOOLBOX -->
+
+		<!-- START HISTORY TOOLBOX -->
+		<div class="side-box  noselect" id="box-history">
+			<h5>History :</h5>
+			<div class="history">
+
+			</div>
+		</div>
+		<!-- END HISTORY TOOLBOX -->
+	
+	</div>
+	<!-- END RIGHT TOOLBOX -->	
+
+	<!-- START MAIN WORKSPACE -->
+	<div class="main">
+		<div class="qr-box">
+		<table id="qr-table" class="qr-tab"></table>
+		<table id="qr-mask-table" class="qr-tab"></table>
+		<canvas id="qr-result" class="hide"></canvas>
+		</div>
+		<div id="div-extract" class="div-extract hide">
+			
+		</div>
+	</div>
+	<!-- END MAIN WORKSPACE -->
+
+	<!-- START WELCOME PAGE OVERLAY -->
+	<div class="overlay" id="home-box">
+	<center>
+		<div class="box">
+			<h1 class="title">QRazyBox</h1>
+			<div class="space"></div>
+			<button id="home-new" class="big yellow">New Project</button>
+			<button id="home-load" class="big green">Load Existing Project</button>
+			<div class="space"></div>
+		</div>
+	</center>
+	</div>
+	<!-- END WELCOME PAGE OVERLAY -->
+
+	<!-- START NEW OVERLAY -->
+	<div class="overlay hide" id="div-new">
+	<center>
+		<div class="box">
+		<h3>New Project</h3>
+		<div class="space"></div>
+		<button id="new-btn-new" class="big">New blank QR code</button>
+		<input type="file" class="hide" id="import-img">
+		<canvas id="hidden-canvas" class="hide"></canvas>
+		<img src="#" id="hidden-img" class="hide">
+		<div class="clear"></div>
+		<div class="space small"></div>
+		<label for="import-img" class="big noselect">
+			Import from image
+		</label>
+		<div class="clear"></div>
+		<div class="space"></div>
+		<button onclick="$('#div-new').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END NEW OVERLAY -->
+
+	<!-- START SAVE OVERLAY -->
+	<div class="overlay hide" id="div-save">
+	<center>
+		<div class="box">
+		<h3>Save Project</h3>
+		<div class="space"></div>
+		<h5>Save As : </h5>
+		<input type="text" placeholder="Enter project name" id="save-name">
+		<button class="left" onclick="saveProject($('#save-name').val());">Save</button>
+		<div class="clear"></div>
+		<div id="div-save-ext">
+		<h5>Save in existing project : </h5>
+		<div class="project-list" id="list-save">
+			
+		</div>
+		</div>
+		<div class="space"></div>
+		<button onclick="$('#div-save').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END SAVE OVERLAY -->
+
+	<!-- START TOOLS OVERLAY -->
+	<div class="overlay hide" id="div-tools">
+	<center>
+		<div class="box">
+		<h3>Tools List</h3>
+		<div class="space"></div>
+		<div class="project-list noselect" id="list-tools">
+			<div id="tools-extract">
+				<h5>Extract QR Information</h5>
+				<h6>Force decode and get information about the current QR code as much as possible</h6>
+			</div>
+			<div id="tools-rs-decoder">
+				<h5>Reed-Solomon Decoder</h5>
+				<h6>Errors and Erasures correction by decoding Reed-Solomon blocks</h6>
+			</div>
+			<div id="tools-brute-force">
+				<h5>Brute-force Format Info Pattern</h5>
+				<h6>Try all possibilities of Format Info Pattern when decoding</h6>
+			</div>
+			<div id="tools-unmasking">
+				<h5>Data Unmasking</h5>
+				<h6>Analyze QR code with its modules unmasked</h6>
+			</div>
+			<div id="tools-pad-recovery">
+				<h5>Padding Bits Recovery</h5>
+				<h6>Recover missing bits by placing terminator and padding bits</h6>
+			</div>
+		</div>
+		<div class="space"></div>
+		<button onclick="$('#div-tools').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END TOOLS OVERLAY -->
+
+	<!-- START LOAD OVERLAY -->
+	<div class="overlay hide" id="div-load">
+	<center>
+		<div class="box">
+		<h3>Load Project</h3>
+		<div class="space"></div>
+		<div class="project-list" id="list-load">
+			
+		</div>
+		<div class="space"></div>
+		<button onclick="$('#div-load').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END LOAD OVERLAY -->
+
+	<!-- START ABOUT OVERLAY -->
+	<div class="overlay hide" id="div-about">
+	<center>
+		<div class="box">
+		<h3>About</h3>
+		<div class="space"></div>
+		<div class="clear"></div>
+		<h4>QRazyBox v0.1.0</h4>
+		<h6>QR Code Analysis and Recovery Toolkit</h6>
+		<div class="space"></div>
+		<p>Written by  : Merricx</p>
+		<p>License : MIT</p>
+		<br>
+		<p>Issues or pull requests : </p>
+		<p><a href="https://github.com/merricx/qrazybox/">https://github.com/merricx/qrazybox/</a></p>
+		<div class="space"></div>
+		<button onclick="$('#div-about').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END ABOUT OVERLAY -->
+
+	<!-- START QR DECODER OVERLAY -->
+	<div class="overlay hide" id="div-decode">
+	<center>
+		<div class="box">
+		<h3>QR Decoder</h3>
+		<div class="space"></div>
+		<h5>Decoded Message : </h5>
+		<input id="decode-message" type="text" readonly>
+		<div class="clear"></div>
+		<div id="div-decode-error" class="hide">
+		<h5>Error : </h5>
+		<input id="decode-error" type="text" readonly>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+		<button onclick="$('#div-decode').hide();">Close</button>
+		</div>
+	</center>
+	</div>
+	<!-- END QR DECODER OVERLAY -->
+
+	<!-- START BRUTE-FORCE-FORMAT-INFO OVERLAY -->
+	<div class="overlay hide" id="div-brute-force-loader">
+	<center>
+		<div class="box">
+		<h3>Brute-force Format Info Pattern</h3>
+		<div class="space"></div>
+		<div id="brute-force-content" class="hide">
+			<div class="clear"></div>
+			<h5>Decoded Message : </h5>
+			<input id="brute-force-decoded-data" type="text" readonly>
+			<div class="clear"></div>
+			<h5 id="brute-force-ecc">Error Correction Level : <span></span></h5>
+			<h5 id="brute-force-mask">Mask Pattern : <span></span></h5>
+			<div class="paging">
+				<button id="btn-brute-force-counter-prev"> < </button>
+				<h5 id="brute-force-result-counter">1 of 1 result</h5>
+				<button id="btn-brute-force-counter-next"> > </button>
+			</div>
+		</div>
+		<h5 id="brute-force-msg-wait">Brute-forcing...</h5>
+		<h5 id="brute-force-msg-fail" class="hide">No message found in any possible format info patterns. Check the data modules and try again.</h5>
+		<div class="clear"></div>
+		<div class="space"></div>
+		<button class="hide" id="btn-brute-force-apply-pattern" onclick="$('#div-brute-force-loader').hide();">Apply</button>
+		<!--<button id="btn-brute-force-close">Close</button>-->
+		</div>
+		<div id="brute-force-hidden-content">
+		</div>
+	</center>
+	</div>
+	<!-- END BRUTE-FORCE-FORMAT-INFO OVERLAY -->
+
+	<!-- START FORMAT INFORMATION PATTERN OVERLAY -->
+	<div class="overlay hide" id="format-information-box">
+	<center>
+		<div class="box">
+		<h3>Format Info Pattern</h3>
+		<div class="space"></div>
+		<div id="format-info-msg" class="hide">
+			<h5>Format info pattern is currently set to be Brute-forced.</h5>
+		</div>
+		<div id="format-info-content">
+			<select class="select" id="select-format-info-pos">
+				<option value="TOP_LEFT">Top Left</option>
+				<option value="TOP_RIGHT">Top Right</option>
+				<option value="BOTTOM_LEFT">Bottom Left</option>
+			</select>
+			<div class="space"></div>
+			<table id="qr-format-info" class="qr-tab">
+
+			</table>
+			<div class="space"></div>
+	
+			<div class="left">
+			<h5>Error Correction Level:</h5>
+			<h5>Mask Pattern :</h5>
+			</div>
+			<div class="left">
+			<div id="slider-ecc" class="slider">
+				<div id="ecc-l">L</div>
+				<div id="ecc-m">M</div>
+				<div id="ecc-q">Q</div>
+				<div id="ecc-h">H</div>
+			</div>
+			<div class="clear"></div>
+			<div id="slider-mask" class="slider">
+				<div id="mask-0">0</div>
+				<div id="mask-1">1</div>
+				<div id="mask-2">2</div>
+				<div id="mask-3">3</div>
+				<div id="mask-4">4</div>
+				<div id="mask-5">5</div>
+				<div id="mask-6">6</div>
+				<div id="mask-7">7</div>
+			</div>
+			</div>
+		</div>
+		<div class="clear space"></div>
+		<button id="btn-save-info">Save</button>
+		<button onclick="$('#format-information-box').hide();">Cancel</button>
+		</div>
+	</center>
+	</div>
+	<!-- END FORMAT INFORMATION PATTERN OVERLAY -->
+
+	<!-- START REED-SOLOMON DECODER OVERLAY -->
+	<div class="overlay hide" id="div-rs-decoder">
+		<center>
+			<div class="box">
+				<h3>Reed-Solomon Decoder</h3>
+				<div class="space"></div>
+				<div id="rs-decoder-page-1" class="hide">
+					<div class="left">
+						
+					</div>
+					<h6 class="left"><i>Note: Input must be in Decimal value and separated by comma</i></h6>
+				</div>
+				<div id="rs-decoder-page-2" class="hide">
+					<h5>Decoded Reed-Solomon blocks : </h5>
+					<input type="text" id="rs-decoder-output" readonly>
+					<div class="clear"></div>
+					<h5>Final data string : </h5>
+					<div class="left" style="width:400px;">
+					<textarea readonly spellcheck="false" id="rs-decoder-final-msg" rows="5"></textarea>
+					</div>
+					<div class="clear"></div>
+					<h6 class="left invisible" id="rs-decoder-error">ERROR: Error here!!!</h6>
+				</div>
+				<div class="clear"></div>
+				<div class="space"></div>
+				<div class="right">
+					<button id="btn-rs-decoder-prev" class="hide">Back</button>
+					<button id="btn-rs-decoder-next">Decode</button>
+					<!--<button id="btn-rs-decoder-apply" class="hide">Apply</button>-->
+				</div>
+				<button class="left" onclick="$('#div-rs-decoder').hide();">Close</button>
+				<div class="clear"></div>
+			</div>
+		</center>
+	</div>
+	<!-- END REED-SOLOMON DECODER OVERLAY -->
+
+	<!-- START PADDING BITS RECOVERY OVERLAY -->
+	<div class="overlay hide" id="div-padding-recovery">
+		<center>
+			<div class="box large">
+				<h3>Padding Bits Recovery</h3>
+				<div class="space"></div>
+				<div class="preview-box left">
+					<table id="qr-dummy" class="qr-tab"></table>
+				</div>
+				<div class="left">
+					<div id="div-pad-rec-error" class="hide">
+						<h5 class="left">Error : </h5>
+						<textarea spellcheck="false" readonly></textarea>
+					</div>
+					<div id="div-pad-rec-data">
+						<h5>Bits before recovery : </h5>
+						<textarea spellcheck="false" id="pad-rec-before" readonly></textarea>
+						<h5>Bits after recovery : </h5>
+						<textarea spellcheck="false" id="pad-rec-after" readonly></textarea>
+					</div>
+					<div id="div-pad-rec-warning" class="hide">
+						<h5 class="left">Warning : </h5>
+						<textarea spellcheck="false" readonly></textarea>
+					</div>
+					<h6><i>Note : Recovered modules are marked with green color</i></h6>
+					<div class="space"></div>
+					<button id="btn-pad-rec-apply">Apply</button>
+					<button id="btn-pad-rec-cancel">Cancel</button>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</center>
+	</div>
+	<!-- END PADDING BITS RECOVERY OVERLAY -->
+
+
+<!-- START LOAD EXTERNAL JAVASCRIPT -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/table.js"></script>
+<script type="text/javascript" src="js/sqrd.js"></script>
+<script type="text/javascript" src="js/reedsolomon.js"></script>
+<script type="text/javascript" src="js/jsqrcode/grid.js"></script>
+<script type="text/javascript" src="js/jsqrcode/version.js"></script>
+<script type="text/javascript" src="js/jsqrcode/detector.js"></script>
+<script type="text/javascript" src="js/jsqrcode/formatinf.js"></script>
+<script type="text/javascript" src="js/jsqrcode/errorlevel.js"></script>
+<script type="text/javascript" src="js/jsqrcode/bitmat.js"></script>
+<script type="text/javascript" src="js/jsqrcode/datablock.js"></script>
+<script type="text/javascript" src="js/jsqrcode/bmparser.js"></script>
+<script type="text/javascript" src="js/jsqrcode/datamask.js"></script>
+<script type="text/javascript" src="js/jsqrcode/rsdecoder.js"></script>
+<script type="text/javascript" src="js/jsqrcode/gf256poly.js"></script>
+<script type="text/javascript" src="js/jsqrcode/gf256.js"></script>
+<script type="text/javascript" src="js/jsqrcode/decoder.js"></script>
+<script type="text/javascript" src="js/jsqrcode/qrcode.js"></script>
+<script type="text/javascript" src="js/jsqrcode/findpat.js"></script>
+<script type="text/javascript" src="js/jsqrcode/alignpat.js"></script>
+<script type="text/javascript" src="js/jsqrcode/databr.js"></script>
+<!-- END LOAD EXTERNAL JAVASCRIPT -->
+
+<script type="text/javascript">
+	
+var qr_version = 1;
+var qr_pixel_size = 15;
+var qr_size = 17+(qr_version*4);
+
+var qr_array = [];
+var qr_format_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+var active_painter = "0";
+var fill_painter = false;
+var toggle_painter = false;
+var dragging_painter = false;
+
+var changed_state = false;
+
+var show_grey = true;
+var brute_force_mode = false;
+var masking_mode = false;
+var unmask_status = false;
+
+var qr_temp_array = [];
+
+var is_data_module = [];
+
+var history_array = [];
+var active_history = -1;
+
+function generateTable(version){
+
+	qr_array = [];
+	changed_state = false;
+
+	var size = 17+(version*4);
+	$("#qr-table").html("");
+
+
+	for(var i=0; i < size; i++){
+		var element = "<tr>";
+		qr_array[i] = [];
+		for(var j=0; j < size;j++){
+			element += "<td id='qr-"+i+"-"+j+"'></td>";
+			qr_array[i].push(-1);
+		}
+		element += "</tr>";
+		$("#qr-table").append(element);
+	}
+
+	getFinder(size);
+	getAlignment(size);
+	getTiming(size);
+	getInformation(size);
+	resize(qr_pixel_size);
+	is_data_module = getDataModule(qr_array);
+	updateToolbox();
+	clearHistory();
+	updateHistory("New QR code");
+}
+
+function getFinder(size){
+
+	//Finder top-left
+	var blackFinder = [[0,1,2,3,4,5,6],[0,6],[0,2,3,4,6],[0,2,3,4,6],[0,2,3,4,6],[0,6],[0,1,2,3,4,5,6],[]];
+	for(var i=0; i < 8; i++){
+		for(var j=0; j < 8;j++){
+			$("#qr-"+i+"-"+j).addClass("static");
+			if(blackFinder[i].includes(j)){
+				$("#qr-"+i+"-"+j).addClass("black");
+				qr_array[i][j] = 1;
+			} else {
+				qr_array[i][j] = 0;
+			}
+		}
+	}
+
+	//Finder top-right
+	blackFinder = [
+		[size-1,size-2,size-3,size-4,size-5,size-6,size-7],
+		[size-1,size-7],
+		[size-1,size-3,size-4,size-5,size-7],
+		[size-1,size-3,size-4,size-5,size-7],
+		[size-1,size-3,size-4,size-5,size-7],
+		[size-1,size-7],
+		[size-1,size-2,size-3,size-4,size-5,size-6,size-7],
+		[]
+	];
+	for(var i=0; i < 8; i++){
+		for(var j=size-8; j < size;j++){
+			$("#qr-"+i+"-"+j).addClass("static");
+			if(blackFinder[i].includes(j)){
+				$("#qr-"+i+"-"+j).addClass("black");
+				qr_array[i][j] = 1;
+			} else {
+				qr_array[i][j] = 0;
+			}
+		}
+	}
+
+	//Finder bottom-left
+	blackFinder = [[],[0,1,2,3,4,5,6],[0,6],[0,2,3,4,6],[0,2,3,4,6],[0,2,3,4,6],[0,6],[0,1,2,3,4,5,6]];
+	var index = 0;
+	for(var i=size-8; i < size; i++){
+		for(var j=0; j < 8;j++){
+			$("#qr-"+i+"-"+j).addClass("static");
+			if(blackFinder[index].includes(j)){
+				$("#qr-"+i+"-"+j).addClass("black");
+				qr_array[i][j] = 1;
+			} else {
+				qr_array[i][j] = 0;
+			}
+		}
+		index++;
+	}
+}
+
+function getTiming(size){
+
+	var status = 0;
+	for(var i=8; i < size-8; i++){
+		if(status == 0){
+			$("#qr-6-"+i).addClass("static black");
+			status = 1;
+			qr_array[6][i] = 1;
+		} else {
+			$("#qr-6-"+i).addClass("static");
+			status = 0;
+			qr_array[6][i] = 0;
+		}
+	}
+
+	status = 0;
+	for(var i=8; i < size-8; i++){
+		if(status == 0){
+			$("#qr-"+i+"-6").addClass("static black");
+			status = 1;
+			qr_array[i][6] = 1;
+		} else {
+			$("#qr-"+i+"-6").addClass("static");
+			status = 0;
+			qr_array[i][6] = 0;
+		}
+	}
+}
+
+function getInformation(size){
+	//Information top-left beside Finder
+	for(var i=0; i < 9; i++){
+		if(i == 6)
+			continue;
+		$("#qr-"+i+"-8").addClass("info");
+		qr_array[i][8] = 0;
+	}
+
+	//Information top-left below Finder
+	for(var i=0; i < 9; i++){
+		if(i == 6)
+			continue;
+		$("#qr-8-"+i).addClass("info");
+		qr_array[8][i] = 0;
+	}
+
+	//Information top-right below Finder
+	for(var i=size-8; i < size; i++){
+		$("#qr-8-"+i).addClass("info");
+		qr_array[8][i] = 0;
+	}
+
+	//Information bottom-left beside Finder and get Dark module
+	for(var i=size-8; i < size; i++){
+		if(i != size-8){
+			$("#qr-"+i+"-8").addClass("info");
+			qr_array[i][8] = 0;
+		}
+		else {
+			$("#qr-"+i+"-8").addClass("static black");
+			qr_array[i][8] = 1;
+		}
+	}
+}
+
+function getAlignment(size){
+	if(size < 25)
+		return;
+
+	var row = (6);
+	var col = (size-7);
+
+	var blackBox = [[0,1,2,3,4],[0,4],[0,2,4],[0,4],[0,1,2,3,4]];
+	var row_index = 0;
+	for(var i=col-2; i <= col+2; i++){
+		var col_index = 0;
+		for(var j=col-2; j <= col+2; j++){
+			$("#qr-"+i+"-"+j).addClass("static");
+			if(blackBox[row_index].includes(col_index)){
+				$("#qr-"+i+"-"+j).addClass("black");
+				qr_array[i][j] = 1;
+			} else {
+				qr_array[i][j] = 0;
+			}
+			col_index++;
+		}
+		row_index++;
+	}
+}
+
+function generateInfoTable(position){
+
+	position = position || "TOP_LEFT";
+
+	$("#qr-format-info").html("");
+	$("#select-format-info-pos").val(position);
+	var pattern_array = function_pattern_with_format_info[position];
+
+	if(position == "TOP_LEFT"){
+		var start_index = 0;
+		var end_index = 15;
+	} else if(position == "TOP_RIGHT"){
+		var start_index = 0;
+		var end_index = 8;
+	} else if(position == "BOTTOM_LEFT"){
+		var start_index = 8;
+		var end_index = 15;
+	}
+
+	for(var i=0; i < pattern_array.length; i++){
+		var element = "<tr>";
+		for(var j=0; j < pattern_array[i].length;j++){
+			if(pattern_array[i][j] == 0){
+				element += "<td class='static'></td>";
+			} else if(pattern_array[i][j] == 1){
+				element += "<td class='static black'></td>";
+			} else {
+				element += "<td id='qr-info-"+(pattern_array[i][j]-2)+"'></td>";
+			}
+		}
+		element += "</tr>";
+		$("#qr-format-info").append(element);
+	}
+
+	for(var i=start_index; i < end_index; i++){
+		if(qr_format_array[i] == 1){
+			$("td#qr-info-"+i).addClass("black");
+		} else {
+			$("td#qr-info-"+i).addClass("white");
+		}
+	}
+
+	var desc = getInfoBits();
+	if(desc.ecc != ""){
+		$("#slider-ecc #ecc-"+desc.ecc.toLowerCase()).addClass("active");
+		$("#slider-mask #mask-"+desc.mask).addClass("active");
+	}
+	else {
+		$("#slider-ecc div.active").removeClass("active");
+		$("#slider-mask div.active").removeClass("active");
+	}
+}
+
+
+function saveInfoTable(size){
+	for(var i=0; i < 8; i++){
+		if(i > 5)
+			qr_array[i+1][8] = parseInt(qr_format_array[i]);
+		else
+			qr_array[i][8] = parseInt(qr_format_array[i]);
+		qr_array[8][size-(i+1)] = parseInt(qr_format_array[i]);
+	}
+	var index = 0;
+	for(var i=14; i >= 8; i--){
+		if(index > 5)
+			qr_array[8][index+1] = parseInt(qr_format_array[i]);
+		else
+			qr_array[8][index] = parseInt(qr_format_array[i]);
+		qr_array[size-(index+1)][8] = parseInt(qr_format_array[i]);
+		index++;
+	}
+	
+	refreshTable();
+	$("#format-information-box").hide();
+	changed_state = true;
+}
+
+function refreshTable(){
+	for(var i=0; i < qr_array.length; i++){
+		for(var j=0; j < qr_array[i].length; j++){
+			if(!$("#qr-"+i+"-"+j).hasClass("static")){
+				$("#qr-"+i+"-"+j).removeClass("black");
+				$("#qr-"+i+"-"+j).removeClass("white");
+				if(qr_array[i][j] == 1){
+					$("#qr-"+i+"-"+j).addClass("black");
+				} else if(qr_array[i][j] == 0) {
+					$("#qr-"+i+"-"+j).addClass("white");
+				}
+			}
+		}
+	}
+}
+
+function getInfoBits(){
+	var result = {ecc:"",mask:""};
+
+	var bits = "";
+	bits = qr_format_array.join("");
+	bits = bits.split("").reverse().join("");
+	
+	if(format_information_bits[0].indexOf(bits) > -1){
+		result.ecc = "L";
+		result.mask = format_information_bits[0].indexOf(bits);
+	} else if(format_information_bits[1].indexOf(bits) > -1){
+		result.ecc = "M";
+		result.mask = format_information_bits[1].indexOf(bits);
+	} else if(format_information_bits[2].indexOf(bits) > -1){
+		result.ecc = "Q";
+		result.mask = format_information_bits[2].indexOf(bits);
+	} else if(format_information_bits[3].indexOf(bits) > -1){
+		result.ecc = "H";
+		result.mask = format_information_bits[3].indexOf(bits);
+	}
+	console.log(bits);
+
+	return result;
+}
+
+function generateResult(){
+
+	var c = document.getElementById("qr-result");
+	var size = 17+(qr_version*4);
+	c.width = qr_pixel_size*size;
+	c.height = qr_pixel_size*size;
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#000";
+	
+	for(var i=0; i < qr_array.length; i++){
+		for(var j=0; j < qr_array[i].length; j++){
+			var x = qr_pixel_size*j;
+			var y = qr_pixel_size*i;
+			if(qr_array[i][j] == 1){
+				ctx.fillStyle = "#000";
+				ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
+			} else if(qr_array[i][j] == 0) {
+				ctx.fillStyle = "#fff";
+				ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
+			} else {
+				if(show_grey){
+					ctx.fillStyle = "#bdbdbd";
+					ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
+				}
+				else{
+					ctx.fillStyle = "#fff";
+					ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
+				}
+			}
+		}
+	}
+	
+	$("#qr-result").show();
+	$("#qr-table").hide();
+	$("#qr-mask-table").hide();
+	$("body").css("background-color","#FFFFFF");
+}
+
+function updateToolbox(){
+	$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+	$("#qr-size").val(qr_pixel_size+"px");
+}
+
+function resize(size){
+	$("td").each(function(){
+		$(this).css({"min-width":size+"px","min-height":size+"px","width":size+"px","height":size+"px"});
+	})
+}
+
+function toggleResult(){
+	if(!$("#btn-switch-mode").hasClass("active")){
+		if(unmask_status)
+			maskDataBits();
+		generateResult();
+		$("#btn-switch-mode").addClass("active");
+		$("#div-tool-work, #box-history").hide();
+		$("#div-tool-result").show();
+		$("#btn-switch-mode").text("Decode Mode");
+		$("#box-tools-masking").hide();
+		if(brute_force_mode)
+			$("#h6-brute-force-msg").show();
+		else
+			$("#h6-brute-force-msg").hide();
+	} else {
+		if(unmask_status){
+			maskDataBits();
+			refreshTable();
+		}
+		$("#qr-result").hide();
+		$(".qr-tab").show();	
+		$("#btn-switch-mode").removeClass("active");
+		$("body").css("background-color","#eceff1");
+		$("#div-tool-result").hide();
+		$("#div-tool-work, #box-history").show();
+		$("#btn-switch-mode").text("Editor Mode");
+		if(masking_mode)
+			$("#box-tools-masking").show();
+	}
+}
+
+function loadImage(input, target){
+	if(input.files && input.files[0]){
+		var reader = new FileReader();
+
+		reader.onload = function(e){
+			$(target).attr("src",e.target.result);
+		}
+		reader.readAsDataURL(input.files[0]);
+	}
+}
+
+function saveProject(projectName){
+	var saveData = [qr_array, qr_version, qr_format_array];
+	var dataList = JSON.parse(localStorage.getItem("dataList"));
+	var timeNow = new Date();
+	var timeData = timeNow.toDateString();
+	var projectNameList = [];
+	if(dataList == undefined){
+		dataList = [];
+	}
+	for(var i=0; i < dataList.length; i++){
+		projectNameList[i] = dataList[i][0];
+	}
+	if(!projectNameList.includes(projectName)) {
+		dataList.push([projectName, timeData]);
+	} else {
+		var index = projectNameList.indexOf(projectName);
+		dataList[index][1] = timeData;
+	}
+	localStorage.setItem("saveData_"+projectName,JSON.stringify(saveData));
+	localStorage.setItem("dataList",JSON.stringify(dataList));
+	$("#div-save").hide();
+	changed_state = false;
+}
+
+function loadProject(name){
+	var loadedData = JSON.parse(localStorage.getItem("saveData_"+name));
+	qr_version = loadedData[1];
+	qr_size = 17+(qr_version*4);
+	generateTable(qr_version);
+	qr_array = loadedData[0];
+	qr_format_array = loadedData[2];
+	brute_force_mode = false;
+	masking_mode = false;
+	unmask_status = false;
+	$("#tools-brute-force, #tools-unmasking").removeClass("active");
+	refreshTable();
+	$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+	$("#div-load").hide();
+	if($("#btn-switch-mode").hasClass("active")){
+		toggleResult();
+	}
+	if($("#div-extract").css("display") != "none"){
+		$("#btn-tools-extract").trigger("click");
+	}
+	$("#box-tools-masking").hide();
+	$("#qr-mask-table").html("");
+	clearHistory();
+	updateHistory("Load project");
+}
+
+function removeProject(name, origin){
+	if(confirm("Are you sure want to permanently delete this project?")){
+		var dataList = JSON.parse(localStorage.getItem("dataList"));
+		var projectNameList = [];
+
+		for(var i=0; i < dataList.length; i++){
+			projectNameList[i] = dataList[i][0];
+		}
+
+		var index = projectNameList.indexOf(name);
+		if(index >= 0){
+			dataList.remove(index);
+			localStorage.removeItem("saveData_"+name);
+			localStorage.setItem("dataList",JSON.stringify(dataList));
+			refreshLoadList(origin);
+		}
+	}
+}
+
+function refreshLoadList(origin){
+	var dataList = JSON.parse(localStorage.getItem("dataList"));
+	if(dataList == undefined){
+		$("#list-"+origin).html("<h5>There's no saved project in Local Storage.</h5>");
+	} else {
+		var element = "";
+		for(var i=0; i < dataList.length; i++){
+			element	+= "<div><h5>"+dataList[i][0]+"</h5><h6>"+dataList[i][1]+"</h6><span>&#10006;<span></div>";
+		}
+		$("#list-"+origin).html(element);
+	}
+}
+
+function decodeFromBase64(img, callback){
+	qrcode.callback = callback;
+	qrcode.decode(img, callback);
+}
+
+function importFromImage(src, cb){
+	var img = new Image();
+	img.crossOrigin = "Anonymous";
+	console.log(src);
+	img.onload = function(){
+		var canvas_qr = document.createElement("canvas");
+		var context = canvas_qr.getContext('2d');
+		var nheight = img.height;
+    	var nwidth = img.width;
+    	if(img.width*img.height>qrcode.maxImgSize){
+            var ir = img.width / img.height;
+            nheight = Math.sqrt(qrcode.maxImgSize/ir);
+        	nwidth=ir*nheight;
+        }
+
+        canvas_qr.width = nwidth;
+        canvas_qr.height = nheight;
+        context.drawImage(img, 0, 0, canvas_qr.width, canvas_qr.height );
+		qrcode.width = canvas_qr.width;
+    	qrcode.height = canvas_qr.height;
+
+		try{
+        	qrcode.imagedata = context.getImageData(0, 0, canvas_qr.width, canvas_qr.height);
+        }catch(e){
+			cb(e);
+			return;
+		}
+
+		var image = qrcode.grayScaleToBitmap(qrcode.grayscale());
+
+		var detector = new Detector(image);
+		try {
+			var qRCodeMatrix = detector.detect();
+		} catch(error){
+			console.log(error);
+			cb(error);
+			return;
+		}
+
+		var qrArray = qRCodeMatrix.bits.bits;
+		var size = qRCodeMatrix.bits.width;
+		if(size > 41){
+			alert("QR version is unsupported");
+			return;
+		}
+		qr_size = size;
+		qr_version = (size-17)/4;
+		updateToolbox();
+		var result = [];
+
+		for(var x=0; x < size; x++){
+			result[x] = [];
+			for(var y=0; y < size; y++){
+				result[x][y] = qRCodeMatrix.bits.get_Renamed(y,x) ? 1 : 0;
+			}
+		}
+
+		cb(result);
+	}
+	img.src = src;
+}
+
+//Reference : https://jsfiddle.net/eWxNE/2/
+function floodFill(x, y, oldVal, newVal){
+	
+	x = parseInt(x);
+	y = parseInt(y);
+
+	if(oldVal == null){
+		oldVal = parseInt(qr_array[x][y]);
+	}
+
+	if(qr_array[x][y] !== oldVal){
+    	return;
+    }
+
+    if(is_data_module[x][y])
+    	qr_array[x][y] = parseInt(newVal);
+    else
+    	return;
+
+    if (x > 0){
+        floodFill(x-1, y, oldVal, newVal);
+    }
+    if(y > 0){
+        floodFill(x, y-1, oldVal, newVal);
+    }
+    if(x < qr_size-1){
+        floodFill(x+1, y, oldVal, newVal);
+    }
+    if(y < qr_size-1){
+        floodFill(x, y+1, oldVal, newVal);
+    }
+}
+
+function updateHistory(msg){
+
+	if(active_history < 10) active_history++;
+
+	history_array = history_array.slice(0, active_history);
+	if(history_array.length == 10){
+		history_array.shift();
+	}
+	history_array.push([msg, JSON.stringify(qr_array)]);
+
+	var html = "";
+	for(var i=history_array.length-1; i >= 0; i--){
+		if(i == history_array.length-1){
+			html += "<div class='active' id='history-"+i+"'><h6>"+history_array[i][0]+"</h6></div>";
+		} else {
+			html += "<div id='history-"+i+"'><h6>"+history_array[i][0]+"</h6></div>";
+		}
+	}
+	$(".history").html(html);
+}
+
+function getHistory(index){
+	qr_array = JSON.parse(history_array[index][1]);
+	if(qr_array.length != qr_size){
+		qr_size = qr_array.length;
+		qr_version = (qr_size-17)/4;
+		updateToolbox();
+	}
+	refreshTable();
+}
+
+function clearHistory(){
+	history_array = [];
+	active_history = -1;
+	$(".history").html("");
+}
+
+function extractInfo(){
+
+	var data_array = JSON.stringify(qr_array);
+	var result = QRDecode(JSON.parse(data_array));
+	var size = 17+(qr_version*4);
+	console.log(result);
+
+	var html = "<h5>QR version : <span>"+qr_version+" ("+size+"x"+size+")</span></h5>\
+			<h5>Error correction level : <span>"+result.ecc+"</span></h5>\
+			<h5>Mask pattern : <span>"+result.mask_pattern+"</span></h5>\
+			<div class=\"space\"></div>\
+			<h5>Number of missing bytes (erasures) : <span>"+result.erasure_count+" bytes ("+(result.erasure_count/result.data_module_count * 100).toFixed(2)+"%)</span></h5>\
+			<div class=\"space\"></div>\
+			<h5>Data blocks : </h5>\
+			<h5><span>"+result.data_blocks+"</span></h5>\
+			<div class=\"space\"></div>";
+	if($("#btn-extract-show-rs").hasClass("active")){
+		for(var i=0; i < result.rs_block.length; i++){
+			html += "<h5>----------------Block "+(i+1)+"----------------</h5>\
+				<h5>Reed-Solomon Block : <span>"+result.rs_block[i]+"</span></h5>";
+			if(result.syndrome[i] != undefined && result.error_count[i] != undefined){
+				console.log(result.syndrome[i], result.error_count);
+				html +="<h5>Syndrome : <span>"+result.syndrome[i]+"</span></h5>\
+					<h5>Number of Errors : <span>"+result.error_count[i]+"</span></h5>\
+					<h5>Coefficient of the error location polynomial : <span>"+result.coeff_error[i]+"</span></h5>\
+					<h5>Error Position : <span>"+result.error_position[i]+"</span></h5>\
+					<h5>Error Magnitude : <span>"+result.error_magnitude[i]+"</span></h5>\
+					<div class='space'></div>";
+			} else {
+				html += "<div class='space'></div>";
+			}
+		}
+	}
+	html += "<h5>Final data bits : </h5>\
+			<h5><span>"+result.data_bits+"</span></h5>\
+			<div class=\"space\"></div>";
+
+	for(var i=0; i < result.data_bits_count; i++){
+		html += "<h5><span>"+result.data_bits_block[i]+"</span></h5>\
+			<h5>Mode Indicator : <span>"+result.mode[i]+"</span></h5>\
+			<h5>Character Count Indicator : <span>"+result.count[i]+"</span></h5>\
+			<h5>Decoded data : <span>"+result.decoded[i]+"</span></h5>\
+			<div class=\"space\"></div>";
+	}
+
+	html += "<h5>Final Decoded string : <span>"+result.message+"</span></h5>";
+	if($("#btn-extract-show-error").hasClass("active") && result.error.length > 0){
+		html += "<div class='space'></div><h5>Error : </h5>";
+		for(var i=0; i < result.error.length; i++){
+			html += "<h5><span> - "+result.error[i]+"</span></h5>";
+		}
+	}
+	$("#div-extract").html(html);
+}
+
+var brute_result = [];
+var brute_result_index = [];
+var current_brute_result = 0;
+
+function callbackBruteForce(){
+	console.log(brute_result);
+	if(brute_result.length != 32)
+		return;
+
+	for(var i=0; i < brute_result.length; i++){
+		if(brute_result[i] != "error decoding QR Code"){
+			brute_result_index.push(i);
+		}
+	}
+
+	var true_count = brute_result_index.length;
+	current_brute_result = 0;
+
+	if(true_count > 0){
+		var ecc = Math.floor(brute_result_index[0] / 8);
+		var mask = brute_result_index[0] % 8;
+
+		qr_format_array = format_information_bits[ecc][mask].split("").reverse();
+
+		if(ecc == 0)
+			ecc = "L";
+		else if(ecc == 1)
+			ecc = "M";
+		else if(ecc == 2)
+			ecc = "Q";
+		else if(ecc == 3)
+			ecc = "H";
+
+		$("#brute-force-msg-wait").hide();
+		$("#brute-force-msg-fail").hide();
+		$("#brute-force-content").show();
+		$("#btn-brute-force-apply-pattern").show();
+		$("#brute-force-decoded-data").val(brute_result[brute_result_index[current_brute_result]]);
+		$("#brute-force-ecc span").text(ecc);
+		$("#brute-force-mask span").text(mask);
+		$("#brute-force-result-counter").text("1 of "+true_count+" result");
+		saveInfoTable(qr_size);
+		generateResult();
+		$("#tools-brute-force").trigger("click");
+	} else {
+		$("#brute-force-msg-wait").hide();
+		$("#brute-force-msg-fail").show();
+		$("#btn-brute-force-apply-pattern").show();
+		qr_format_array = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+		saveInfoTable(qr_size);
+		generateResult();
+		updateHistory("Update format info pattern");
+	}
+}
+
+function bruteForceFormatInfo(){
+	brute_result = [];
+	brute_result_index = [];
+
+	var possible_ecc = ["L","M","Q","H"];
+	var possible_mask = [0,1,2,3,4,5,6,7];
+
+	for(var i=0; i < possible_ecc.length; i++){
+		for(var j=0; j < possible_mask.length; j++){
+			qr_format_array = format_information_bits[i][j].split("").reverse();
+			saveInfoTable(qr_size);
+			generateResult();
+			var image = document.getElementById("qr-result").toDataURL();
+			if(i == 3 && j == 7){
+				decodeFromBase64(image, function(data){
+					brute_result.push(data);
+					callbackBruteForce();
+				})
+			} else {
+				decodeFromBase64(image, function(data){
+					brute_result.push(data);
+				})
+			}
+		}
+	}
+}
+
+function maskDataBits(){
+	var mask_pattern = getFormatInfo(qr_array).mask;
+	qr_array = maskData(qr_array, mask_pattern);
+	refreshTable();
+	updateHistory("Data masking");
+}
+
+function showMaskPatternArea(){
+	var qr_mask_array = [];
+	for(var i=0; i < qr_array.length; i++){
+		qr_mask_array[i] = [];
+		for(var j=0; j < qr_array[i].length; j++){
+			qr_mask_array[i][j] = 0;
+		}
+	}
+	var mask_pattern = getFormatInfo(qr_array).mask;
+	qr_mask_array = maskData(qr_mask_array, mask_pattern);
+
+	$("#qr-mask-table").html("");
+	for(var i=0; i < qr_array.length; i++){
+		var html = "<tr>";
+		for(var j=0; j < qr_array[i].length; j++){
+			if($("#qr-"+i+"-"+j).hasClass("info") || $("#qr-"+i+"-"+j).hasClass("static")){
+				html += "<td class='invisible'></td>";
+			} else {
+				if(qr_mask_array[i][j] == 0)
+					html += "<td class='invisible'></td>";
+				else
+					html += "<td></td>";
+			}
+		}
+		html += "</tr>";
+		$("#qr-mask-table").append(html);
+	}
+	resize(qr_pixel_size);
+}
+
+function recoverPadding(){
+	var data_array = JSON.stringify(qr_array);
+	var result =  recoverPaddingBits(JSON.parse(data_array));
+	var warning = false;
+
+	$("#qr-dummy").html("");
+	$("#div-pad-rec-warning, #div-pad-rec-error").hide();
+	$("#div-pad-rec-data, #btn-pad-rec-apply").show()
+
+	if(typeof result == "string"){
+		$("#div-pad-rec-error").show();
+		$("#div-pad-rec-error textarea").val(result);
+		$("#div-pad-rec-warning, #div-pad-rec-data, #btn-pad-rec-apply").hide();
+		return;
+	}
+
+	for(var i=0; i < result.result_array.length; i++){
+		var elem = "<tr>";
+		for(var j=0; j < result.result_array[i].length; j++){
+			if(qr_array[i][j] != result.result_array[i][j]){
+				if(result.result_array[i][j] == 0)
+					elem += "<td class='green white'></td>";
+				else if(result.result_array[i][j] == 1)
+					elem += "<td class='green black'></td>";
+				else
+					elem += "<td></td>";
+			} else {
+				if(result.result_array[i][j] == 0)
+					elem += "<td class='white'></td>";
+				else if(result.result_array[i][j] == 1)
+					elem += "<td class='black'></td>";
+				else
+					elem += "<td></td>";
+			}
+		}
+		elem += "</tr>";
+		$("#qr-dummy").append(elem);
+	}
+
+	for(var i=0; i < result.after.length; i++){
+		if(result.before.charAt(i) != "?"){
+			if(result.after.charAt(i) != result.before.charAt(i)){
+				warning = true;
+				break;
+			}
+		}
+	}
+
+	if(warning){
+		$("#div-pad-rec-warning").show();
+		$("#div-pad-rec-warning textarea").val("There's one or more modules conflict with the already known module of original QR code. Correction may fail.")
+	}
+
+	$("#pad-rec-before").val(result.before);
+	$("#pad-rec-after").val(result.after);
+
+	qr_temp_array = Array.prototype.slice.call(result.result_array);
+}
+
+function reedSolomonDecode(data, nysm){
+
+	var result = [];
+
+	for(var i=0; i < data.length; i++){
+		var err_pos = [];
+		for(var j=0; j < data[i].length; j++){
+			if(data[i][j] == 0)
+				err_pos.push(j);
+		}
+		var decoded = RS.decode(data[i], nysm, err_pos);
+
+		if(typeof decoded == "string"){
+			$("#rs-decoder-error").text("ERROR: "+decoded).removeClass("invisible");
+			$("#rs-decoder-output, #rs-decoder-final-msg").val("");
+			return;
+		}
+		
+		result = result.concat(decoded);
+	}
+	console.log(result);
+	
+	$("#rs-decoder-output").val(result.join(","));
+
+	var data_bits = "";
+	for(var i=0; i < result.length; i++){
+		var pad = "00000000";
+		var text = parseInt(result[i]).toString(2);
+		console.log(result[i].toString(2));
+    	var remain = (pad+text).length - 8;
+		text = (pad + text).slice(remain);
+    	data_bits += text;
+	}
+	console.log(data_bits);
+		
+	$("#rs-decoder-final-msg").val(readDataBits(data_bits));
+}
+
+$(document).ready(function(){
+
+
+
+	$("#home-new").click(function(){
+		$("#home-box").hide();
+		$("#div-new").show();
+	})
+
+	$("#home-load").click(function(){
+		$("#home-box").hide();
+		$("#div-load").show();
+		var dataList = JSON.parse(localStorage.getItem("dataList"));
+		if(dataList == undefined){
+			$("#list-load").html("<h5>There's no saved project in Local Storage.</h5>");
+		} else {
+			var element = "";
+			for(var i=0; i < dataList.length; i++){
+				element	+= "<div><h5>"+dataList[i][0]+"</h5><h6>"+dataList[i][1]+"</h6><span>&#10006;<span></div>";
+			}
+			$("#list-load").html(element);
+		}
+	})
+
+	$("#new-btn-new").click(function(){
+		generateTable(qr_version);
+		qr_format_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		if($("#btn-switch-mode").hasClass("active")){
+			toggleResult();
+		}
+		if($("#div-extract").css("display") != "none"){
+			$("#btn-tools-extract").trigger("click");
+		}
+		brute_force_mode = false;
+		masking_mode = false;
+		unmask_status = false;
+		$("#tools-brute-force, #tools-unmasking").removeClass("active");
+		$("#qr-mask-table").html("");
+		$("#box-tools-masking").hide();
+		$("#div-new").hide();
+	})
+
+	$("#import-img").change(function(){
+		if(this.files && this.files[0]){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$("#hidden-img").attr("src",e.target.result);
+				importFromImage($("#hidden-img").attr("src"), function(data){
+					if(Array.isArray(data)){
+						$("#div-new").hide();
+						generateTable(qr_version);
+						qr_array = Array.prototype.slice.call(data);
+						clearHistory();
+						updateHistory("Load from image");
+						refreshTable();
+						changed_state = true;
+					} else {
+						alert(data);
+					}
+				})
+			}
+			reader.readAsDataURL(this.files[0]);
+		}
+	})
+
+	$("#menu-new").click(function(){
+		if(changed_state){
+			if(!confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!"))
+				return;
+		}
+		$("#home-box").hide();
+		$("#div-new").show();	
+	})
+
+	$("#menu-save").click(function(){
+		$("#div-save").show();
+		var dataList = JSON.parse(localStorage.getItem("dataList"));
+		if(dataList == undefined){
+			$("#div-save-ext").hide();
+		} else {
+			var element = "";
+			for(var i=0; i < dataList.length; i++){
+				element	+= "<div><h5>"+dataList[i][0]+"</h5><h6>"+dataList[i][1]+"</h6><span>&#10006;<span></div>";
+			}
+			$("#list-save").html(element);
+			$("#div-save-ext").show();
+		}
+	})
+
+
+
+	$("#menu-load").click(function(){
+		$("#div-load").show();
+		var dataList = JSON.parse(localStorage.getItem("dataList"));
+		if(dataList == undefined){
+			$("#list-load").html("<h5>There's no saved project in Local Storage.</h5>");
+		} else {
+			var element = "";
+			for(var i=0; i < dataList.length; i++){
+				element	+= "<div><h5>"+dataList[i][0]+"</h5><h6>"+dataList[i][1]+"</h6><span>&#10006;<span></div>";
+			}
+			$("#list-load").html(element);
+		}
+	})
+
+	$("#menu-tools").click(function(){
+		$("#div-tools").show();
+	})
+
+	$(document).on("click", "#list-load div", function(e){
+		var projectName = $(this).find("h5").text();
+		if(e.target.nodeName != "SPAN"){
+			loadProject(projectName);
+		} else {
+			removeProject(projectName, "load");
+		}
+	})
+
+	$(document).on("click", "#list-save div", function(e){
+		var projectName = $(this).find("h5").text();
+		if(e.target.nodeName != "SPAN"){
+			saveProject(projectName);
+		} else {
+			removeProject(projectName, "save");
+		}
+	})
+
+	$("#painter-box div").click(function(){
+		$("#painter-box div.active").removeClass("active")
+		$(this).addClass("active");
+		active_painter = $(this).attr("index");
+	})
+
+	$("#painter-fill").click(function(){
+		if(fill_painter){
+			$(this).removeClass("active");
+			fill_painter = false;
+		} else {
+			$(this).addClass("active");
+			fill_painter = true;
+		}
+	})
+		
+	$("#btn-version-plus").click(function(){
+		if(changed_state){
+			if(confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!")){
+				if(qr_version != 6){
+					qr_version += 1;
+					qr_size = 17+(qr_version*4);
+					$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+					generateTable(qr_version);
+				}
+			}
+		} else {
+			if(qr_version != 6){
+				qr_version += 1;
+				qr_size = 17+(qr_version*4);
+				$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+				generateTable(qr_version);
+			}
+		}
+	})
+	$("#btn-version-min").click(function(){
+		if(changed_state){
+			if(confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!")){
+				if(qr_version != 1){
+					qr_version -= 1;
+					qr_size = 17+(qr_version*4);
+					$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+					generateTable(qr_version);
+				}
+			}
+		} else {
+			if(qr_version != 1){
+				qr_version -= 1;
+				qr_size = 17+(qr_version*4);
+				$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
+				generateTable(qr_version);
+			}
+		}
+	})
+
+	$("#btn-size-plus").click(function(){
+		if(qr_pixel_size != 50){
+			qr_pixel_size += 5;
+		}
+		$("#qr-size").val(qr_pixel_size+"px");
+		resize(qr_pixel_size);
+		if($("#btn-switch-mode").hasClass("active")){
+			generateResult();
+		}
+	})
+	$("#btn-size-min").click(function(){
+		if(qr_pixel_size != 5){
+			qr_pixel_size -= 5;
+		}
+		$("#qr-size").val(qr_pixel_size+"px");
+		resize(qr_pixel_size);
+		if($("#btn-switch-mode").hasClass("active")){
+			generateResult();
+		}
+	})
+
+	$("#btn-show-grey-pixel").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			show_grey = false;
+		} else {
+			$(this).addClass("active");
+			show_grey = true;
+		}
+		generateResult();
+	})
+
+	$("#btn-qr-decode").click(function(){
+		if(brute_force_mode){
+			$("#btn-brute-force-apply-pattern").hide();
+			$("#brute-force-msg-wait").show();
+			$("#brute-force-msg-fail").hide();
+			$("#brute-force-content").hide();
+			$("#div-brute-force-loader").show();
+			bruteForceFormatInfo();
+		} else {
+			var image = document.getElementById("qr-result").toDataURL();
+			$("#decode-message").val("");
+			$("#div-decode").show();
+			decodeFromBase64(image, function(decodedData){
+				if(decodedData != "error decoding QR Code"){
+					$("#decode-message").val(decodedData);
+				}
+			});
+		}
+	})
+
+	$("#btn-switch-mode").click(function(){
+		toggleResult();
+	})
+
+	$("#tools-extract").click(function(){
+		$("#div-tools").hide();
+		if($(this).hasClass("active")){
+			$("#btn-tools-extract").trigger("click");
+			return;
+		}
+		$(".side-box").each(function(){
+			$(this).hide();
+		});
+		$(".right-box").hide();
+		$("#box-tools-extract").show();
+		$("#qr-table").hide();
+		$("#qr-mask-table").html("");
+		$("#qr-result").hide();
+		$("#div-extract").show();
+		$("body").css("background-color","#fff");
+		$(this).addClass("active");
+		if(unmask_status && !$("#btn-switch-mode").hasClass("active"))
+			maskDataBits();
+		extractInfo();
+	})
+
+	$("#btn-extract-show-rs, #btn-extract-show-error").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+		} else {
+			$(this).addClass("active");
+		}
+		extractInfo();
+	})
+
+	$("#btn-tools-extract").click(function(){
+		$("#div-tools").hide();
+		$("#tools-extract").removeClass("active");
+		$(".side-box").each(function(){
+			$(this).show();
+		});
+		$(".right-box").show();
+		if(!masking_mode){
+			$("#box-tools-masking").hide();
+		}
+		if(unmask_status)
+				maskDataBits();
+		$("#box-tools-extract").hide();
+		$("#qr-table").show();
+		if($("#btn-mask-show-pattern-area").hasClass("active")){
+			$("#qr-mask-table").show();
+		}
+		$("#btn-switch-mode").removeClass("active");
+		$("#div-tool-result").hide();
+		$("#div-tool-work").show();
+		$("#btn-switch-mode").text("Editor Mode");
+		$("#div-extract").hide();
+		$("body").css("background-color","#eceff1");
+	})
+
+	$("#tools-brute-force").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			//qr_format_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+			brute_force_mode = false;
+			updateHistory("Update format info pattern");
+		} else {
+			$(this).addClass("active");
+			brute_force_mode = true;
+			qr_format_array = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+		}
+		saveInfoTable(qr_size);
+	})
+
+	$("#btn-brute-force-counter-prev").click(function(){
+		if(current_brute_result > 0)
+			current_brute_result -= 1;
+
+		var ecc = Math.floor(brute_result_index[current_brute_result] / 8);
+		var mask = brute_result_index[current_brute_result] % 8;
+
+		qr_format_array = format_information_bits[ecc][mask].split("").reverse();
+
+		if(ecc == 0)
+			ecc = "L";
+		else if(ecc == 1)
+			ecc = "M";
+		else if(ecc == 2)
+			ecc = "Q"
+		else if(ecc == 3)
+			ecc = "H"
+
+		$("#brute-force-decoded-data").val(brute_result[brute_result_index[current_brute_result]]);
+		$("#brute-force-ecc span").text(ecc);
+		$("#brute-force-mask span").text(mask);
+		$("#brute-force-result-counter").text((current_brute_result+1)+" of "+brute_result_index.length+" result");
+		saveInfoTable(qr_size);
+		generateResult();
+	})
+
+	$("#btn-brute-force-counter-next").click(function(){
+		if(current_brute_result < brute_result_index.length-1)
+			current_brute_result += 1;
+
+		var ecc = Math.floor(brute_result_index[current_brute_result] / 8);
+		var mask = brute_result_index[current_brute_result] % 8;
+
+		qr_format_array = format_information_bits[ecc][mask].split("").reverse();
+
+		if(ecc == 0)
+			ecc = "L";
+		else if(ecc == 1)
+			ecc = "M";
+		else if(ecc == 2)
+			ecc = "Q"
+		else if(ecc == 3)
+			ecc = "H"
+
+		$("#brute-force-decoded-data").val(brute_result[brute_result_index[current_brute_result]]);
+		$("#brute-force-ecc span").text(ecc);
+		$("#brute-force-mask span").text(mask);
+		$("#brute-force-result-counter").text((current_brute_result+1)+" of "+brute_result_index.length+" result");
+		saveInfoTable(qr_size);
+		generateResult();
+	})
+
+	$("#tools-unmasking").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			masking_mode = false;
+			unmask_status = false;
+			$("#box-tools-masking").hide();
+			$("#qr-mask-table").html("");
+		} else {
+			$(this).addClass("active");
+			masking_mode = true;
+			unmask_status = false;
+			//if($("#qr-result").css == "none" && $("#div-extract").css == "none")
+				$("#box-tools-masking").show();
+			$("#btn-tools-mask").removeClass("active");
+
+			var mask_pattern = getFormatInfo(qr_array).mask;
+			$("#mask-pattern").val("Pattern "+mask_pattern);
+			$("#btn-mask-show-pattern-area").removeClass("active");
+		}
+	})
+
+	$("#btn-mask-plus").click(function(){
+		var current_mask = getFormatInfo(qr_array).mask;
+		if(current_mask == 7)
+			return;
+
+		if(unmask_status)
+			maskDataBits();
+
+		var ecc = getFormatInfo(qr_array).ecc;
+		if(ecc == 0)
+			ecc = 1;
+		else if(ecc == 1)
+			ecc = 0;
+		else if(ecc == 2)
+			ecc = 3;
+		else if(ecc == 3)
+			ecc = 2;
+		var next_mask = parseInt(current_mask) + 1;
+		qr_format_array = format_information_bits[ecc][next_mask].split("").reverse();
+		saveInfoTable(qr_size);
+		$("#mask-pattern").val("Pattern "+next_mask);
+		if($("#btn-mask-show-pattern-area").hasClass("active")){
+			showMaskPatternArea();
+		}
+		if(unmask_status)
+			maskDataBits();
+		updateHistory("Data masking");
+	})
+
+	$("#btn-mask-min").click(function(){
+		var current_mask = getFormatInfo(qr_array).mask;
+		if(current_mask == 0)
+			return;
+
+		if(unmask_status)
+			maskDataBits();
+
+		var ecc = getFormatInfo(qr_array).ecc;
+		if(ecc == 0)
+			ecc = 1;
+		else if(ecc == 1)
+			ecc = 0;
+		else if(ecc == 2)
+			ecc = 3;
+		else if(ecc == 3)
+			ecc = 2;
+		var prev_mask = parseInt(current_mask) - 1;
+		qr_format_array = format_information_bits[ecc][prev_mask].split("").reverse();
+		saveInfoTable(qr_size);
+		$("#mask-pattern").val("Pattern "+prev_mask);
+		if($("#btn-mask-show-pattern-area").hasClass("active")){
+			showMaskPatternArea();
+		}
+		if(unmask_status)
+			maskDataBits();
+		updateHistory("Data masking");
+	})
+
+	$("#btn-mask-show-pattern-area").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			$("#qr-mask-table").html("");
+		} else {
+			$(this).addClass("active");
+			showMaskPatternArea();
+			$("#qr-mask-table").show();
+		}
+	})
+
+	$("#btn-tools-mask").click(function(){
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			unmask_status = false;
+		} else {
+			$(this).addClass("active");
+			unmask_status = true;
+		}
+		maskDataBits();
+	})
+
+	$("#tools-pad-recovery").click(function(){
+		recoverPadding();
+		$("#div-padding-recovery").show();
+		$("#div-tools").hide();
+	})
+
+	$("#btn-pad-rec-apply").click(function(){
+		qr_array = JSON.parse(JSON.stringify(qr_temp_array));
+		refreshTable();
+		updateHistory("Padding bits recovery");
+		$("#div-padding-recovery").hide();
+		changed_state = true;
+	})
+
+	$("#btn-pad-rec-cancel").click(function(){
+		$("#div-padding-recovery").hide();
+	})
+
+	var current_rs_decoder_page = 1;
+
+	$("#tools-rs-decoder").click(function(){
+		current_rs_decoder_page = 1;
+		$("#div-rs-decoder").show();
+		$("#div-tools").hide();
+		$("#btn-rs-decoder-prev, #btn-rs-decoder-apply").hide();
+		$("#rs-decoder-page-1, #btn-rs-decoder-next").show();
+		$("#rs-decoder-page-2").hide();
+
+		var ecc = getFormatInfo(qr_array).ecc;
+		var nblocks = RS_block_num_table[qr_version-1][ecc];
+		var html = "";
+
+		var data_array = JSON.stringify(qr_array);
+		var rs_block = QRDecode(JSON.parse(data_array)).rs_block;
+
+		for(var i=1; i <= nblocks; i++){
+			html += "<h5>Encoded Reed-Solomon blocks ["+i+"] : </h5>\
+					<input type='text' class='rs-decoder-input' id='rs-decoder-input-"+i+"' value='"+rs_block[i-1].replace(/[^0-9,]/g, "")+"'>\
+					<div class='clear'></div>";
+		}
+		$("#rs-decoder-page-1 div").html(html);
+	})
+
+	$("#btn-rs-decoder-next").click(function(){
+		$("#rs-decoder-page-1").hide();
+		$("#rs-decoder-page-2").show();
+		$("#rs-decoder-error").addClass("invisible");
+		$("#btn-rs-decoder-prev, #btn-rs-decoder-apply").show();
+		
+		var rs_blocks = [];
+		var ecc = getFormatInfo(qr_array).ecc;
+		var nysm = error_correction_code_table[qr_version-1][ecc];
+		$(this).hide();
+		$(".rs-decoder-input").each(function(){
+			rs_blocks.push($(this).val().replace(/[^0-9,]+/g, "").split(","));
+		})
+		
+		reedSolomonDecode(rs_blocks, nysm);
+		
+	})
+
+	$("#btn-rs-decoder-prev").click(function(){
+		$("#btn-rs-decoder-prev, #btn-rs-decoder-apply").hide();
+		$("#rs-decoder-page-1, #btn-rs-decoder-next").show();
+		$("#rs-decoder-page-2").hide();
+	})
+
+	$("#btn-rs-decoder-apply").click(function(){
+
+	})
+
+	$("#sample-file").change(function(){
+		loadImage(this, "#img-sample");
+		$("#img-sample").show();
+	})
+
+	$(document).on("click","td.info", function(){
+		$("#format-information-box").show();
+		if(brute_force_mode){
+			$("#format-info-content").hide();
+			$("#btn-save-info").hide();
+			$("#format-info-msg").show();
+		} else {
+			for(var i=0; i < 8; i++){
+				if(i > 5)
+					qr_format_array[i] = qr_array[i+1][8];
+				else
+					qr_format_array[i] = qr_array[i][8];
+				qr_format_array[i] = qr_array[8][qr_size-(i+1)];
+			}
+			var index = 0;
+			for(var i=14; i >= 8; i--){
+				if(index > 5)
+					qr_format_array[i] = qr_array[8][index+1];
+				else
+					qr_format_array[i] = qr_array[8][index];
+				qr_format_array[i] = qr_array[qr_size-(index+1)][8];
+				index++;
+			}
+
+			var id = $(this)[0].id;
+			var i = /\d{1,2}/.exec(id)[0];
+			var j = /\d{1,2}$/.exec(id)[0];
+
+			if(i <= 8 && j <= 8) position = "TOP_LEFT";
+			else if(j == 8 && i > 8) position = "BOTTOM_LEFT";
+			else position = "TOP_RIGHT";
+
+			$("#slider-ecc div.active").removeClass("active");
+			$("#slider-mask div.active").removeClass("active");
+			generateInfoTable(position);
+			var desc = getInfoBits();
+			if(desc.ecc != ""){
+				$("#slider-ecc #ecc-"+desc.ecc.toLowerCase()).addClass("active");
+				$("#slider-mask #mask-"+desc.mask).addClass("active");
+			}
+			$("#format-info-content").show();
+			$("#btn-save-info").show();
+			$("#format-info-msg").hide();
+		}
+	})
+
+	$(document).on("mouseover", ".info", function(){
+		$(".info:not(.black)").each(function(){
+			$(this).css("opacity","0.8");
+		})
+	})
+
+	$(document).on("mouseleave", ".info", function(){
+		$(".info:not(.black)").each(function(){
+			$(this).css("opacity","1");
+		})
+	})
+
+	$(document).on("mouseover", "#qr-table td:not(.static):not(.info)", function(){
+		
+	})
+
+	$(document).on("mouseleave", "#qr-table td:not(.static):not(.info)", function(){	
+		
+	})
+
+	$(document).on("mousedown", "#qr-table td", function(){
+		if(!$(this).hasClass("static") && !$(this).hasClass("info")){
+			if(active_painter == "0"){
+				if($(this).hasClass("black")){
+					$(this).removeClass("black");
+					var id = $(this)[0].id;
+					var i = /\d{1,2}/.exec(id)[0];
+					var j = /\d{1,2}$/.exec(id)[0];
+					qr_array[i][j] = -1;
+					changed_state = true;
+					updateHistory("Painter");
+				} else {
+					if(!fill_painter){
+						$(document).on("mousemove", startDragging);
+						$(document).on("mouseup", stopDragging);
+						$(this).removeClass("white");
+						$(this).addClass("black");
+						var id = $(this)[0].id;
+						var i = /\d{1,2}/.exec(id)[0];
+						var j = /\d{1,2}$/.exec(id)[0];
+						qr_array[i][j] = 1;
+					} else {
+						var id = $(this)[0].id;
+						var i = /\d{1,2}/.exec(id)[0];
+						var j = /\d{1,2}$/.exec(id)[0];
+						var original_color = qr_array[i][j];
+						floodFill(i,j,original_color,1);
+						refreshTable();
+						updateHistory("Flood fill");
+					}
+					
+					changed_state = true;
+				}
+			} else if(active_painter == "1"){
+				if($(this).hasClass("white")){
+					$(this).removeClass("white");
+					var id = $(this)[0].id;
+					var i = /\d{1,2}/.exec(id)[0];
+					var j = /\d{1,2}$/.exec(id)[0];
+					qr_array[i][j] = -1;
+					changed_state = true;
+					updateHistory("Painter");
+				} else {
+					if(!fill_painter){
+						$(document).on("mousemove", startDragging);
+						$(document).on("mouseup", stopDragging);
+						$(this).removeClass("black");
+						$(this).addClass("white");
+						var id = $(this)[0].id;
+						var i = /\d{1,2}/.exec(id)[0];
+						var j = /\d{1,2}$/.exec(id)[0];
+						qr_array[i][j] = 0;
+					} else {
+						var id = $(this)[0].id;
+						var i = /\d{1,2}/.exec(id)[0];
+						var j = /\d{1,2}$/.exec(id)[0];
+						var original_color = qr_array[i][j];
+						floodFill(i,j,original_color,0);
+						refreshTable();
+						updateHistory("Flood fill");
+					}
+					changed_state = true;
+				}
+			} else if(active_painter == "2"){
+				if(!fill_painter){
+					$(document).on("mousemove", startDragging);
+					$(document).on("mouseup", stopDragging);
+					$(this).removeClass("black");
+					$(this).removeClass("white");
+					var id = $(this)[0].id;
+					var i = /\d{1,2}/.exec(id)[0];
+					var j = /\d{1,2}$/.exec(id)[0];
+					qr_array[i][j] = -1;
+				} else {
+					var id = $(this)[0].id;
+					var i = /\d{1,2}/.exec(id)[0];
+					var j = /\d{1,2}$/.exec(id)[0];
+					var original_color = qr_array[i][j];
+					floodFill(i,j,original_color,-1);
+					refreshTable();
+					updateHistory("Flood fill");
+				}
+				changed_state = true;
+			}
+		}
+	})
+
+	var startDragging = function(e){
+		var x = e.clientX;
+		var y = e.clientY;
+		var elem = document.elementFromPoint(x, y);
+		var id = elem.id;
+		if(elem.tagName == "TD" && elem.className.search("static") == -1 && elem.className.search("info") == -1){
+			var i = /\d{1,2}/.exec(id)[0];
+			var j = /\d{1,2}$/.exec(id)[0];
+			if(active_painter == "0"){
+				elem.className = "black";
+				qr_array[i][j] = 1;
+			}
+			else if(active_painter == "1"){
+				elem.className = "white";
+				qr_array[i][j] = 0;
+			}
+			else if(active_painter == "2"){
+				elem.className = "";
+				qr_array[i][j] = -1;
+			}
+		}
+	}
+
+	var stopDragging = function(){
+		$(document).off("mousemove");
+		$(document).off("mouseup");
+		updateHistory("Painter");
+	}
+
+	$(document).on("click","#qr-format-info td", function(){
+		if(!$(this).hasClass("static")){
+			if($(this).hasClass("black")){
+				$(this).removeClass("black");
+				$(this).addClass("white");
+				var id = $(this)[0].id;
+				var i = /\d{1,2}/.exec(id)[0];
+				qr_format_array[i] = 0;
+			} else {
+				$(this).removeClass("white");
+				$(this).addClass("black");
+				var id = $(this)[0].id;
+				var i = /\d{1,2}/.exec(id)[0];
+				qr_format_array[i] = 1;
+			}
+			
+		}
+
+		var desc = getInfoBits();
+		if(desc.ecc != ""){
+			$("#slider-ecc #ecc-"+desc.ecc.toLowerCase()).addClass("active");
+			$("#slider-mask #mask-"+desc.mask).addClass("active");
+		}
+		else {
+			$("#slider-ecc div.active").removeClass("active");
+			$("#slider-mask div.active").removeClass("active");
+		}
+	})
+
+	$("#select-format-info-pos").change(function(){
+		var position = $(this).val();
+		generateInfoTable(position);
+	})
+
+	$("#slider-ecc div").click(function(){
+		var position = $(this).val();
+		$("#slider-ecc div.active").removeClass("active");
+		$(this).addClass("active");
+		var i = /\w$/.exec($(this)[0].id)[0];
+		if(i == "l")
+			i = 0;
+		else if(i == "m")
+			i = 1;
+		else if(i == "q")
+			i = 2;
+		else if(i == "h")
+			i = 3;
+		var j = /\d$/.exec($("#slider-mask div.active")[0].id)[0];
+		qr_format_array = format_information_bits[i][j].split("").reverse();
+		generateInfoTable(position);
+	})
+
+	$("#slider-mask div").click(function(){
+		var position = $(this).val();
+		$("#slider-mask div.active").removeClass("active");
+		$(this).addClass("active");
+		var i = /\w$/.exec($("#slider-ecc div.active")[0].id)[0];
+		if(i == "l")
+			i = 0;
+		else if(i == "m")
+			i = 1;
+		else if(i == "q")
+			i = 2;
+		else if(i == "h")
+			i = 3;
+		var j = /\d$/.exec($(this)[0].id)[0];
+		qr_format_array = format_information_bits[i][j].split("").reverse();
+		generateInfoTable(position);
+	})
+
+	$("#btn-save-info").click(function(){
+		var size = 17+(qr_version*4);
+		if(unmask_status)
+			maskDataBits();
+		saveInfoTable(size);
+		updateHistory("Update format info pattern");
+		if(masking_mode){
+			if(unmask_status)
+				maskDataBits();
+			if($("#btn-mask-show-pattern-area").hasClass("active")){
+				showMaskPatternArea();
+			}
+			var mask_pattern = getFormatInfo(qr_array).mask;
+			$("#mask-pattern").val("Pattern "+mask_pattern);
+		}
+	})
+
+	//Undo/Redo in History
+	$(document).on("click",".history div", function(){
+		var index = $(this)[0].id.substring(8);
+		$(".history div.active").removeClass("active");
+		$(this).addClass("active");
+		getHistory(index);
+		active_history = parseInt(index);
+	})
+
+	//Prevent page from closing
+	window.onbeforeunload = function(){
+		if(changed_state)
+			return "Do you really want to close? Your unsaved progress will be lost!";
+	};
+
+})
+</script>
+
+</body>
+</html>

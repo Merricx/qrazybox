@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+		</div>
+	</div>
+
+	<div class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Getting Started</a> <span>&rsaquo;</span> About QR Code</h6>
+		</div>
+
+		<h2>About QR Code</h2>
+		<br>
+		<p><b>QR code</b> (abbreviated from <b>Quick Response Code</b>) is the trademark for a type of matrix barcode (or two-dimensional barcode) first designed for the automotive industry in Japan. A QR code uses four standardized encoding modes (numeric, alphanumeric, byte/binary, and kanji) to efficiently store data. <i>(Wikipedia)</i></p>
+		<p>The QR code format was created in 1994 by Japanese company Denso-Wave, which is a subsidiary of Toyota that manufactures auto components. The standard is defined in ISO/IEC 18004:2006. The use of QR codes is license-free. <i>(thonky.org)</i></p>
+		<p>Keep in mind, that in this section, we'll only discuss a summary about QR Code standards. If you want to learn QR Code in detail, you can visit a page that I recommend you before in previous section.</p>
+		<br>
+		<h4>QR Code Versions</h4>
+		<br>
+		<center><img src="../img/versionVarietyImage.png"></center>
+		<br>
+		<p>The size of QR Code is called <b>version</b>. Version of QR Code range from <b>version 1 (21x21 pixels)</b> up to <b>version 40 (177x177 pixels)</b>. These versions is defined by how much data that stored in the QR Code. So, the larger the data stored, the larger the version will be.</p>
+		<p><i>*Pixel in QR Code is often also called <b>Module</b>.</i></p>
+		<br>
+		<h4>Error Correction</h4>
+		<p>QR Code also has error correction feature, that will automatically restore the data if some of them are damaged or unreadable. This error correction scheme use <i>Reed-Solomon Error Correction</i> algorithm that consists of 4 correction levels: <b>Low (L)</b>, <b>Medium (M)</b>, <b>Quartile (Q)</b>, and <b>High (H)</b>, where each of the level has its own capability of how much the data can be restored.</p>
+		<br>
+		<center><table>
+			<tr>
+				<th>Error-Correction Level</th>
+				<th>% of data that can be restored</th>
+			</tr>
+			<tr>
+				<td>Level L</td>
+				<td>&plusmn; 7%</td>
+			</tr>
+			<tr>
+				<td>Level M</td>
+				<td>&plusmn; 15%</td>
+			</tr>
+			<tr>
+				<td>Level Q</td>
+				<td>&plusmn; 25%</td>
+			</tr>
+			<tr>
+				<td>Level H</td>
+				<td>&plusmn; 30%</td>
+			</tr>
+		</table>
+		<p><i>(The table above show the capabilty of each Error-Correction level)</i></p>
+		</center>
+		<br>
+		<h4>Structure of QR Code</h4>
+		<p>QR Code always consist of three things, <b>Function pattern</b>, <b>Format &amp; Version Information Pattern</b>, and <b>Data Bits</b>.<br>Function Pattern is a non-data element of the QR Code that is required by the QR Code specification.<br>Format &amp; Version Information Pattern are pattern that describe current specification that being used by QR Code such as Version, Error correction level, and Mask Pattern. And Data Bits itself is an actual data that encoded in the QR Code.<br>
+		Function pattern often also called <i>Fixed Pattern</i> because their form never changed, but only their position that will change depending on the QR Code version.</p>
+		<center>
+			<img src="../img/QRCode-2-Structure.png" style="width:800px;height:auto;">
+			<p><i>(The image above explains about QR Code structure)</i></p>
+		</center>
+		<br>
+		<h4>Format and Version Information</h4>
+		<p>As explained in previous part, Format and Version Information are patterns in QR Code that tell about current specification that being used by QR code. Format information is always exist in every version of QR code, but Version information only exist in version 7 or above.<br><br>
+		Format information consist of 15 bits data that store information about error correction and mask pattern that being used by QR code.<br>Thereafter, Version information consist of 18 bits data that store information about QR code version.<br>Because until now, QRazyBox only support up to version 6 QR code, so we will ignore about version information for now.</p>
+		<br>
+		<center>
+			<img src="../img/576px-QR_Format_Information.svg.png">
+			<p><i>(The image above explain about how Format information store error correction level and mask pattern)</i></p>
+		</center>
+		<br>
+		<p>The placement of these pattern are shared into 3 places (for Format info) and 2 places (for Version info). Those placement can be see in the image in the previous part that explains QR code structure.</p>
+		<p>We will discuss about Mask Pattern in the last part of this section.</p>
+		<br>
+		<h4>Data Bits Layout</h4>
+		<p>Data bits is sequence of modules that contained blocks of encoded message and blocks of reed-solomon that will be used as error corrector later. The encoded message itself, is arranged from: <b>Mode Indicator</b>, <b>Character Count Indicator</b>, and <b>main message itself</b>.</p>
+		<p>Mode indicator is encoding mode codeword (4 bits) that being used to encode the message to binary form. As explained before that QR code has 4 modes for encodes text: <b>Numeric</b>, <b>Alphanumeric</b>, <b>Byte</b>, and <b>Kanji</b>.<br>Character count indicator is a number that tell the length of message.</p>
+		<p>It is possible to use multiple modes in a single QR code by including the mode indicator before each section of bytes that uses that mode.</p>
+		<br>
+		<p>Data bits are placed in QR code from right to left in a zigzag pattern and form a snake flow.<br>The order is : <b>Mode Indicator &rArr; Character Count Indicator &rArr; Main message &rArr; Error correction (reed-solomon block)</b></p>
+		<center>
+			<img src="../img/QR_Character_Placement.png">
+			<p><i>(Example of data bits placement process, encoding text "www.wikipedia.org")</i></p>
+		</center>
+		<br>
+		<p>But, pay attention that for larger QR code, data blocks must be interleaved and broken into smaller blocks according to the version and error correction level that being used. The Image below explain process of placing interleaved data blocks.</p>
+		<center>
+			<img src="../img/QR_Ver3_Codeword_Ordering.png" style="width:70%;height:auto;">
+		</center>
+		<br>
+		<h4>Mask Pattern</h4>
+		<p>Before QR code is finally generated, the data bits must be <b>XOR</b>-ed with mask pattern. There are 8 mask pattern that available in QR code, namely mask pattern 0 to 7 (or 000 to 111 in binary). This process have a purpose of making QR code more readable by QR scanner.</p>
+		<center>
+			<img src="../img/40310477-qr-mask.png">
+			<p><i>(Eight mask patterns)</i></p>
+			<img src="../img/mask_process.png">
+			<p><i>(The process of data masking)</i></p>
+		</center>
+		<br>
+		<h4>References :</h4>
+		<p><a href="https://en.wikipedia.org/wiki/QR_code">https://en.wikipedia.org/wiki/QR_code</a></p>
+		<p><a href="http://www.thonky.com/qr-code-tutorial/">http://www.thonky.com/qr-code-tutorial</a></p>
+		<p><a href="http://www.qrcode.com/">http://www.qrcode.com</a></p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='index.html';">Prev : Getting Started</button>
+			<button class="right" onclick="window.location='interface-overview.html';">Next : Interface Overview</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

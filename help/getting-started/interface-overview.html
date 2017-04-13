@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+		</div>
+	</div>
+
+	<div class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Getting Started</a> <span>&rsaquo;</span> Interface Overview</h6>
+		</div>
+
+		<h2>Interface Overview</h2>
+		<br>
+		<center>
+			<img src="../img/editor-interface.png" style="width:75%;height:auto;">
+		</center>
+		<br>
+		<p><b>1. Menu</b> : Main menu where you can create new project, save/load project, use sub-tools, etc..</p>
+		<p><b>2. Mode indicator</b> : The button that lets you switch main workspace mode from Editor mode to Decode mode or otherwise.</p>
+		<p><b>3. Main Toolbox</b> : Toolbox that does the core commands (such as draw, erase QR code, or decode QR code) and maintain your workspace. This toolbox will change according to the current workspace mode that being used.</p>
+		<p><b>4. Sample toolbox</b> : Toolbox that store your image sample as a replication, to ease in reconstructing QR code.</p>
+		<p><b>5. History toolbox</b> : Toolbox that store your drawing history of current QR code, lets you to undo or redo your work.</p>
+		<p><b>6. Workspace</b> : Your main canvas to drawing and reconstructing QR code.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='about-qr-code.html';">Prev : About QR Code</button>
+			<button class="right" onclick="window.location='create-save-load-project.html';">Next : Create, Save, and Load Project</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

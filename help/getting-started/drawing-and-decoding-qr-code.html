@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+		</div>
+	</div>
+
+	<div class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Getting Started</a> <span>&rsaquo;</span> Drawing and Decoding QR Code</h6>
+		</div>
+
+		<h2>Drawing and Decoding QR Code</h2>
+		<br>
+		<p>There are two main working modes in QRazyBox : <b>Editor mode</b> and <b>Decode mode</b>.</p>
+		<p>To switch working mode, you can use <b>Mode Indicator</b> as explained before in the <a href="interface-overview.html">previous section</a>.</p>
+		<br>
+		<h4>Editor Mode</h4>
+		<p>Editor mode is working mode where you can create, draw, and edit the QR code using painter and other tools.<br>This image below is the main toolbox of Editor Mode that lets you draw QR code and maintain it.<br>
+		</p>
+		<br>
+		<center><img src="../img/editor-toolbox.png"></center>
+		<p><b>1. Painter</b> : Collection of painter tools that used to draw QR code.</p>
+		<p><b>2. QR Code version</b> : Change current version of your QR code. Remember that, change version of QR code will cause your work start from beginning, therefore, don't forget to set this before you start to reconstructing the QR code.</p>
+		<p><b>3. Module size</b> : Change size of each module of the QR code. Use it to zoom in/out your QR code.</p>
+		<br>
+		<p>You can draw QR code by clicking the square in the QR canvas which has been provided. Each square represents one module/pixel in QR code with its respective colors. Each color representation can be seen in the following image.</p>
+		<center>
+			<img src="../img/qr-canvas.png">
+		</center>
+		<br>
+		<p>Red color modules are fixed pattern. Therefore, they can't be edited.<br>Blue color modules can be edited by clicking the blue area and you will be prompted with a dialog to set Format Information pattern there. Also, by editing only one part of format information, the other parts will change themselves automatically.</p>
+		<br>
+		<p>Further details about Painter and drawing QR code will be explained in the <a href="../editor-painter/index.html">next section</a>.</p>
+		<br>
+		<h4>Decode Mode</h4>
+		<p>Decode mode is working mode that used to displays final result of your QR code where you can decode it or export it as image.<br>The image below is the toolbox when Decode mode is active.</p>
+		<center>
+			<img src="../img/decode-toolbox.png">
+		</center>
+		<br>
+		<p><b>1. Module Size</b> : Change size of each module of the QR code. Use it to zoom in/out your QR code.</p>
+		<p><b>2. Grey Modules</b> : Option whether you want to show the grey modules or to show them in white color (this doesn't change the main data of the QR code).</p>
+		<p><b>3. QR Decoder</b> : Decode your final QR code and read the message.</p>
+		<br>
+		<p>When you decode QR code, you will be prompted a dialog and the decoded message will be shown there. If the dialog show blank message, it means that the QR decoder cannot decode it.</p>
+		<p>You can also save your final result as an image file. Simply right click in the QR code and select <b>Save Image as..</b> (when using <i>Firefox</i> or <i>Chrome</i>).</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='create-save-load-project.html';">Prev : Create, Save, and Load Project</button>
+			<button class="right" onclick="window.location='../editor-painter/index.html';">Next : Editor &amp; Painter</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+		</div>
+	</div>
+
+	<div class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Getting Started</a> <span>&rsaquo;</span> Create, Save, and Load Project</h6>
+		</div>
+
+		<h2>Create, Save, and Load Project</h2>
+		<br>
+		<p>Create, save, and load project can be done through main menu in the header.</p>
+		<br>
+		<h4>Create New Project</h4>
+		<p>There are two ways to create new project. First, quickly create a blank QR code with template that ready to use. Therefore, you don't need to draw the Function pattern. The second is, you can import it from image file and QRazyBox will try to convert it to bitmatrix array.</p>
+		<br>
+		<center>
+			<img src="../img/new_project.png">
+		</center>
+		<br>
+		<p>But, keep in mind that when you importing new project from image file, there are conditions that should be met besides that the image must contains valid QR code. Those conditions are, the loaded image must contain <b>three Finder patterns</b> and <b>Alignment pattern</b> according to the QR version. When you fail in importing an image, unfortunately you should reconstruct manually.</p>
+		<center>
+			<img src="../img/import_image_diff.png">
+		</center>
+		<br>
+		<p>Last, when you importing an image, QRazyBox only accept black and white colors, other than those colors will be transformed to black or white depending on its grayscale value, so you should change it manually when you want to mark it as damaged part of QR code.<br>
+		</p>
+		<br>
+		<h4>Save and Load Project</h4>
+		<p>QRazyBox use <b>HTML5 Local Storage</b> to store all of your project data. Therefore, if you change to the different new browser, you can't use your saved project from the previous browser.<br>Be careful when you save a project with name that already exist, since it will overwrite the older project.</p>
+		<p>You can delete your saved project by clicking cross mark (<b>x</b>) in the save or load dialog menu.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='interface-overview.html';">Prev : Interface Overview</button>
+			<button class="right" onclick="window.location='drawing-and-decoding-qr-code.html';">Next : Drawing and Decoding QR Code</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>
