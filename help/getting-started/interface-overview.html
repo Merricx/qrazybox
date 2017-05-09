@@ -9,6 +9,7 @@
 </head>
 
 <script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 
 <body style="background:white;">
@@ -23,10 +24,11 @@
 				<img src="../../img/search.png">
 				<input type="text" placeholder="Search here...">
 			</div>
+			<img src="../../img/bars.png" class="menu-bar">
 		</div>
 	</div>
 
-	<div class="left-box" style="overflow-x:auto;">
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
 		<div style="height:80px;"></div>
 		<div id="help-menu">
 		
@@ -41,12 +43,12 @@
 		<h2>Interface Overview</h2>
 		<br>
 		<center>
-			<img src="../img/editor-interface.png" style="width:75%;height:auto;">
+			<img src="../img/editor-interface.png">
 		</center>
 		<br>
 		<p><b>1. Menu</b> : Main menu where you can create new project, save/load project, use sub-tools, etc..</p>
-		<p><b>2. Mode indicator</b> : The button that lets you switch main workspace mode from Editor mode to Decode mode or otherwise.</p>
-		<p><b>3. Main Toolbox</b> : Toolbox that does the core commands (such as draw, erase QR code, or decode QR code) and maintain your workspace. This toolbox will change according to the current workspace mode that being used.</p>
+		<p><b>2. Mode indicator</b> : The button that lets you switch main working mode from Editor mode to Decode mode or otherwise.</p>
+		<p><b>3. Main Toolbox</b> : Toolbox that does the core commands (such as draw, erase QR code, or decode QR code) and maintain your workspace. This toolbox will change according to the current working mode that being used.</p>
 		<p><b>4. Sample toolbox</b> : Toolbox that store your image sample as a replication, to ease in reconstructing QR code.</p>
 		<p><b>5. History toolbox</b> : Toolbox that store your drawing history of current QR code, lets you to undo or redo your work.</p>
 		<p><b>6. Workspace</b> : Your main canvas to drawing and reconstructing QR code.</p>

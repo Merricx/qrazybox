@@ -9,6 +9,7 @@
 </head>
 
 <script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 
 <body style="background:white;">
@@ -23,10 +24,11 @@
 				<img src="../../img/search.png">
 				<input type="text" placeholder="Search here...">
 			</div>
+			<img src="../../img/bars.png" class="menu-bar">
 		</div>
 	</div>
 
-	<div class="left-box" style="overflow-x:auto;">
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
 		<div style="height:80px;"></div>
 		<div id="help-menu">
 		
@@ -42,14 +44,13 @@
 		<br>
 		<p><b>QR code</b> (abbreviated from <b>Quick Response Code</b>) is the trademark for a type of matrix barcode (or two-dimensional barcode) first designed for the automotive industry in Japan. A QR code uses four standardized encoding modes (numeric, alphanumeric, byte/binary, and kanji) to efficiently store data. <i>(Wikipedia)</i></p>
 		<p>The QR code format was created in 1994 by Japanese company Denso-Wave, which is a subsidiary of Toyota that manufactures auto components. The standard is defined in ISO/IEC 18004:2006. The use of QR codes is license-free. <i>(thonky.org)</i></p>
-		<p>Keep in mind, that in this section, we'll only discuss a summary about QR Code standards. If you want to learn QR Code in detail, you can visit a page that I recommend you before in previous section.</p>
 		<br>
 		<h4>QR Code Versions</h4>
 		<br>
 		<center><img src="../img/versionVarietyImage.png"></center>
 		<br>
 		<p>The size of QR Code is called <b>version</b>. Version of QR Code range from <b>version 1 (21x21 pixels)</b> up to <b>version 40 (177x177 pixels)</b>. These versions is defined by how much data that stored in the QR Code. So, the larger the data stored, the larger the version will be.</p>
-		<p><i>*Pixel in QR Code is often also called <b>Module</b>.</i></p>
+		<p><i>*Pixel in QR Code is also called <b>Module</b>.</i></p>
 		<br>
 		<h4>Error Correction</h4>
 		<p>QR Code also has error correction feature, that will automatically restore the data if some of them are damaged or unreadable. This error correction scheme use <i>Reed-Solomon Error Correction</i> algorithm that consists of 4 correction levels: <b>Low (L)</b>, <b>Medium (M)</b>, <b>Quartile (Q)</b>, and <b>High (H)</b>, where each of the level has its own capability of how much the data can be restored.</p>
@@ -80,16 +81,15 @@
 		</center>
 		<br>
 		<h4>Structure of QR Code</h4>
-		<p>QR Code always consist of three things, <b>Function pattern</b>, <b>Format &amp; Version Information Pattern</b>, and <b>Data Bits</b>.<br>Function Pattern is a non-data element of the QR Code that is required by the QR Code specification.<br>Format &amp; Version Information Pattern are pattern that describe current specification that being used by QR Code such as Version, Error correction level, and Mask Pattern. And Data Bits itself is an actual data that encoded in the QR Code.<br>
-		Function pattern often also called <i>Fixed Pattern</i> because their form never changed, but only their position that will change depending on the QR Code version.</p>
+		<p>QR Code always consists of three things, <b>Function pattern</b>, <b>Format &amp; Version Information Pattern</b>, and <b>Data Bits</b>.<br>Function Pattern is a non-data element of the QR Code that is required by the QR Code specification.<br>Format &amp; Version Information Pattern are pattern that describe current specification that being used by QR Code such as Version, Error correction level, and Mask Pattern. And Data Bits itself is an actual data that encoded in the QR Code.</p><br>
 		<center>
-			<img src="../img/QRCode-2-Structure.png" style="width:800px;height:auto;">
+			<img src="../img/QRCode-2-Structure.png">
 			<p><i>(The image above explains about QR Code structure)</i></p>
 		</center>
 		<br>
 		<h4>Format and Version Information</h4>
 		<p>As explained in previous part, Format and Version Information are patterns in QR Code that tell about current specification that being used by QR code. Format information is always exist in every version of QR code, but Version information only exist in version 7 or above.<br><br>
-		Format information consist of 15 bits data that store information about error correction and mask pattern that being used by QR code.<br>Thereafter, Version information consist of 18 bits data that store information about QR code version.<br>Because until now, QRazyBox only support up to version 6 QR code, so we will ignore about version information for now.</p>
+		Format information consists of 15 bits data that store information about error correction and mask pattern that being used by QR code.<br>Thereafter, Version information consists of 18 bits data that store information about QR code version.<br>Because until now, QRazyBox only support up to version 6 QR code, so we will ignore about version information for now.</p>
 		<br>
 		<center>
 			<img src="../img/576px-QR_Format_Information.svg.png">
@@ -112,7 +112,7 @@
 		<br>
 		<p>But, pay attention that for larger QR code, data blocks must be interleaved and broken into smaller blocks according to the version and error correction level that being used. The Image below explain process of placing interleaved data blocks.</p>
 		<center>
-			<img src="../img/QR_Ver3_Codeword_Ordering.png" style="width:70%;height:auto;">
+			<img src="../img/QR_Ver3_Codeword_Ordering.png">
 		</center>
 		<br>
 		<h4>Mask Pattern</h4>

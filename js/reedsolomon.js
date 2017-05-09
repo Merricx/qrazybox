@@ -1,4 +1,4 @@
-/*****************************************************************************************
+/***************************************************************************************************
 	------------------Javascript Reed-Solomon Universal Encoder/Decoder--------------------
 
 	Written by : Merricx
@@ -6,7 +6,7 @@
 	Heavily referenced from https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders
 	And ported partly from https://github.com/tomerfiliba/reedsolomon
 
-******************************************************************************************/
+***************************************************************************************************/
 
 var gf_exp = new Uint8Array(512);
 var gf_log = new Uint8Array(256);
