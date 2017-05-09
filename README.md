@@ -16,3 +16,16 @@ Main Features
 - Easy to use
 - Free and open source :)
 
+Help Usage & Documentation
+---------------------
+Documentation page of this tool can be accessed in following URL :
+
+<a href="https://merricx.github.io/help/" target="blank">https://merricx.github.io/help/</a>
+
+Third-parties & References
+---------------------
+- <a href="http://www.thonky.com/qr-code-tutorial/">thonky.com</a>
+- <a href="https://github.com/LazarSoft/jsqrcode">https://github.com/LazarSoft/jsqrcode</a><br>
+- <a href="https://github.com/waidotto/strong-qr-decoder">https://github.com/waidotto/strong-qr-decoder</a>
+- <a href="https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders">
+- <a href="https://markjs.io/">https://markjs.io/</a>
