@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Brute-force Format Info Pattern</h6>
+		</div>
+
+		<h2>Brute-force Format Info Pattern</h2>
+		<br>
+		<p>This tool is very suitable to use when almost all or even the whole modules of format info pattern are unknown or damaged.<br>It will try all possibilities of Format info pattern. Since QR code only has 4 ECC level and 8 Mask pattern, it just needs 32 trials to find the correct one.<br>
+		Though, this condition is very rarely happen to QR code.</p>
+		<br>
+		<p><b>Brute-force Format Info Pattern</b> is <i>toggleable</i> tool. Which means, it will remain active until you de-activate it or the tool has found the correct pattern.<br>As long as this tool is active, you cannot edit or set the format info pattern.<br>
+		This tool will be executed when you decode the QR code through <b>Decode mode</b>.</p>
+		<center>
+			<img src="../img/brute-force-format-info.png">
+			<p><i>(The image above displays brute-force result with ECC level H and Mask pattern 2 along with the decoded message)</i></p>
+		</center>
+		<br>
+		<p>Keep in mind, that it may generate more than one result. You can check all result(s) by clicking the arrow button.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='reed-solomon-decoder.html';">Prev : Reed-Solomon Decoder</button>
+			<button class="right" onclick="window.location='data-unmasking.html';">Next : Data Unmasking</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

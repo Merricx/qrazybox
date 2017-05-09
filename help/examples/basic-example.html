@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Examples</a> <span>&rsaquo;</span> Basic Example</h6>
+		</div>
+
+		<h2>Basic Example</h2>
+		<br>
+		<p>In this example, we are going to recover the following QR code.</p>
+		<br>
+		<center>
+			<img src="../../sample/basic-example.png" style="width:250px;height:auto;">
+		</center>
+		<br>
+		<p>Of course, we cannot scan it normally, because it lost too much modules including Finder and Alignment pattern.<br>
+		The first step is to reconstruct it with Painter manually (we cannot import it as image since its Finder and Alignment pattern are missing).</p>
+		<center>
+			<img src="../img/basic-example-1.png" style="width:300px;height:auto;">
+			<p><i>(Reconstructed QR code using Painter)</i></p>
+		</center>
+		<br>
+		<p>The next step is to set the Format Info Pattern. Because the known modules of format info pattern only located in top right corner, the easiest way to reconstruct it is to try the pattern one by one and check whether it's match or not.</p>
+		<center>
+			<img src="../img/basic-example-2.png" style="width:500px;height:auto;">
+			<p><i>(The most suitable pattern is <b>ECC level M</b> and <b>Mask pattern 1)</b></i></p>
+		</center>
+		<br>
+		<p>Now we have reconstructed QR code in our Editor and the missing Finder along with Alignment pattern are recovered.</p>
+		<center>
+			<img src="../img/basic-example-3.png" style="width:300px;height:auto;">
+		</center>
+		<br>
+		<p>Still, we can't decode it using normal Decoder because it's too much damaged for Error level M to be corrected. So, we should recover more modules of this QR code.<br>
+		The next step, analyze the QR code using <b>Extract QR Information</b>. Using that tool, give us the following result.</p>
+		<center>
+			<img src="../img/basic-example-4.png">
+		</center>
+		<br>
+		<p>We got the decoded message, but it rather unreadable and seems broken. We can ignore that for a moment.<br>
+		Pay attention to the <b>Number of missing bytes</b>. It said that our QR code have <b>39 bytes</b> of its data missing. Meanwhile, to correcting Erasure with Reed-Solomon, the maximum number of missing bytes in <b>ECC level M version 3</b> should be about <b>26</b>.</p>
+		<p>Therefore, we should recover some modules until the missing bytes are dropped about 26 bytes or less. The next step, we will try recover padding bits using <b>Padding Bits Recovery</b>.<br>
+		<center>
+			<img src="../img/basic-example-5.png">
+		</center>
+		<p>Luckily, our padding bits in this QR code was quite big and we successfully recovered almost half of the damaged parts.<br>
+		This is our recovered QR code so far (<i>still not decodable yet</i>).</p>
+		<br>
+		<center>
+			<img src="../img/basic-example-8.png">
+		</center>
+		<br>
+		<p>Checking again with <b>Extract QR Information</b>, we dropped number of missing bytes to <b>25 bytes (35.71%)</b>. Also, the final part of messsage become more readable than before (<i>EVERYTHING</i> from <i>EVERYTHIMY</i>).
+		</p>
+		<br>
+		<center>
+			<img src="../img/basic-example-6.png">
+		</center>
+		<br>
+		<p>QR code <b>version 3</b> with <b>ECC level M</b> have <b>26</b> of the ECC symbol, and since our number of missing bytes is 25, we can apply Erasure correction to the current QR code (remember from <a href="../extension-tools/reed-solomon-decoder.html">previous section</a> that we can correct Errors half of the ECC symbol and <u>Erasures as many as the ECC symbol</u>).<br>
+		Using <b>Reed-Solomon Decoder</b>, we successfully recover the message.</p>
+		<br>
+		<center>
+			<img src="../img/basic-example-7.png">
+		</center>
+		<p>And finally, we got the final message : <b>"YOU CAN DO ANYTHING BUT NOT EVERYTHING"</b>.</p>
+		<br>
+		<p><i>*This example concept inspired from <a href="http://uecmma.github.io/mmactf/">MMA CTF 2015 challenge</a> and the solving concept from <a href="https://github.com/pwning/public-writeup/blob/master/mma2015/misc400-qr/writeup.md">https://github.com/pwning/public-writeup/blob/master/mma2015/misc400-qr/writeup.md</a></i></p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='index.html';">Prev : Examples</button>
+			<button class="right" onclick="window.location='advanced-example.html';">Next : Advanced Example</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

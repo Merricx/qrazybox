@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Editor &amp; Painter</a> <span>&rsaquo;</span> Undo/Redo using History</h6>
+		</div>
+
+		<h2>Undo/Redo using History</h2>
+		<br>
+		<p>You can undo or redo your work by selecting one of history you want to rollback on <b>History toolbox</b>, so that you can jump to any previous states of your work.</p>
+		<br>
+		<center>
+			<img src="../img/history-toolbox.png">
+		</center>
+		<br>
+		<p>History in QRazyBox works with following conditions : </p>
+		<ul>
+			<li><p>Any changes of your work (including from Extension tools) will be stored in History.</p></li>
+			<li><p>History can only store maximum of 10 states. When the maximum is exceeded, the oldest one will be lost.</p></li>
+			<li><p>When creating or loading new project, history will be cleared and starts from beginning.</p></li>
+			<li><p>Suppose you have history with states named <b>A</b>, <b>B</b>, <b>C</b>, <b>D</b> sequentially. <b>D</b> is your current state. Then, you jump to state <b>B</b> and make changes and thus create new state called <b>E</b>. The state <b>C</b> and <b>D</b> will be lost and overwritten by state <b>E</b>. Therefore, your history list now is: <b>A</b>, <b>B</b>, <b>E</b>.</p></li>
+		</ul>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='format-info-pattern.html';">Prev : Format Info Pattern</button>
+			<button class="right" onclick="window.location='../extension-tools/index.html';">Next : Extension Tools</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Editor &amp; Painter</a> <span>&rsaquo;</span> Painter Basic Usage</h6>
+		</div>
+
+		<h2>Painter Basic Usage</h2>
+		<br>
+		<center>
+			<img src="../img/painter.png">
+			<p><i>(The image of Painter tools)</i></p>
+		</center>
+		<br>
+		<h4>Color Palettes</h4>
+		<p>There are three colors to draw data bits of QR code that available in Painter: <b>Black</b>, <b>White</b>, and <b>Grey</b>.<br>
+		<b>Black</b> and <b>white</b> color represent binary value of data bits (black = 1 and white = 0).<br>
+		Then, <b>grey</b> color represents damaged or missing data of QR code.<br></p>
+		<br>
+		<p>You can switch the active color by clicking color palette you want to activated.</p>
+		<br>
+		<h4>Drawing Methods</h4>
+		<p>There are two methods that you can use to draw QR code using color palette.<br>First, called <b>Toggling</b>, where you color modules by clicking one by one. In addition, when you color on an already colored module with the same color as your current color palette, it will color alternately between that color and grey color (this only works on black and white palettes).<br><!--For more details, see image below.--></p>
+		<center>
+			
+		</center>
+		<br>
+		<p>The second is <b>Dragging</b>. This method will let you color modules freely by dragging cursor to the modules you want to color.</p>
+		<center>
+			
+		</center>
+		<br>
+		<h4>Flood Fill</h4>
+		<p>Besides using the above methods, you can also color modules quickly by using <b>Flood fill</b>. It use the same concept as <i>bucket fill</i> tool that perhaps you have seen in common Paint-like application. It will color all similarly-colored and connected modules.</p>
+		<center>
+			
+		</center>
+		<p>Flood fill is toggleable, and will color according to the currently active color palette.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='index.html';">Prev : Editor &amp; Painter</button>
+			<button class="right" onclick="window.location='format-info-pattern.html';">Next : Format Info Pattern</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

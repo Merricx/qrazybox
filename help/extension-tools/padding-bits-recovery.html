@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Padding Bits Recovery</h6>
+		</div>
+
+		<h2>Padding Bits Recovery</h2>
+		<br>
+		<p><b>Padding Bits Recovery</b> is tool that used to recover missing terminator and padding bits of QR code automatically.<br>
+		I assume that you already know about how data encoding works in QR code before using this tool.<br><br>
+		As we already know that if the message bit string is shorter than the total number of required bits, QR code should be padded with <b>terminator</b> and <b>padding bits</b> until it reach the required number of bits.<br>
+		<b>Terminator</b> always consists of <b>0</b> value of their modules and <b>Padding bits</b> always consists of alternate value between <b>11101100</b> and <b>00010001</b>. Therefore, we can exploit that to automatically recover some missing bits in QR code.</p>
+		<br>
+		<p>This tool can be used when QR code meets the following conditions :</p>
+		<ul>
+			<li><p>It contains at least four values of Terminator (<b>0000</b>) at the end of message bit string</p></li>
+			<li><p>It contains one or more Encoding mode indicator</p></li>
+			<li><p>It contains Character count indicator right after encoding mode indicator</p></li>
+		</ul>
+		<p>Otherwise, the tool will throw error when the above conditions are not fulfilled.</p>
+		<center>
+			<img src="../img/padding-bits-recovery.png">
+			<p><i>(The dialog of Padding Bits Recovery. The green-colored modules indicating recovered/affected modules)</i></p>
+		</center>
+		<br>
+		<h4>Tool's Warning</h4>
+		<p>In certain cases, this tool can also throw a warning when the recovered modules are overwritting modules that are not grey-colored.<br>
+		When that happen, you have an option to ignore the warning or cancel the operation. Be careful though, overwriting already known modules may cause addition of the Error in QR code.<br>You can undo this operation anytime through <a href="../editor-painter/undo-redo-using-history.html"><b>History</b></a></p>
+		<br>
+		<p>Further details about the implementation of this tool can be seen in the <a href="../examples/index.html">example section</a>.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='data-unmasking.html';">Prev : Data Unmasking</button>
+			<button class="right" onclick="window.location='../examples/index.html';">Next : Examples</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

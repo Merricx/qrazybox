@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Data Unmasking</h6>
+		</div>
+
+		<h2>Data Unmasking</h2>
+		<br>
+		<p><b>Data Unmasking</b> is a simple tool to unmask modules of your current work according to the mask pattern that being used. It can be used when you want to analyze QR code module by module manually.<br><br>
+		This tool is <i>toggleable</i> like <a href="brute-force-format-info-pattern.html">Brute-force Format Info Pattern</a>. Activating this tool will add new toolbox under main toolbox in Editor mode where you can manage the tool settings there.</p>
+		<center>
+			<img src="../img/data-unmasking-toolbox.png">
+		</center>
+		<p><b>1. Mask Pattern : </b> Set the mask pattern that will be used to unmask QR code (change this will affect current Format info pattern).</p>
+		<p><b>2. Mask Pattern Area : </b> Option whether to show Mask pattern area or not (the affected modules will be marked with green color).</p>
+		<p><b>3. Unmask Data : </b> Toggle between unmask/mask data of QR code.</p>
+		<br>
+		<center>
+			<img src="../img/data-unmasking-diff.png" style="width:640px;height:auto;">
+		</center>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='brute-force-format-info-pattern.html';">Prev : Brute-force Format Info Pattern</button>
+			<button class="right" onclick="window.location='padding-bits-recovery.html';">Next : Padding Bits Recovery</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

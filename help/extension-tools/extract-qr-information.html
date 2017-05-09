@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Extract QR Information</h6>
+		</div>
+
+		<h2>Extract QR Information</h2>
+		<br>
+		<p>The best tool as starting point of your work that used to analyzing your QR code.<br>This tool will force decode QR code and then extract information such as: specifications (Version, Error Correction level and Mask Pattern that being used), data sequence, reed-solomon blocks, and decoded message (if possible) from it. Always use this tool first when you trying to recover the unscannable QR code.</p>
+		<br>
+		<p>The big difference between this tool and normal decoder is, when you decoding with normal decoder and find any error on the QR code, the decoder will stop the process (and maybe prints the error message).<br>Whereas, this tool will ignore those errors and continue the decoding process although with rough results. This tool also use the different algorithm to make the process more effective for that purpose. In addition, it will also display the decoding process including the process of error correction and message decoding.</p>
+		<br>
+		<h4>Interface</h4>
+		<center>
+			<img src="../img/extract-qr-info.png" style="width:800px;height:auto;">
+		</center>
+		<p><b>1. Error Correction Log : </b> Option whether you want to show error correction process (Reed-Solomon calculation) or not in the output.</p>
+		<p><b>2. Decoding Error : </b> Option whether you want to show decoding error or not in the output.</p>
+		<p><b>3. Back to Editor : </b> Close the tool and back to main workspace.</p>
+		<p><b>4. Output : </b> Main output that display the result of extracted information from QR code.</p>
+		<br>
+		<h4>Reading QR code without Error correction</h4>
+		<p>In rare case, you can recover the message from bad damaged QR code just by using this tool, as shown in the following example.</p>
+		<br>
+		<center>
+			<img src="../img/extract-qr-example.png" style="width:800px;height:auto;">
+		</center>
+		<br>
+		<p>It could be happened, since the damaged modules only affect the Reed-Solomon blocks instead of the message. Therefore, by reading the data sequence normally, this tool can still recover the message.</p>
+		<br>
+		<p><i>*Javascript implementation of this tool was ported from Python script of <a href="https://github.com/waidotto/strong-qr-decoder">Strong-QR-Decoder</a>.</i></p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='index.html';">Prev : Extension Tools</button>
+			<button class="right" onclick="window.location='reed-solomon-decoder.html';">Next : Reed-Solomon Decoder</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>

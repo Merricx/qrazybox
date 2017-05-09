@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css">
+	<link rel="icon" href="../../img/icon.png">
+	<title>QRazyBox - Help Page</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.mark.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+
+<style type="text/css">
+	p span {
+		font-weight: bold;
+		margin-left: 20px;
+		color: #00c853;
+	}
+
+	p span.red {
+		color: #e53935;	
+	}
+</style>
+
+<body style="background:white;">
+	<div class="header noselect">
+		<div class="left">
+			<img src="../../img/icon.png" class="icon">
+			<h3>QRazyBox Help</h3>
+		</div>
+
+		<div class="right">
+			<div class="search">
+				<img src="../../img/search.png">
+				<input type="text" placeholder="Search here...">
+			</div>
+			<img src="../../img/bars.png" class="menu-bar">
+		</div>
+	</div>
+
+	<div id="left-box-help" class="left-box" style="overflow-x:auto;">
+		<div style="height:80px;"></div>
+		<div id="help-menu">
+		
+		</div>
+	</div>
+
+	<div class="help">
+		<div class="breadcrumbs noselect">
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Reed-Solomon Decoder</h6>
+		</div>
+
+		<h2>Reed-Solomon Decoder</h2>
+		<br>
+		<p><b>Reed-Solomon error correction</b> is the error correcting codes that used widely in two-dimensional barcode, including QR code. It allows to correct reading when some of the data is damaged or unreadable.<br><br>
+		This is the most essential tool of QRazyBox, since our recovery method is very dependent on Reed-Solomon.<br>This tool implements all type of correction process (also known as <i>Reed-Solomon decoding</i>).</p>
+		<br>
+		<h4>Error and Erasure Correction</h4>
+		<p>There are three types of correction that used by Reed-Solomon codes: <b>Error correction</b>, <b>Erasure correction</b> and both of <b>Error and Erasure correction</b>.<br>
+		<b>Error correction</b> is type of correction where the errors location are unknown, whereas <b>Erasure correction</b> is type of correction where the errors location are known. <br><br>
+		Using <b>Error correction</b>, we can correct errors up to half of the number of ECC symbol (<i>Reed-Solomon blocks</i>) and correct errors as many as the number of ECC symbol with <b>Erasure correction</b>. Therefore, Error correction become twice as strong when the error location is known.
+		<br>
+		<br>
+		Thus, according to that fact, when we know position of the errors, the capability to restore the data of each ECC level can be doubled.<br>See the following table to see the difference.</p>
+		<center><table>
+			<tr>
+				<th rowspan="2">Error Correction Level</th>
+				<th colspan="2">% of data that can be restored</th>
+			</tr>
+			<tr>
+				<th>Without Erasure Correction</th>
+				<th>With Erasure Correction</th>
+			</tr>
+			<tr>
+				<td>Level L</td>
+				<td>&plusmn; 7%</td>
+				<td>&plusmn; 14%</td>
+			</tr>
+			<tr>
+				<td>Level M</td>
+				<td>&plusmn; 15%</td>
+				<td>&plusmn; 30%</td>
+			</tr>
+			<tr>
+				<td>Level Q</td>
+				<td>&plusmn; 25%</td>
+				<td>&plusmn; 50%</td>
+			</tr>
+			<tr>
+				<td>Level H</td>
+				<td>&plusmn; 30%</td>
+				<td>&plusmn; 60%</td>
+			</tr>
+		</table>
+		</center>
+		<br>
+		<p>However, normal QR code scanner doesn't have <b>erasure correction</b> feature, since it difficult to recognize the error locations of QR code automatically and may resulting in slower scan.</p>
+		<br>
+		<h4>Example of Reed-Solomon in General</h4>
+		<p>Before using this tool, it is better to know how <i>Reed-Solomon</i> works generally. Take a look at the following simple example.<br></p>
+		<p>Suppose we will encode text <b>"HELLO WORLD"</b> to Reed-Solomon block.</p>
+		<p>Convert the text to decimal value : <br>
+		<b>72,69,76,76,79,32,87,79,82,76,68</b></p>
+		<p>Encode with Reed-Solomon using <b>11</b> ECC symbol : <br>
+		<b>72,69,76,76,79,32,87,79,82,76,68,<i>123,80,185,183,114,194,10,36,93,160,102</i></b></p>
+		<br>
+		<p>Now, that we have the encoded Reed-Solomon block, we will try to calculate the correction possiblity in various damaged states.</p>
+		<p>According to the ECC symbol that being used to encode (in this case the number of ECC symbol is <b>11</b>), we can correct up to <b>2*e+n <= 11</b>, where <b>e</b> is number of error and <b>n</b> is number of erasure.<br>
+		Suppose <b>x</b> as error and <b>?</b> as erasure</p>
+		<p><b>72,69,x,x,x,x,87,79,82,76,68,123,80,185,183,114,194,10,36,93,160,102</b> <i>(4 errors)</i>&ensp; <b>= &ensp;8 <= 11</b><span>CORRECTABLE</span></p>
+		<p><b>72,69,x,x,x,x,87,79,82,76,68,123,80,185,183,114,x,x,x,93,160,102</b> <i>(7 errors)</i>&ensp; <b>= &ensp;14 <= 11</b><span class="red">UNCORRECTABLE</span></p>
+		<p><b>72,69,?,?,?,?,87,79,82,76,68,123,80,185,183,114,194,10,36,93,160,102</b> <i>(4 erasures)</i>&ensp; <b>= &ensp;4 <= 11</b><span>CORRECTABLE</span></p>
+		<p><b>72,69,?,?,?,?,87,79,82,76,68,123,80,185,183,114,?,?,?,93,160,102</b> <i>(7 erasures)</i>&ensp; <b>= &ensp;7 <= 11</b><span>CORRECTABLE</span></p>
+		<p><b>?,?,?,?,?,?,87,?,?,76,68,123,80,185,183,114,?,?,?,?,160,102</b> <i>(12 erasures)</i>&ensp; <b>= &ensp;12 <= 11</b><span class="red">UNCORRECTABLE</span></p>
+		<p><b>72,69,x,x,x,x,87,79,82,76,68,123,80,185,183,114,?,?,?,93,160,102</b> <i>(4 errors &amp; 3 erasures)</i>&ensp; <b>= &ensp;11 <= 11</b><span>CORRECTABLE</span></p>
+		<br>
+		<h4>Basic Usage</h4>
+		<p>When you use Reed-Solomon Decoder, you will be prompted by dialog. There will be total 2 page of dialog, for input and output. Although, this tool will input the Reed-Solomon blocks automatically, but you can edit and enter manually if you want to.<br>
+		You also don't have to input number of ECC symbol and even the error position/location, since this tool will automatically detect from the QR code that you already drawn before (zero values of Reed-Solomon blocks will be treated as error position).</p>
+		<center>
+			<img src="../img/rs-decoder-1.png">
+		</center>
+		<p>Keep in mind, that Reed-Solomon block can also consist more than one on a larger QR code.<br>The second page of the dialog will display output such as decoded Reed-Solomon blocks and the final message from QR code.</p>
+		<center>
+			<img src="../img/rs-decoder-2.png">
+		</center>
+		<br>
+		<p>Jump to <a href="../examples/index.html">examples section</a> to see the further details about using Reed-Solomon Decoder.</p>
+		<div class="space"></div>
+		<div class="nav">
+			<button class="left" onclick="window.location='extract-qr-information.html';">Prev : Extract QR Information</button>
+			<button class="right" onclick="window.location='brute-force-format-info-pattern.html';">Next : Brute-force Format Info Pattern</button>
+		</div>
+		<div class="clear"></div>
+		<div class="space"></div>
+	</div>
+</body>
+</html>
