@@ -20,7 +20,7 @@ Help Usage & Documentation
 ---------------------
 Documentation page of this tool can be accessed in following URL :
 
-<a href="https://merricx.github.io/help/index.html" target="_blank">https://merricx.github.io/help/index.html</a>
+<a href="https://merricx.github.io/qrazybox/help/">https://merricx.github.io/qrazybox/help/</a>
 
 Third-parties & References
 ---------------------
