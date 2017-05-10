@@ -1206,6 +1206,7 @@ $(document).ready(function(){
 		$("#div-tools").hide();
 		$("#tools-extract").removeClass("active");
 		$(".side-box").show();
+		$(".right-box").show();
 		if(!masking_mode){
 			$("#box-tools-masking").hide();
 		}
