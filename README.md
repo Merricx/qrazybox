@@ -20,7 +20,7 @@ Help Usage & Documentation
 ---------------------
 Documentation page of this tool can be accessed in following URL :
 
-<a href="https://merricx.github.io/help/" target="blank">https://merricx.github.io/help/</a>
+<a href="https://merricx.github.io/help/index.html" target="_blank">https://merricx.github.io/help/index.html</a>
 
 Third-parties & References
 ---------------------
