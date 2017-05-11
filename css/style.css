@@ -852,6 +852,37 @@ noscript div h4 {
 	overflow: auto;
 }
 
+.loader {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 999999999;
+	background-color: #4fc3f7;
+	text-align: center;
+}
+
+.loader div {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.loader div img.logo {
+	width: 128px;
+	height: auto;
+}
+
+.loader div img.animated {
+	width: 64px;
+	height: auto;
+}
+
+.loader div h3 {
+	margin-top: 15px;
+}
+
 @media screen and (max-width: 900px) {
 
 	#box-mode {

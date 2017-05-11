@@ -10,6 +10,16 @@
 
 
 <body>
+	<!-- START LOADER OVERLAY -->
+	<div class="loader">
+		<div>
+			<img src="img/icon.png" class="logo">
+			<br><br><br>
+			<img src="img/preloader.gif" class="animated">
+		</div>
+	</div>
+	<!-- END LOADER OVERLAY -->
+
 	<!-- START HEADER MENU -->
 	<div class="header noselect">
 		<div class="left">
@@ -518,6 +528,11 @@
 <script type="text/javascript" src="js/jsqrcode/alignpat.js"></script>
 <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+	$(window).load(function(){
+		$(".loader").delay(1000).fadeOut();
+	})
+</script>
 <!-- END LOAD JAVASCRIPT -->
 
 <!-- START NOSCRIPT TAG -->
