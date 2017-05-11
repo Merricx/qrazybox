@@ -1,3 +1,6 @@
+
+var VERSION = '0.1.7';
+
 var qr_version = 1;
 var qr_pixel_size = 15;
 var qr_size = 17+(qr_version*4);
@@ -1800,6 +1803,8 @@ $(document).ready(function(){
 			$(this).removeClass("active");
 		}
 	})
+
+	$("#txt-version").text('QRazyBox v'+VERSION);
 
 	$("#mobile-editor-mode, #mobile-decode-mode").click(function(){
 		toggleResult();
