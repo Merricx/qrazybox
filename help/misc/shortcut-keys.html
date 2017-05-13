@@ -12,6 +12,25 @@
 <script type="text/javascript" src="../js/jquery.mark.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 
+<style type="text/css">
+
+	.sample-box {
+		float: left;
+		margin: 25px;
+	}
+
+	.sample-box img {
+		max-height: 200px;
+		width: auto;
+		border: solid 2px #000;
+		cursor: pointer;
+	}
+
+	.sample-box img:hover {
+		opacity: .85;
+	}
+</style>
+
 <body style="background:white;">
 	<div class="header noselect">
 		<div class="left">
@@ -37,20 +56,30 @@
 
 	<div class="help">
 		<div class="breadcrumbs noselect">
-			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> Miscellaneous</h6>
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Miscellaneous</a> <span>&rsaquo;</span> Shortcut Keys</h6>
 		</div>
 
-		<h2>Miscellaneous</h2>
+		<h2>Shortcut Keys</h2>
 		<br>
-		<ul>
-			<li><p><b><a href="qr-code-samples.html">QR Code Samples</a></b></p></li>
-			<li><p><b><a href="shortcut-keys.html">Shortcut Keys</a></b></p></li>
-			<li><p><b><a href="license.html">Third Party and License</a></b></p></li>
-		</ul>
+		<p>This is list of shortcut keys that can be used as alternate way to do various commands.</p>
+		<br>
+		<p><b>Q</b> &ensp; : Black color palette</p>
+		<p><b>W</b> &ensp; : White color palette</p>
+		<p><b>E</b> &ensp; : Grey color palette</p>
+		<p><b>G</b> &ensp; : Toggle flood fill</p>
+		<br>
+		<p><b>-</b> &ensp; : Zoom out (-5px module size)</p>
+		<p><b>=</b> &ensp; : Zoom in (+5px module size)</p>
+		<br>
+		<p><b>Z</b> &ensp; : Undo (move to previous <i>history</i>)</p>
+		<p><b>X</b> &ensp; : Redo (move to next <i>history</i>)</p>
+		<br>
+		<p><b>TAB</b> &ensp; : Switch working mode</p>
+		<div class="clear"></div>
 		<div class="space"></div>
 		<div class="nav">
-			<button class="left" onclick="window.location='../examples/advanced-example.html';">Prev : Advanced Example</button>
-			<button class="right" onclick="window.location='qr-code-samples.html';">Next : QR Code Samples</button>
+			<button class="left" onclick="window.location='qr-code-samples.html';">Prev : QR Code Samples</button>
+			<button class="right" onclick="window.location='license.html';">Next : Third Party &amp; License</button>
 		</div>
 		<div class="clear"></div>
 		<div class="space"></div>

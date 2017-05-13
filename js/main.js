@@ -1819,6 +1819,58 @@ $(document).ready(function(){
 		}
 	})
 
+	$(document).keydown(function(e){
+		if(!$("input[type=text], textarea").is(":focus") && !$("#tools-extract").hasClass("active")){
+
+			//Shortcut key : Tab
+			if(e.keyCode == 9){
+				e.preventDefault();
+				$("#btn-switch-mode").trigger("click");
+			}
+
+			//Shortcut key : -
+			else if(e.keyCode == 173){
+				$("#btn-size-min").trigger("click");
+			}
+
+			//Shortcut key : =
+			else if(e.keyCode == 61){
+				$("#btn-size-plus").trigger("click");
+			}
+
+			//Shortcut key : Q
+			else if(e.keyCode == 81){
+				$("#painter-black").trigger("click");
+			}
+
+			//Shortcut key : W
+			else if(e.keyCode == 87){
+				$("#painter-white").trigger("click");
+			}
+
+			//Shortcut key : E
+			else if(e.keyCode == 69){
+				$("#painter-eraser").trigger("click");
+			}
+
+			//Shortcut key : G
+			else if(e.keyCode == 71){
+				$("#painter-fill").trigger("click");
+			}
+
+			//Shortcut key : Z
+			else if(e.keyCode == 90){
+				$(".history div.active").next().trigger("click");
+			}
+
+			//Shortcut key : X
+			else if(e.keyCode == 88){
+				$(".history div.active").prev().trigger("click");
+			}
+
+		}
+	})
+
 	//Prevent page from closing
 	window.onbeforeunload = function(){
 		if(changed_state)

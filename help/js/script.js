@@ -32,6 +32,7 @@ var sidebarMenu =
 			<a href="../misc/index.html"><li>Miscellaneous</li></a>\
 			<ul class="help-menu hide">\
 				<a href="../misc/qr-code-samples.html"><li>QR Code samples</li></a>\
+				<a href="../misc/shortcut-keys.html"><li>Shortcut Keys</li></a>\
 				<a href="../misc/license.html"><li>Third-Party &amp; License</li></a>\
 			</ul>\
 		</ul>';
