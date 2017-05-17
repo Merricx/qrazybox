@@ -1,5 +1,5 @@
 
-var VERSION = '0.1.13';
+var VERSION = '0.1.14';
 
 var qr_version = 1;
 var qr_pixel_size = 15;
@@ -1829,12 +1829,14 @@ $(document).ready(function(){
 			}
 
 			//Shortcut key : -
-			else if(e.keyCode == 173){
+			else if(e.keyCode == 173 || e.keyCode == 109 || e.keyCode == 189){
+				e.preventDefault();
 				$("#btn-size-min").trigger("click");
 			}
 
 			//Shortcut key : =
-			else if(e.keyCode == 61){
+			else if(e.keyCode == 61 || e.keyCode == 187){
+				e.preventDefault();
 				$("#btn-size-plus").trigger("click");
 			}
 
