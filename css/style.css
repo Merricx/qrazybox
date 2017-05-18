@@ -883,7 +883,7 @@ noscript div h4 {
 	margin-top: 15px;
 }
 
-.mobile {
+.warning {
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -893,7 +893,7 @@ noscript div h4 {
 	background-color: #4fc3f7;
 }
 
-.mobile h3 {
+.warning h3 {
 	margin-top: 100px;
 	color: #ffffff;
 }
