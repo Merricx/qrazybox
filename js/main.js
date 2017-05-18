@@ -27,29 +27,28 @@ var is_data_module = [];
 var history_array = [];
 var active_history = -1;
 
-function generateTable(version){
 
-	qr_array = [];
+function generateTable(version){
+	qr_array = JSON.parse(JSON.stringify(qr_templates[version-1]));
 	changed_state = false;
 
+	var element = "";
 	var size = 17+(version*4);
-	$("#qr-table").html("");
 
-
-	for(var i=0; i < size; i++){
-		var element = "<tr>";
-		qr_array[i] = [];
-		for(var j=0; j < size;j++){
-			element += "<td id='qr-"+i+"-"+j+"'></td>";
-			qr_array[i].push(-1);
+	for(var i=0; i < qr_array.length; i++){
+		element += "<tr>";
+		for(var j=0; j < qr_array.length; j++){
+			if(qr_array[i][j] == 0)
+				element += "<td class='static' id='qr-"+i+"-"+j+"'></td>";
+			else if(qr_array[i][j] == 1)
+				element += "<td class='static black' id='qr-"+i+"-"+j+"'></td>";
+			else
+				element += "<td id='qr-"+i+"-"+j+"'></td>";
 		}
 		element += "</tr>";
-		$("#qr-table").append(element);
 	}
+	$("#qr-table").html(element);
 
-	getFinder(size);
-	getAlignment(size);
-	getTiming(size);
 	getInformation(size);
 	resize(qr_pixel_size);
 	is_data_module = getDataModule(qr_array);
@@ -58,97 +57,12 @@ function generateTable(version){
 	updateHistory("New QR code");
 }
 
-function getFinder(size){
-
-	//Finder top-left
-	var blackFinder = [[0,1,2,3,4,5,6],[0,6],[0,2,3,4,6],[0,2,3,4,6],[0,2,3,4,6],[0,6],[0,1,2,3,4,5,6],[]];
-	for(var i=0; i < 8; i++){
-		for(var j=0; j < 8;j++){
-			$("#qr-"+i+"-"+j).addClass("static");
-			if(blackFinder[i].includes(j)){
-				$("#qr-"+i+"-"+j).addClass("black");
-				qr_array[i][j] = 1;
-			} else {
-				qr_array[i][j] = 0;
-			}
-		}
-	}
-
-	//Finder top-right
-	blackFinder = [
-		[size-1,size-2,size-3,size-4,size-5,size-6,size-7],
-		[size-1,size-7],
-		[size-1,size-3,size-4,size-5,size-7],
-		[size-1,size-3,size-4,size-5,size-7],
-		[size-1,size-3,size-4,size-5,size-7],
-		[size-1,size-7],
-		[size-1,size-2,size-3,size-4,size-5,size-6,size-7],
-		[]
-	];
-	for(var i=0; i < 8; i++){
-		for(var j=size-8; j < size;j++){
-			$("#qr-"+i+"-"+j).addClass("static");
-			if(blackFinder[i].includes(j)){
-				$("#qr-"+i+"-"+j).addClass("black");
-				qr_array[i][j] = 1;
-			} else {
-				qr_array[i][j] = 0;
-			}
-		}
-	}
-
-	//Finder bottom-left
-	blackFinder = [[],[0,1,2,3,4,5,6],[0,6],[0,2,3,4,6],[0,2,3,4,6],[0,2,3,4,6],[0,6],[0,1,2,3,4,5,6]];
-	var index = 0;
-	for(var i=size-8; i < size; i++){
-		for(var j=0; j < 8;j++){
-			$("#qr-"+i+"-"+j).addClass("static");
-			if(blackFinder[index].includes(j)){
-				$("#qr-"+i+"-"+j).addClass("black");
-				qr_array[i][j] = 1;
-			} else {
-				qr_array[i][j] = 0;
-			}
-		}
-		index++;
-	}
-}
-
-function getTiming(size){
-
-	var status = 0;
-	for(var i=8; i < size-8; i++){
-		if(status == 0){
-			$("#qr-6-"+i).addClass("static black");
-			status = 1;
-			qr_array[6][i] = 1;
-		} else {
-			$("#qr-6-"+i).addClass("static");
-			status = 0;
-			qr_array[6][i] = 0;
-		}
-	}
-
-	status = 0;
-	for(var i=8; i < size-8; i++){
-		if(status == 0){
-			$("#qr-"+i+"-6").addClass("static black");
-			status = 1;
-			qr_array[i][6] = 1;
-		} else {
-			$("#qr-"+i+"-6").addClass("static");
-			status = 0;
-			qr_array[i][6] = 0;
-		}
-	}
-}
-
 function getInformation(size){
 	//Information top-left beside Finder
 	for(var i=0; i < 9; i++){
 		if(i == 6)
 			continue;
-		$("#qr-"+i+"-8").addClass("info");
+		$("#qr-"+i+"-8").removeClass("static").addClass("info");
 		qr_array[i][8] = 0;
 	}
 
@@ -156,53 +70,25 @@ function getInformation(size){
 	for(var i=0; i < 9; i++){
 		if(i == 6)
 			continue;
-		$("#qr-8-"+i).addClass("info");
+		$("#qr-8-"+i).removeClass("static").addClass("info");
 		qr_array[8][i] = 0;
 	}
 
 	//Information top-right below Finder
 	for(var i=size-8; i < size; i++){
-		$("#qr-8-"+i).addClass("info");
+		$("#qr-8-"+i).removeClass("static").addClass("info");
 		qr_array[8][i] = 0;
 	}
 
 	//Information bottom-left beside Finder and get Dark module
 	for(var i=size-8; i < size; i++){
 		if(i != size-8){
-			$("#qr-"+i+"-8").addClass("info");
+			$("#qr-"+i+"-8").removeClass("static").addClass("info");
 			qr_array[i][8] = 0;
 		}
-		else {
-			$("#qr-"+i+"-8").addClass("static black");
-			qr_array[i][8] = 1;
-		}
 	}
 }
 
-function getAlignment(size){
-	if(size < 25)
-		return;
-
-	var row = (6);
-	var col = (size-7);
-
-	var blackBox = [[0,1,2,3,4],[0,4],[0,2,4],[0,4],[0,1,2,3,4]];
-	var row_index = 0;
-	for(var i=col-2; i <= col+2; i++){
-		var col_index = 0;
-		for(var j=col-2; j <= col+2; j++){
-			$("#qr-"+i+"-"+j).addClass("static");
-			if(blackBox[row_index].includes(col_index)){
-				$("#qr-"+i+"-"+j).addClass("black");
-				qr_array[i][j] = 1;
-			} else {
-				qr_array[i][j] = 0;
-			}
-			col_index++;
-		}
-		row_index++;
-	}
-}
 
 function generateInfoTable(position){
 
