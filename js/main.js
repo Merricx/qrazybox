@@ -1,5 +1,5 @@
 
-var VERSION = '0.1.19';
+var VERSION = '0.1.20';
 
 var qr_version = 1;
 var qr_pixel_size = 15;

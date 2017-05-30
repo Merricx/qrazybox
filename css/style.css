@@ -78,6 +78,13 @@ ul {list-style: none;}
     z-index: 999;
 }
 
+
+.header div#header-menu {
+	display: block;
+	min-width: 600px;
+	overflow: auto;
+}
+
 .header .icon {
 	width: 40px;
 	height: auto;
