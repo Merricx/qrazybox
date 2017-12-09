@@ -134,7 +134,7 @@
 			<button id="btn-mask-show-pattern-area" class="toggle">Show</button>
 			<div class="clear"></div>
 			<div class="space"></div>
-			<center><button id="btn-tools-mask" class="toggle">Unmask Data</button></center>
+			<center><button id="btn-tools-mask" class="toggle">Mask Data</button></center>
 		</div>
 		<!-- END DATA UNMASKING TOOLBOX -->
 		</div>
@@ -265,12 +265,16 @@
 				<h6>Try all possibilities of Format Info Pattern when decoding</h6>
 			</div>
 			<div id="tools-unmasking">
-				<h5>Data Unmasking</h5>
-				<h6>Analyze QR code with its modules unmasked</h6>
+				<h5>Data Masking</h5>
+				<h6>Simulate data masking (XOR) with Mask pattern</h6>
 			</div>
 			<div id="tools-pad-recovery">
 				<h5>Padding Bits Recovery</h5>
 				<h6>Recover missing bits by placing terminator and padding bits</h6>
+			</div>
+			<div id="tools-data-analysis">
+				<h5>Data Sequence Analysis</h5>
+				<h6>Analyze data sequence of QR code</h6>
 			</div>
 		</div>
 		<div class="space"></div>
@@ -469,6 +473,39 @@
 	</div>
 	<!-- END REED-SOLOMON DECODER OVERLAY -->
 
+	<!-- START DATA MASKING OVERLAY -->
+	<div class="overlay hide" id="div-data-masking">
+		<center>
+			<div class="box">
+				<h3>Data Masking</h3>
+				<div class="space"></div>
+				<div class="row">
+					<div class="col">
+						<h5 class="left">Mask Pattern :</h5>
+					</div>
+					<div class="col">
+						<div class="slider" id="data-masking-slider">
+							<div data="0">0</div>
+							<div data="1">1</div>
+							<div data="2">2</div>
+							<div data="3">3</div>
+							<div data="4">4</div>
+							<div data="5">5</div>
+							<div data="6">6</div>
+							<div data="7">7</div>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div class="space"></div>
+				<button class="left" onclick="$('#div-data-masking').hide();">Close</button>
+				<button class="right" id="btn-data-masking-apply">Apply</button>
+				<div class="clear"></div>
+			</div>
+		</center>
+	</div>
+	<!-- END DATA MASKING OVERLAY -->
+
 	<!-- START PADDING BITS RECOVERY OVERLAY -->
 	<div class="overlay hide" id="div-padding-recovery">
 		<center>
@@ -544,6 +581,7 @@
 
 	if(is_mobile) $(".warning").show();
 
+	//Detect unsupported HTML features using Modernizr
 	else if(!Modernizr.canvas || !Modernizr.fileinput || !Modernizr.filereader || !Modernizr.imgcrossorigin || !Modernizr.json || !Modernizr.localstorage)
 		$(".warning").show().find("h3").html("Please, upgrade your browser to use QRazyBox.<br>Unfortunately, your browser doesn't support some features that used by this tool.");
 

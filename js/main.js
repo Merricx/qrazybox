@@ -1,5 +1,5 @@
 
-var VERSION = '0.1.20';
+var VERSION = '0.1.24';
 
 var qr_version = 1;
 var qr_pixel_size = 15;
@@ -169,6 +169,16 @@ function refreshTable(){
 				} else if(qr_array[i][j] == 0) {
 					$("#qr-"+i+"-"+j).addClass("white");
 				}
+			}
+		}
+	}
+}
+
+function updateQRArray(new_data){
+	for(var i=0; i < qr_array.length; i++){
+		for(var j=0; j < qr_array[i].length; j++){
+			if(is_data_module[i][j]){
+				qr_array[i][j] = new_data[i][j];
 			}
 		}
 	}
@@ -872,7 +882,7 @@ $(document).ready(function(){
 					if(Array.isArray(data)){
 						$("#div-new").hide();
 						generateTable(qr_version);
-						qr_array = Array.prototype.slice.call(data);
+						updateQRArray(data);
 						clearHistory();
 						updateHistory("Load from image");
 						refreshTable();
@@ -1182,33 +1192,22 @@ $(document).ready(function(){
 	})
 
 	$("#tools-unmasking").click(function(){
-		if($(this).hasClass("active")){
-			$(this).removeClass("active");
-			masking_mode = false;
-			unmask_status = false;
-			$("#box-tools-masking").hide();
-			$("#qr-mask-table").html("");
-		} else {
-			$(this).addClass("active");
-			masking_mode = true;
-			unmask_status = false;
-			//if($("#qr-result").css == "none" && $("#div-extract").css == "none")
-				$("#box-tools-masking").show();
-			$("#btn-tools-mask").removeClass("active");
 
-			var mask_pattern = getFormatInfo(qr_array).mask;
-			$("#mask-pattern").val("Pattern "+mask_pattern);
-			$("#btn-mask-show-pattern-area").removeClass("active");
-		}
+		var current_mask = getFormatInfo(qr_array).mask;
+
+		$("#data-masking-slider div[data="+current_mask+"]").addClass("active");
+
+		$("#div-data-masking").show();
+		$("#div-tools").hide();
 	})
 
-	$("#btn-mask-plus").click(function(){
-		var current_mask = getFormatInfo(qr_array).mask;
-		if(current_mask == 7)
-			return;
+	$("#data-masking-slider div").click(function(){
+		$("#data-masking-slider div.active").removeClass("active");
+		$(this).addClass("active");
+	})
 
-		if(unmask_status)
-			maskDataBits();
+	$("#btn-data-masking-apply").click(function(){
+		var mask = $("#data-masking-slider div.active").attr("data");
 
 		var ecc = getFormatInfo(qr_array).ecc;
 		if(ecc == 0)
@@ -1219,45 +1218,12 @@ $(document).ready(function(){
 			ecc = 3;
 		else if(ecc == 3)
 			ecc = 2;
-		var next_mask = parseInt(current_mask) + 1;
-		qr_format_array = format_information_bits[ecc][next_mask].split("").reverse();
+
+		qr_format_array = format_information_bits[ecc][mask].split("").reverse();
 		saveInfoTable(qr_size);
-		$("#mask-pattern").val("Pattern "+next_mask);
-		if($("#btn-mask-show-pattern-area").hasClass("active")){
-			showMaskPatternArea();
-		}
-		if(unmask_status)
-			maskDataBits();
-		updateHistory("Data masking");
-	})
 
-	$("#btn-mask-min").click(function(){
-		var current_mask = getFormatInfo(qr_array).mask;
-		if(current_mask == 0)
-			return;
-
-		if(unmask_status)
-			maskDataBits();
-
-		var ecc = getFormatInfo(qr_array).ecc;
-		if(ecc == 0)
-			ecc = 1;
-		else if(ecc == 1)
-			ecc = 0;
-		else if(ecc == 2)
-			ecc = 3;
-		else if(ecc == 3)
-			ecc = 2;
-		var prev_mask = parseInt(current_mask) - 1;
-		qr_format_array = format_information_bits[ecc][prev_mask].split("").reverse();
-		saveInfoTable(qr_size);
-		$("#mask-pattern").val("Pattern "+prev_mask);
-		if($("#btn-mask-show-pattern-area").hasClass("active")){
-			showMaskPatternArea();
-		}
-		if(unmask_status)
-			maskDataBits();
-		updateHistory("Data masking");
+		maskDataBits();
+		$("#div-data-masking").hide();
 	})
 
 	$("#btn-mask-show-pattern-area").click(function(){
@@ -1269,17 +1235,6 @@ $(document).ready(function(){
 			showMaskPatternArea();
 			$("#qr-mask-table").show();
 		}
-	})
-
-	$("#btn-tools-mask").click(function(){
-		if($(this).hasClass("active")){
-			$(this).removeClass("active");
-			unmask_status = false;
-		} else {
-			$(this).addClass("active");
-			unmask_status = true;
-		}
-		maskDataBits();
 	})
 
 	$("#tools-pad-recovery").click(function(){

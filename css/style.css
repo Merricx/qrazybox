@@ -81,7 +81,7 @@ ul {list-style: none;}
 
 .header div#header-menu {
 	display: block;
-	min-width: 600px;
+	min-width: 630px;
 	overflow: auto;
 }
 
@@ -377,7 +377,7 @@ ul {list-style: none;}
 	height: 400px;
 	overflow: auto;
 	margin-right: 20px;
-	pointer-events: none;
+	/*pointer-events: none;*/
 }
 
 .overlay .box h3 {
@@ -959,6 +959,7 @@ noscript div h4 {
 	.header div#header-menu {
 		display: none;
 		margin: 0;
+		min-width: 100px;
 		width: 150px;
 		position: fixed;
 		top: 60px;
