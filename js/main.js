@@ -1195,6 +1195,7 @@ $(document).ready(function(){
 
 		var current_mask = getFormatInfo(qr_array).mask;
 
+		$("#data-masking-slider div.active").removeClass("active");
 		$("#data-masking-slider div[data="+current_mask+"]").addClass("active");
 
 		$("#div-data-masking").show();
