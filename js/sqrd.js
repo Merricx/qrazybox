@@ -272,7 +272,7 @@ function getFormatInfo(data){
 function maskData(data_array, mask_pattern){
 
 	var width = data_array.length;
-	var data = Array.prototype.slice.call(data_array);
+	var data = JSON.parse(JSON.stringify(data_array));
 	var is_data_module = getDataModule(data);
 
 	for(var x=0; x < width; x++){
@@ -519,7 +519,7 @@ function recoverPaddingBits(data_array){
 
 function QRDecode(data){
 
-	result = {message:"",error:[],error_count:0,ecc:0,mask_pattern:0,erasure_count:0,data_module_count:0};
+	result = {message:"",error:[],error_count:0,ecc:0,mask_pattern:0,erasure_count:0,data_module_count:0,module_order:[]};
 
 	var width = data.length;
 	var version = (width - 21) / 4 + 1;
@@ -563,6 +563,7 @@ function QRDecode(data){
                 block = "";
                 count = 0;
             }
+            result.module_order.push(x+"-"+y);
         }
         if(y < 7) tx = y; else tx = y - 1;
         if(tx % 2 == 1)
@@ -916,6 +917,91 @@ function QRDecode(data){
     result.message = data.join("");
 
     return result;
+}
+
+function readDataBlock(data){
+
+    data = JSON.parse(JSON.stringify(data));
+
+    var width = data.length;
+    var version = (width - 21) / 4 + 1;
+    var is_data_module = getDataModule(data);
+    var format_info = getFormatInfo(data);
+    var error_correction_level = format_info.ecc;
+    var mask_pattern = format_info.mask;
+    data = maskData(data, mask_pattern);
+
+    var module_order = [];
+
+    var blocks = [];
+    var block = "";
+    count = 0;
+    var x = width - 1;
+    var y = width - 1;
+    while(true){
+        if(x < 0 || y < 0)
+            break;
+        if(is_data_module[x][y]){
+            if(data[x][y] == -1)
+                block += '?';
+            else
+                block += data[x][y];
+            count += 1;
+            if(count == 8){
+                blocks.push(block);
+                block = "";
+                count = 0;
+            }
+            module_order.push(x+"-"+y);
+        }
+        if(y < 7) tx = y; else tx = y - 1;
+        if(tx % 2 == 1)
+            y -= 1;
+        else {
+            if(Math.floor(tx / 2) % 2 == 1){
+                if(x == 0)
+                    y -= 1;
+                else {
+                    x -= 1;
+                    y += 1;
+                }
+            }
+            else {
+                if(x == width - 1){
+                    if(Math.floor(tx / 2) == 3) y -= 1;
+                    y -= 1;
+                } else {
+                    x += 1;
+                    y += 1;
+                }
+            }
+        }
+    }
+
+    /*var RS_blocks = "";
+    var block_num = RS_block_num_table[version - 1][error_correction_level];
+    var offset = data_code_num_table[version - 1][error_correction_level];
+    
+    for(var i=0; i < block_num; i++){
+        var t = [];
+        for(var j=0; j < Math.floor(offset/block_num); j++){
+            t.push(blocks[j * block_num + i]);
+        }
+        if(offset % block_num != 0){
+            var remain = offset % block_num;
+            if((block_num - remain) <= i)
+                t.push(blocks[Math.floor(offset / block_num) * block_num + (i - (block_num - remain))])
+        }
+        for(var j=0; j < Math.floor((blocks.length - offset) / block_num); j++){
+            t.push(blocks[offset + j * block_num + i]);
+        }
+
+        RS_blocks += t.join("");
+    }
+
+    blocks = RS_blocks;*/
+
+    return {blocks:blocks.join(""),module_order:module_order};
 }
 
 function readDataBits(data_bits){

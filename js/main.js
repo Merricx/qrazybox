@@ -1,5 +1,5 @@
 
-var VERSION = '0.1.24';
+var VERSION = '0.2.0';
 
 var qr_version = 1;
 var qr_pixel_size = 15;
@@ -17,10 +17,10 @@ var changed_state = false;
 
 var show_grey = true;
 var brute_force_mode = false;
-var masking_mode = false;
-var unmask_status = false;
+var analysis_mode = false;
 
 var qr_temp_array = [];
+var qr_data_block = [];
 
 var is_data_module = [];
 
@@ -258,7 +258,7 @@ function generateResult(){
 	
 	$("#qr-result").show();
 	$("#qr-table").hide();
-	$("#qr-mask-table").hide();
+	$("#qr-overlay").hide();
 	$("body").css("background-color","#FFFFFF");
 }
 
@@ -278,8 +278,6 @@ function toggleResult(){
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-decode-mode").addClass("active");
 
-		if(unmask_status)
-			maskDataBits();
 		generateResult();
 		$("#btn-switch-mode").addClass("active");
 		$("#div-tool-work, #box-history").hide();
@@ -290,14 +288,16 @@ function toggleResult(){
 			$("#h6-brute-force-msg").show();
 		else
 			$("#h6-brute-force-msg").hide();
+
+		if(analysis_mode){
+			$("#box-work").show();
+			$("#box-tools-analysis").hide();
+		}
+
 	} else {
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-editor-mode").addClass("active");
 
-		if(unmask_status){
-			maskDataBits();
-			refreshTable();
-		}
 		$("#qr-result").hide();
 		$(".qr-tab").show();	
 		$("#btn-switch-mode").removeClass("active");
@@ -305,8 +305,11 @@ function toggleResult(){
 		$("#div-tool-result").hide();
 		$("#div-tool-work, #box-history").show();
 		$("#btn-switch-mode").text("Editor Mode");
-		if(masking_mode)
-			$("#box-tools-masking").show();
+
+		if(analysis_mode){
+			$("#box-work").hide();
+			$("#box-tools-analysis").show();
+		}
 	}
 }
 
@@ -363,8 +366,6 @@ function loadProject(name){
 	qr_array = loadedData[0];
 	qr_format_array = loadedData[2];
 	brute_force_mode = false;
-	masking_mode = false;
-	unmask_status = false;
 	$("#tools-brute-force, #tools-unmasking").removeClass("active");
 	refreshTable();
 	$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -375,8 +376,11 @@ function loadProject(name){
 	if($("#div-extract").css("display") != "none"){
 		$("#btn-tools-extract").trigger("click");
 	}
+	if(analysis_mode){
+		$("#tools-data-analysis").trigger("click");
+	}
 	$("#box-tools-masking").hide();
-	$("#qr-mask-table").html("");
+	$("#qr-overlay").html("");
 	clearHistory();
 	updateHistory("Load project");
 }
@@ -705,7 +709,7 @@ function showMaskPatternArea(){
 	var mask_pattern = getFormatInfo(qr_array).mask;
 	qr_mask_array = maskData(qr_mask_array, mask_pattern);
 
-	$("#qr-mask-table").html("");
+	$("#qr-overlay").html("");
 	for(var i=0; i < qr_array.length; i++){
 		var html = "<tr>";
 		for(var j=0; j < qr_array[i].length; j++){
@@ -719,7 +723,7 @@ function showMaskPatternArea(){
 			}
 		}
 		html += "</tr>";
-		$("#qr-mask-table").append(html);
+		$("#qr-overlay").append(html);
 	}
 	resize(qr_pixel_size);
 }
@@ -825,6 +829,332 @@ function reedSolomonDecode(data, nysm){
 
 }
 
+function showQRTableOverlay(){
+	$("#qr-overlay").html("");
+	for(var i=0; i < qr_array.length; i++){
+		var html = "<tr>";
+		for(var j=0; j < qr_array[i].length; j++){
+			if($("#qr-"+i+"-"+j).hasClass("info") || $("#qr-"+i+"-"+j).hasClass("static")){
+				html += "<td class='invisible'></td>";
+			} else {
+				html += "<td index='"+i+"-"+j+"' style='opacity:0;'></td>";
+			}
+		}
+		html += "</tr>";
+		$("#qr-overlay").append(html);
+	}
+	resize(qr_pixel_size);
+}
+
+function activateAnalysisMode(status){
+
+	status = status || "true";
+
+	if(status === "true"){
+
+		$("#qr-table tr td").css({"pointer-events":"none","border-color":"transparent"});
+		$("#qr-table tr td.static, #qr-table tr td.info").css("opacity","0.2");
+
+		generateDataBlocks();
+
+
+	} else if(status === "false") {
+
+		$("#qr-table tr td").css({"opacity":"1","pointer-events":"auto","border-color":"#434A54"});
+		$("#qr-table tr td.static, #qr-table tr td.info").css("opacity","1");
+
+		$("#qr-overlay").html("");
+
+	}
+}
+
+var module_order = [];
+
+function pushBlock(type,value,decoded){
+
+	var modules = [];
+
+	for(var k=0; k < value.length; k++){
+		modules.push(module_order.shift());
+	}
+
+	var obj = {value:value,type:type,decoded:decoded,modules:modules};
+
+	qr_data_block.push(obj);
+}
+
+function generateDataBlocks(){
+
+	qr_data_block = [];
+
+	var format_info = getFormatInfo(qr_array);
+	var mask_pattern = format_info.mask;
+	var ecc_level = format_info.ecc;
+
+	if(RS_block_num_table[qr_version-1][ecc_level] > 1){
+		alert('Interleaved blocks is not supported yet!');
+		return;
+	}
+
+	var unmasked_data_array = maskData(qr_array, mask_pattern);
+
+	var decoded_data = readDataBlock(qr_array);
+	var data_block = decoded_data.blocks;
+	module_order = decoded_data.module_order;
+
+	while(data_block.length != 1){
+
+		if(data_block.substring(0,4) == "0001"){
+			var enc_mode = "Numeric mode";
+		} else if(data_block.substring(0,4) == "0010"){
+			var enc_mode = "Alphanumeric mode";
+		} else if(data_block.substring(0,4) == "0100"){
+			var enc_mode = "Binary mode";
+		} else if(data_block.substring(0,4) == "0000") {
+			var enc_mode = "Terminator";
+		} else {
+			break;
+		}
+				
+		pushBlock(
+			"Mode indicator",
+			data_block.substring(0,4),
+			enc_mode
+		);
+		data_block = data_block.substring(4);
+
+		if(enc_mode == "Numeric mode"){
+
+			var data_length = parseInt(data_block.substring(0,10), 2);
+			pushBlock(
+				"Char. count indicator",
+				data_block.substring(0,10),
+				data_length
+			);
+			data_block = data_block.substring(10);
+						
+			for(var k=0; k < Math.floor((data_length + 2) / 3); k++){
+
+				var temp_value = "";
+				var temp_decoded = "";
+
+				if(k == Math.floor((data_length + 2) / 3) - 1){
+					if(data_length % 3 == 0){
+						temp_value = data_block.substring(0,10);
+    					temp_decoded = parseInt(data_block.substring(0,10), 2);
+            			data_block = data_block.substring(10);
+    				} else if(data_length % 3 == 1){
+    					temp_value = data_block.substring(0,4);
+	    				temp_decoded = parseInt(data_block.substring(0,4), 2);
+    	    			data_block = data_block.substring(4);
+    				} else {
+    					temp_value = data_block.substring(0,7);
+    					temp_decoded = parseInt(data_block.substring(0,7), 2);
+        				data_block = data_block.substring(7);
+    				}
+				} else {
+					temp_value = data_block.substring(0,10);
+					temp_decoded = parseInt(data_block.substring(0,10), 2);
+					data_block = data_block.substring(10);
+				}
+
+				pushBlock(
+					"Message data",
+					temp_value,
+					temp_decoded
+				);
+			}
+
+		} else if(enc_mode == "Alphanumeric mode"){
+
+			var data_length = parseInt(data_block.substring(0,9), 2);
+			pushBlock(
+				"Char. count indicator",
+				data_block.substring(0,9),
+				data_length
+			);
+			data_block = data_block.substring(9);
+
+			for(var i=0; i < Math.floor((data_length + 1) / 2); i++){
+				
+    			if(i == Math.floor((data_length + 1) / 2) - 1){
+    				if(data_length % 2 == 0){
+    					var num = parseInt(data_block.substring(0,11), 2);
+    					temp_value = data_block.substring(0,11);
+    					temp_decoded = alphanumeric_table[Math.floor(num / 45)] + alphanumeric_table[num % 45];
+    					data_block = data_block.substring(11);
+    				} else {
+    					var num = parseInt(data_block.substring(0,6), 2);
+    					temp_value = data_block.substring(0,6);
+    					temp_decoded = alphanumeric_table[num];
+    					data_block = data_block.substring(6);
+    				}
+    			} else {
+    				var num = parseInt(data_block.substring(0,11), 2);
+    				temp_value = data_block.substring(0,11);
+    				temp_decoded = alphanumeric_table[Math.floor(num / 45)] + alphanumeric_table[num % 45]
+    				data_block = data_block.substring(11);
+    			}
+
+    			pushBlock(
+					"Message data",
+					temp_value,
+					temp_decoded
+				);
+    		}
+
+		} else if(enc_mode == "Binary mode"){
+
+			var data_length = parseInt(data_block.substring(0,8), 2);
+			pushBlock(
+				"Char. count indicator",
+				data_block.substring(0,8),
+				data_length
+			);
+			data_block = data_block.substring(8);
+
+			for(var i=0; i < data_length; i++){
+				temp_value = data_block.substring(0,8);
+    			temp_decoded = String.fromCharCode(parseInt(data_block.substring(0,8), 2));
+    			data_block = data_block.substring(8);
+
+    			pushBlock(
+					"Message data",
+					temp_value,
+					temp_decoded
+				);
+    		}
+
+    	} else if(enc_mode == "Terminator"){
+
+
+		} else {
+			break;
+		}
+	}
+
+	//console.log(data_block);
+
+	
+	var error_correction_level = getFormatInfo(qr_array).ecc;
+	var offset = data_block.length - error_correction_code_table[qr_version - 1][error_correction_level]*8;
+		
+	pushBlock(
+		"Padding bits",
+		data_block.substring(0,offset),
+		""
+	);
+	data_block = data_block.substring(offset);
+
+	while(data_block.length >= 8){
+		pushBlock(
+			"Error correction",
+			data_block.substring(0,8),
+			parseInt(data_block.substring(0,8), 2)
+		);
+		data_block = data_block.substring(8);
+	}
+
+	console.log(qr_data_block);
+
+	showQRTableOverlay();
+
+	//Generate QR Overlay
+	for(var i=0; i < qr_data_block.length; i++){
+		for(var j=0; j < qr_data_block[i].modules.length; j++){
+			var module = qr_data_block[i].modules[j];
+			$("#qr-overlay td[index="+module+"]").addClass("hoverable data-block-"+i);
+		}
+		for(var j=0; j < qr_data_block[i].modules.length; j++){
+			var module = qr_data_block[i].modules[j].split('-');
+			generateSeparator(module[0], module[1], "data-block-"+i);
+		}
+	}
+
+}
+
+//Generate separator border between blocks
+function generateSeparator(i,j,cls){
+
+	i = parseInt(i);
+	j = parseInt(j);
+
+	var up = $("#qr-overlay td[index="+(i-1)+"-"+j+"]");
+	var down = $("#qr-overlay td[index="+(i+1)+"-"+j+"]");
+	var left = $("#qr-overlay td[index="+i+"-"+(j-1)+"]");
+	var right = $("#qr-overlay td[index="+i+"-"+(j+1)+"]");
+
+
+	if(!left.hasClass(cls)){
+		$("#qr-"+i+"-"+j).css("border-left","solid 1px #f44336");
+	}
+	if(!right.hasClass(cls)){
+		$("#qr-"+i+"-"+j).css("border-right","solid 1px #f44336");
+	}
+	if(!up.hasClass(cls)){
+		$("#qr-"+i+"-"+j).css("border-top","solid 1px #f44336");
+	}
+	if(!down.hasClass(cls)){
+		$("#qr-"+i+"-"+j).css("border-bottom","solid 1px #f44336");
+	}
+}
+
+function selectBlock(cls){
+
+	var index = cls.substring(11);
+
+	$("#data-analysis-value").val(qr_data_block[index].value);
+	$("#data-analysis-type").val(qr_data_block[index].type);
+	$("#data-analysis-decoded").val(qr_data_block[index].decoded);
+}
+
+function updateBlock(value, cls){
+
+	var index = cls[cls.length-2].substring(11);
+
+	if(value == qr_data_block[index].value){
+		//return;
+	}
+
+	if(value.length != qr_data_block[index].value.length || !/^[01\?]+$/g.test(value)){
+		alert('Invalid value!');
+		$("#data-analysis-value").val(qr_data_block[index].value).focus();
+		return;
+	}
+
+	qr_data_block[index].value = value;
+	var mask_pattern = getFormatInfo(qr_array).mask;
+
+	for(var i=0; i < qr_data_block[index].modules.length; i++){
+		var cord = qr_data_block[index].modules[i].split('-');
+		var new_val = value.substring(i,i+1);
+		console.log(new_val, qr_array[cord[0]][cord[1]]);
+
+		if(new_val == '?')
+			new_val = -1;
+		else
+			new_val = parseInt(new_val);
+
+		/*if(mask(mask_pattern, cord[0], cord[1])){
+			if(new_val == 1)
+				new_val = 0;
+			else if(new_val == 0)
+				new_val = 1;
+		}*/
+
+		qr_array[cord[0]][cord[1]] = new_val;
+	}
+
+	refreshTable();
+	activateAnalysisMode();
+	updateHistory("Modules edited");
+
+	$("#data-analysis-value").val("");
+	$("#data-analysis-type").val("");
+	$("#data-analysis-decoded").val("");
+
+}
+
 $(document).ready(function(){
 
 
@@ -859,10 +1189,11 @@ $(document).ready(function(){
 			$("#btn-tools-extract").trigger("click");
 		}
 		brute_force_mode = false;
-		masking_mode = false;
-		unmask_status = false;
+		if(analysis_mode){
+			$("#tools-data-analysis").trigger("click");
+		}
 		$("#tools-brute-force, #tools-unmasking").removeClass("active");
-		$("#qr-mask-table").html("");
+		$("#qr-overlay").html("");
 		$("#box-tools-masking").hide();
 		$("#div-new").hide();
 	})
@@ -1069,6 +1400,9 @@ $(document).ready(function(){
 		toggleResult();
 	})
 
+	/****************************
+		Extract QR Information
+	****************************/
 	$("#tools-extract").click(function(){
 		$("#div-tools").hide();
 		if($(this).hasClass("active")){
@@ -1081,14 +1415,11 @@ $(document).ready(function(){
 		$(".right-box").hide();
 		$("#box-tools-extract").show();
 		$("#qr-table").hide();
-		$("#qr-mask-table").html("");
-		$("#qr-result").hide();
+		$("#qr-result, #qr-overlay").hide();
 		$("#div-extract").show();
 		$(".footer .mode-indicator").hide();
 		$("body").css("background-color","#fff");
 		$(this).addClass("active");
-		if(unmask_status && !$("#btn-switch-mode").hasClass("active"))
-			maskDataBits();
 		extractInfo();
 	})
 
@@ -1106,15 +1437,10 @@ $(document).ready(function(){
 		$("#tools-extract").removeClass("active");
 		$(".side-box").show();
 		$(".right-box").show();
-		if(!masking_mode){
-			$("#box-tools-masking").hide();
-		}
-		if(unmask_status)
-				maskDataBits();
 		$("#box-tools-extract").hide();
 		$("#qr-table").show();
-		if($("#btn-mask-show-pattern-area").hasClass("active")){
-			$("#qr-mask-table").show();
+		if(analysis_mode){
+			$("#qr-overlay").show();
 		}
 		$("#btn-switch-mode").removeClass("active");
 		$("#div-tool-result").hide();
@@ -1123,8 +1449,17 @@ $(document).ready(function(){
 		$("#div-extract").hide();
 		$(".footer .mode-indicator").show();
 		$("body").css("background-color","#eceff1");
+
+		if(analysis_mode) {
+			$("#box-work").hide();
+		} else {
+			$("#box-tools-analysis").hide();
+		}
 	})
 
+	/****************************
+		Brute-force Format info
+	****************************/
 	$("#tools-brute-force").click(function(){
 		if($(this).hasClass("active")){
 			$(this).removeClass("active");
@@ -1191,7 +1526,11 @@ $(document).ready(function(){
 		generateResult();
 	})
 
-	$("#tools-unmasking").click(function(){
+	/****************************
+		Data Masking
+	****************************/
+
+	$("#tools-masking").click(function(){
 
 		var current_mask = getFormatInfo(qr_array).mask;
 
@@ -1230,13 +1569,17 @@ $(document).ready(function(){
 	$("#btn-mask-show-pattern-area").click(function(){
 		if($(this).hasClass("active")){
 			$(this).removeClass("active");
-			$("#qr-mask-table").html("");
+			$("#qr-overlay").html("");
 		} else {
 			$(this).addClass("active");
 			showMaskPatternArea();
-			$("#qr-mask-table").show();
+			$("#qr-overlay").show();
 		}
 	})
+
+	/****************************
+		Padding Bits Recovery
+	****************************/
 
 	$("#tools-pad-recovery").click(function(){
 		recoverPadding();
@@ -1255,6 +1598,10 @@ $(document).ready(function(){
 	$("#btn-pad-rec-cancel").click(function(){
 		$("#div-padding-recovery").hide();
 	})
+
+	/****************************
+		Reed-Solomon Decoder
+	****************************/
 
 	var current_rs_decoder_page = 1;
 
@@ -1309,11 +1656,57 @@ $(document).ready(function(){
 
 	})
 
+	/****************************
+		Data Sequence Analysis
+	****************************/
+	$("#tools-data-analysis").click(function(){
+
+		if($(this).hasClass("active")){
+			analysis_mode = false;
+
+			$(this).removeClass("active");
+			$("#box-work").show();
+			$("#box-tools-analysis").hide();
+			activateAnalysisMode("false");
+		} else {
+			analysis_mode = true;
+
+			$("#data-analysis-value").val("");
+			$("#data-analysis-type").val("");
+			$("#data-analysis-decoded").val("");
+
+			$(this).addClass("active");
+			$("#box-work").hide();
+			$("#box-tools-analysis").show();
+			activateAnalysisMode();
+		}
+
+		$("#div-tools").hide();
+	})
+
+	$("#data-analysis-value").blur(function(){
+		if( $("#qr-overlay td.active").length){
+			updateBlock($(this).val(), $("#qr-overlay td.active").attr("class").split(" "));
+		}
+	}).on("keydown", function(e){
+		if(e.keyCode == "13"){
+			updateBlock($(this).val(), $("#qr-overlay td.active").attr("class").split(" "));
+		}
+	})
+
+
+
+	/****************************
+		Load Sample
+	****************************/
 	$("#sample-file").change(function(){
 		loadImage(this, "#img-sample");
 		$("#img-sample").show();
 	})
 
+	/****************************
+		Painter stuff
+	****************************/
 	$(document).on("click","td.info", function(){
 		$("#format-information-box").show();
 		if(brute_force_mode){
@@ -1374,12 +1767,32 @@ $(document).ready(function(){
 		})
 	})
 
-	$(document).on("mouseover", "#qr-table td:not(.static):not(.info)", function(){
-		
+	$(document).on("mouseover", ".hoverable:not(.active)", function(){
+		var cls = $(this).attr("class").split(" ").pop();
+		$("#qr-overlay td."+cls).each(function(){
+			$(this).css("opacity","0.5");
+		})
+
+		if(!$("#qr-overlay td.active:not(."+cls+")").length){
+			//selectBlock(cls);
+		}
 	})
 
-	$(document).on("mouseleave", "#qr-table td:not(.static):not(.info)", function(){	
-		
+	$(document).on("mouseleave", ".hoverable:not(.active)", function(){	
+		var cls = $(this).attr("class").split(" ").pop();
+		$("#qr-overlay td."+cls).each(function(){
+			$(this).css("opacity","0");
+		})
+	})
+
+	$(document).on("click", ".hoverable", function(){
+		$("#qr-overlay td.active").css("opacity","0").removeClass("active");
+		var cls = $(this).attr("class").split(" ").pop();
+		$("#qr-overlay td."+cls).each(function(){
+			$(this).css("opacity","0.75").addClass("active");
+		})
+
+		selectBlock(cls);
 	})
 
 	$(document).on("mousedown", "#qr-table td", function(){
@@ -1585,19 +1998,8 @@ $(document).ready(function(){
 
 	$("#btn-save-info").click(function(){
 		var size = 17+(qr_version*4);
-		if(unmask_status)
-			maskDataBits();
 		saveInfoTable(size);
 		updateHistory("Update format info pattern");
-		if(masking_mode){
-			if(unmask_status)
-				maskDataBits();
-			if($("#btn-mask-show-pattern-area").hasClass("active")){
-				showMaskPatternArea();
-			}
-			var mask_pattern = getFormatInfo(qr_array).mask;
-			$("#mask-pattern").val("Pattern "+mask_pattern);
-		}
 	})
 
 	//Undo/Redo in History

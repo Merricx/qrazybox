@@ -121,22 +121,20 @@
 		</div>
 		<!-- END EXTRACT QR INFO TOOLBOX -->
 
-		<!-- START DATA UNMASKING TOOLBOX -->
-		<div id="box-tools-masking" class="side-box hide">
-			<h5>Mask Pattern : </h5>
-			<input id="mask-pattern" type="text" readonly value="Pattern 0">
-			<div class="toolbox">
-				<div id="btn-mask-min" class="minus"><img src="img/minus.png"></div>
-				<div id="btn-mask-plus" class="plus"><img src="img/plus.png"></div>
-			</div>
+		<!-- START DATA SEQUENCE TOOLBOX -->
+		<div id="box-tools-analysis" class="side-box hide">
+			<h5>Value : </h5>
+			<input type="text" value="" class="full" id="data-analysis-value">
 			<div class="clear"></div>
-			<h5>Mask Pattern Area : </h5>
-			<button id="btn-mask-show-pattern-area" class="toggle">Show</button>
+			<h5>Type : </h5>
+			<input type="text" readonly value="" class="full read-only" id="data-analysis-type">
+			<div class="clear"></div>
+			<h5>Decoded data : </h5>
+			<input type="text" readonly value="" class="full read-only" id="data-analysis-decoded">
 			<div class="clear"></div>
 			<div class="space"></div>
-			<center><button id="btn-tools-mask" class="toggle">Mask Data</button></center>
 		</div>
-		<!-- END DATA UNMASKING TOOLBOX -->
+		<!-- END DATA SEQUENCE TOOLBOX -->
 		</div>
 	<!-- END LEFT TOOLBOX -->
 
@@ -177,7 +175,7 @@
 	<div class="main">
 		<div class="qr-box">
 		<table id="qr-table" class="qr-tab"></table>
-		<table id="qr-mask-table" class="qr-tab"></table>
+		<table id="qr-overlay" class="qr-tab"></table>
 		<canvas id="qr-result" class="hide"></canvas>
 		</div>
 		<div id="div-extract" class="div-extract hide">
@@ -264,7 +262,7 @@
 				<h5>Brute-force Format Info Pattern</h5>
 				<h6>Try all possibilities of Format Info Pattern when decoding</h6>
 			</div>
-			<div id="tools-unmasking">
+			<div id="tools-masking">
 				<h5>Data Masking</h5>
 				<h6>Simulate data masking (XOR) with Mask pattern</h6>
 			</div>
@@ -273,7 +271,7 @@
 				<h6>Recover missing bits by placing terminator and padding bits</h6>
 			</div>
 			<div id="tools-data-analysis">
-				<h5>Data Sequence Analysis</h5>
+				<h5>Data Sequence Analysis (<i>Experimental</i>)</h5>
 				<h6>Analyze data sequence of QR code</h6>
 			</div>
 		</div>
