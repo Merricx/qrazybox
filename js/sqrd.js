@@ -222,6 +222,19 @@ function getDataModule(data){
 		}
 	}
 
+    if(version >= 7){
+        for(var i=0; i < 6; i++){
+            for(var j=0; j < 3; j++){
+                is_data_module[i][(width)-11 + j] = false
+            }
+        }
+        for(var j=0; j < 6; j++){
+            for(var i=0; i < 3; i++){
+                is_data_module[(width)-11 + i][j] = false
+            }
+        }
+    }
+
 	return is_data_module;
 }
 
@@ -905,7 +918,7 @@ function QRDecode(data){
     		//TODO: Kanji mode
     		break;
     	} else {
-    		console.log("[ERROR]: Invalid Encoding mode");
+    		console.log("[ERROR]: Invalid Encoding mode", mode);
     		result.error.push("Invalid Encoding mode");
     		break;
     	}

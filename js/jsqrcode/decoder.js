@@ -23,7 +23,7 @@
 */
 
 
-Decoder={};
+var Decoder={};
 Decoder.rsDecoder = new ReedSolomonDecoder(GF256.QR_CODE_FIELD);
 
 Decoder.correctErrors=function( codewordBytes,  numDataCodewords)
@@ -56,7 +56,7 @@ Decoder.correctErrors=function( codewordBytes,  numDataCodewords)
 
 Decoder.decode=function(bits)
 {
-	var parser = new BitMatrixParser(bits);console.log(JSON.stringify(bits));
+	var parser = new BitMatrixParser(bits);
 	var version = parser.readVersion();
 	var ecLevel = parser.readFormatInformation().ErrorCorrectionLevel;
 	

@@ -1,8 +1,8 @@
 /*
-  Ported to JavaScript by Lazar Laszlo 2011
-
+  Ported to JavaScript by Lazar Laszlo 2011 
+  
   lazarsoft@gmail.com, www.lazarsoft.info
-
+  
 */
 
 /*
@@ -34,40 +34,32 @@ function BitMatrix( width,  height)
 	this.width = width;
 	this.height = height;
 	var rowSize = width >> 5;
-	if ((width & 0x1f) != 0) {
+	if ((width & 0x1f) != 0)
+	{
 		rowSize++;
 	}
-
 	this.rowSize = rowSize;
 	this.bits = new Array(rowSize * height);
-
 	for(var i=0;i<this.bits.length;i++)
 		this.bits[i]=0;
-
-  Object.defineProperties(this, {
-    'Width': {
-      get: function () {
-        return this.width;
-      }
-    },
-
-    'Height': {
-      get: function () {
-        return this.height;
-      }
-    },
-
-    'Dimension': {
-      get: function () {
-        if (this.width != this.height) {
-          throw "Can't call getDimension() on a non-square matrix";
-        }
-
-        return this.width;
-      }
-    }
-  });
-
+	
+	this.__defineGetter__("Width", function()
+	{
+		return this.width;
+	});
+	this.__defineGetter__("Height", function()
+	{
+		return this.height;
+	});
+	this.__defineGetter__("Dimension", function()
+	{
+		if (this.width != this.height)
+		{
+			throw "Can't call getDimension() on a non-square matrix";
+		}
+		return this.width;
+	});
+	
 	this.get_Renamed=function( x,  y)
 		{
 			var offset = y * this.rowSize + (x >> 5);

@@ -433,6 +433,8 @@ function rs_forney_syndromes(synd, pos, nmess){
 
 function rs_correct_msg(msg_in, nysm, erase_pos){
 
+	console.log(msg_in);
+
 	erase_pos = erase_pos || undefined;
 
 	var msg_len = msg_in.length - nysm;

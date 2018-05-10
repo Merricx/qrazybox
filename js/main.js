@@ -1,33 +1,42 @@
 
-var VERSION = '0.2.0';
 
-var qr_version = 1;
-var qr_pixel_size = 15;
-var qr_size = 17+(qr_version*4);
+/*
+****************************************
+			GLOBAL VARIABLES
+****************************************
+*/
 
-var qr_array = [];
-var qr_format_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var APP_VERSION = '0.3.3';
 
-var active_painter = "0";
-var fill_painter = false;
-var toggle_painter = false;
-var dragging_painter = false;
+var qr_version = 1;										//Current QR version (1-9)
+var qr_pixel_size = 10;									//Current view size of QR code (pixel per module)
+var qr_size = 17+(qr_version*4);						//Current size of QR code
 
-var changed_state = false;
+var qr_array = [];										//Main array to store QR data
+var qr_format_array = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];	//Store QR format information
 
-var show_grey = true;
-var brute_force_mode = false;
-var analysis_mode = false;
+var active_painter = "0";								//Current active painter tool (0,1,2)
+var fill_painter = false;								//Is flood fill tool active?
 
-var qr_temp_array = [];
-var qr_data_block = [];
+var changed_state = false;								//Is document in changed state and not saved yet?
 
-var is_data_module = [];
+var show_grey = true;									//Show grey modules in Decode mode
+var brute_force_mode = false;							//Is Brute-force Format Info active?
+var analysis_mode = false;								//Is Data Analysis tool active?
 
-var history_array = [];
-var active_history = -1;
+var qr_temp_array = [];									//Temporary variable to handle qr_array duplicates
+var qr_data_block = [];									//Array to store data block in "Data Analysis tool"
 
+var is_data_module = [];								//Store data that separate between data module and fixed module (function pattern, alignment pattern, etc)
 
+var history_array = [];									//Store history information and its qr_array data
+var active_history = -1;								//Current active history
+
+/***
+*
+*	generate QR table based on qr_array
+*	
+***/
 function generateTable(version){
 	qr_array = JSON.parse(JSON.stringify(qr_templates[version-1]));
 	changed_state = false;
@@ -57,6 +66,11 @@ function generateTable(version){
 	updateHistory("New QR code");
 }
 
+/***
+*
+*	get format information value
+*	
+***/
 function getInformation(size){
 	//Information top-left beside Finder
 	for(var i=0; i < 9; i++){
@@ -89,7 +103,11 @@ function getInformation(size){
 	}
 }
 
-
+/***
+*
+*	generate QR table in format information overlay dialog
+*	
+***/
 function generateInfoTable(position){
 
 	position = position || "TOP_LEFT";
@@ -134,7 +152,11 @@ function generateInfoTable(position){
 	
 }
 
-
+/***
+*
+*	Save format information value to qr_format_array
+*	
+***/
 function saveInfoTable(size){
 	for(var i=0; i < 8; i++){
 		if(i > 5)
@@ -158,6 +180,11 @@ function saveInfoTable(size){
 	changed_state = true;
 }
 
+/***
+*
+*	Reload QR table based on qr_array value
+*	
+***/
 function refreshTable(){
 	for(var i=0; i < qr_array.length; i++){
 		for(var j=0; j < qr_array[i].length; j++){
@@ -174,6 +201,11 @@ function refreshTable(){
 	}
 }
 
+/***
+*
+*	Update qr_array from new array (exclude fixed pattern: function pattern, alignment pattern, timing, and version information)
+*	
+***/
 function updateQRArray(new_data){
 	for(var i=0; i < qr_array.length; i++){
 		for(var j=0; j < qr_array[i].length; j++){
@@ -182,8 +214,33 @@ function updateQRArray(new_data){
 			}
 		}
 	}
+
+	//update format information when using image upload
+	var size = qr_size;
+
+	for(var i=0; i < 8; i++){
+		if(i > 5)
+			qr_array[i+1][8] = new_data[i+1][8];
+		else
+			qr_array[i][8] = new_data[i][8];
+		qr_array[8][size-(i+1)] = new_data[8][size-(i+1)];
+	}
+	var index = 0;
+	for(var i=14; i >= 8; i--){
+		if(index > 5)
+			qr_array[8][index+1] = new_data[8][index+1];
+		else
+			qr_array[8][index] = new_data[8][index];;
+		qr_array[size-(index+1)][8] = new_data[size-(index+1)][8];;
+		index++;
+	}
 }
 
+/***
+*
+*	Get format information from format information overlay dialog
+*	
+***/
 function getInfoBits(){
 	var result = {ecc:"",mask:-1};
 	$("#slider-mask div.active").removeClass("active");
@@ -224,6 +281,11 @@ function getInfoBits(){
 	return result;
 }
 
+/***
+*
+*	generate QR code made from canvas based on qr_array values
+*	
+***/
 function generateResult(){
 
 	var c = document.getElementById("qr-result");
@@ -262,17 +324,32 @@ function generateResult(){
 	$("body").css("background-color","#FFFFFF");
 }
 
+/***
+*
+*	Update toolbox values
+*	
+***/
 function updateToolbox(){
 	$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
 	$("#qr-size").val(qr_pixel_size+"px");
 }
 
+/***
+*
+*	Resize QR size
+*	
+***/
 function resize(size){
 	$("td").each(function(){
 		$(this).css({"min-width":size+"px","min-height":size+"px","width":size+"px","height":size+"px"});
 	})
 }
 
+/***
+*
+*	Toggle between Editor and Decode mode
+*	
+***/
 function toggleResult(){
 	if(!$("#btn-switch-mode").hasClass("active")){
 		$(".mode-indicator button").removeClass("active");
@@ -313,6 +390,11 @@ function toggleResult(){
 	}
 }
 
+/***
+*
+*	Load image from file and put to {target}
+*	
+***/
 function loadImage(input, target){
 	if(input.files && input.files[0]){
 		var reader = new FileReader();
@@ -324,6 +406,11 @@ function loadImage(input, target){
 	}
 }
 
+/***
+*
+*	Save project to LocalStorage
+*	
+***/
 function saveProject(projectName){
 
 	if(projectName == ""){
@@ -354,6 +441,11 @@ function saveProject(projectName){
 	changed_state = false;
 }
 
+/***
+*
+*	Load project from LocalStorage
+*	
+***/
 function loadProject(name){
 	if(changed_state){
 		if(!confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!"))
@@ -385,6 +477,11 @@ function loadProject(name){
 	updateHistory("Load project");
 }
 
+/***
+*
+*	Remove project from LocalStorage
+*	
+***/
 function removeProject(name, origin){
 	if(confirm("Are you sure want to permanently delete this project?")){
 		var dataList = JSON.parse(localStorage.getItem("dataList"));
@@ -404,6 +501,11 @@ function removeProject(name, origin){
 	}
 }
 
+/***
+*
+*	Refresh list of project in LocalStorage
+*	
+***/
 function refreshLoadList(origin){
 	var dataList = JSON.parse(localStorage.getItem("dataList"));
 	if(dataList == undefined){
@@ -417,6 +519,11 @@ function refreshLoadList(origin){
 	}
 }
 
+/***
+*
+*	Decode Base64 to image
+*	
+***/
 function decodeFromBase64(img, callback){
 	qrcode.callback = callback;
 	qrcode.decode(img, callback);
@@ -463,7 +570,7 @@ function importFromImage(src, cb){
 
 		var qrArray = qRCodeMatrix.bits.bits;
 		var size = qRCodeMatrix.bits.width;
-		if(size > 41){
+		if(size > 53){
 			alert("QR version is unsupported");
 			return;
 		}
@@ -484,7 +591,14 @@ function importFromImage(src, cb){
 	img.src = src;
 }
 
-//Reference : https://jsfiddle.net/eWxNE/2/
+
+/***
+*
+*	Flood fill algorithm to perform paint-like bucket tool
+*
+*	Reference : https://jsfiddle.net/eWxNE/2/
+*	
+***/
 function floodFill(x, y, oldVal, newVal){
 	
 	x = parseInt(x);
@@ -517,6 +631,11 @@ function floodFill(x, y, oldVal, newVal){
     }
 }
 
+/***
+*
+*	Update history
+*	
+***/
 function updateHistory(msg){
 
 	if(active_history < 10) active_history++;
@@ -538,6 +657,11 @@ function updateHistory(msg){
 	$(".history").html(html);
 }
 
+/***
+*
+*	Get history value and refresh QR table
+*	
+***/
 function getHistory(index){
 	qr_array = JSON.parse(history_array[index][1]);
 	if(qr_array.length != qr_size){
@@ -548,6 +672,11 @@ function getHistory(index){
 	refreshTable();
 }
 
+/***
+*
+*	Clear all history value
+*	
+***/
 function clearHistory(){
 	history_array = [];
 	active_history = -1;
@@ -691,6 +820,11 @@ function bruteForceFormatInfo(){
 	}
 }
 
+/***
+*
+*	Mask qr_array with mask_pattern and refresh QR table
+*	
+***/
 function maskDataBits(){
 	var mask_pattern = getFormatInfo(qr_array).mask;
 	qr_array = maskData(qr_array, mask_pattern);
@@ -787,9 +921,15 @@ function recoverPadding(){
 	qr_temp_array = Array.prototype.slice.call(result.result_array);
 }
 
+/***
+*
+*	Perform Reed-Solomon decode
+*	
+***/
 function reedSolomonDecode(data, nysm){
 
 	var result = [];
+	//console.log('nysm: '+nysm, 'data: '+data);
 
 	for(var i=0; i < data.length; i++){
 		var err_pos = [];
@@ -1155,6 +1295,12 @@ function updateBlock(value, cls){
 
 }
 
+
+/*******************************************************************
+*
+*					EVENT LISTENER USING JQUERY
+*	
+********************************************************************/
 $(document).ready(function(){
 
 
@@ -1308,7 +1454,7 @@ $(document).ready(function(){
 	$("#btn-version-plus").click(function(){
 		if(changed_state){
 			if(confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!")){
-				if(qr_version != 6){
+				if(qr_version != 9){
 					qr_version += 1;
 					qr_size = 17+(qr_version*4);
 					$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -1316,7 +1462,7 @@ $(document).ready(function(){
 				}
 			}
 		} else {
-			if(qr_version != 6){
+			if(qr_version != 9){
 				qr_version += 1;
 				qr_size = 17+(qr_version*4);
 				$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -2048,7 +2194,7 @@ $(document).ready(function(){
 		}
 	})
 
-	$("#txt-version").text('QRazyBox v'+VERSION);
+	$("#txt-version").text('QRazyBox v'+APP_VERSION);
 
 	$("#mobile-editor-mode, #mobile-decode-mode").click(function(){
 		toggleResult();

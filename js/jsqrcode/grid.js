@@ -1,8 +1,8 @@
 /*
-  Ported to JavaScript by Lazar Laszlo 2011
-
+  Ported to JavaScript by Lazar Laszlo 2011 
+  
   lazarsoft@gmail.com, www.lazarsoft.info
-
+  
 */
 
 /*
@@ -23,7 +23,7 @@
 */
 
 
-GridSampler = {};
+var GridSampler = {};
 
 GridSampler.checkAndNudgePoints=function( image,  points)
 		{
@@ -94,7 +94,7 @@ GridSampler.checkAndNudgePoints=function( image,  points)
 				}
 			}
 		}
-
+	
 
 
 GridSampler.sampleGrid3=function( image,  dimension,  transform)
@@ -118,12 +118,12 @@ GridSampler.sampleGrid3=function( image,  dimension,  transform)
 				{
 					for (var x = 0; x < max; x += 2)
 					{
-						var xpoint = (Math.floor( points[x]) * 4) + (Math.floor( points[x + 1]) * qrcode.width * 4);
+						//var xpoint = (Math.floor( points[x]) * 4) + (Math.floor( points[x + 1]) * qrcode.width * 4);
                         var bit = image[Math.floor( points[x])+ qrcode.width* Math.floor( points[x + 1])];
-						qrcode.imagedata.data[xpoint] = bit?255:0;
-						qrcode.imagedata.data[xpoint+1] = bit?255:0;
-						qrcode.imagedata.data[xpoint+2] = 0;
-						qrcode.imagedata.data[xpoint+3] = 255;
+						//qrcode.imagedata.data[xpoint] = bit?255:0;
+						//qrcode.imagedata.data[xpoint+1] = bit?255:0;
+						//qrcode.imagedata.data[xpoint+2] = 0;
+						//qrcode.imagedata.data[xpoint+3] = 255;
 						//bits[x >> 1][ y]=bit;
 						if(bit)
 							bits.set_Renamed(x >> 1, y);
@@ -147,6 +147,6 @@ GridSampler.sampleGrid3=function( image,  dimension,  transform)
 GridSampler.sampleGridx=function( image,  dimension,  p1ToX,  p1ToY,  p2ToX,  p2ToY,  p3ToX,  p3ToY,  p4ToX,  p4ToY,  p1FromX,  p1FromY,  p2FromX,  p2FromY,  p3FromX,  p3FromY,  p4FromX,  p4FromY)
 {
 	var transform = PerspectiveTransform.quadrilateralToQuadrilateral(p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY);
-
+			
 	return GridSampler.sampleGrid3(image, dimension, transform);
 }
