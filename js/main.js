@@ -21,6 +21,7 @@ var fill_painter = false;								//Is flood fill tool active?
 var changed_state = false;								//Is document in changed state and not saved yet?
 
 var show_grey = true;									//Show grey modules in Decode mode
+var extract_info_mode = false;							//Is Extract QR Information active?
 var brute_force_mode = false;							//Is Brute-force Format Info active?
 var analysis_mode = false;								//Is Data Analysis tool active?
 
@@ -683,6 +684,12 @@ function clearHistory(){
 	$(".history").html("");
 }
 
+/***
+*
+*	Display information text result in Extract QR Information tool and
+*	load it to #div-extract
+*	
+***/
 function extractInfo(){
 
 	var data_array = JSON.stringify(qr_array);
@@ -1335,6 +1342,7 @@ $(document).ready(function(){
 			$("#btn-tools-extract").trigger("click");
 		}
 		brute_force_mode = false;
+		extract_info_mode = false;
 		if(analysis_mode){
 			$("#tools-data-analysis").trigger("click");
 		}
@@ -1491,8 +1499,10 @@ $(document).ready(function(){
 	})
 
 	$("#btn-size-plus").click(function(){
-		if(qr_pixel_size != 50){
+		if(qr_pixel_size != 50 && qr_pixel_size >= 10){
 			qr_pixel_size += 5;
+		} else if(qr_pixel_size < 10){
+			qr_pixel_size += 1;
 		}
 		$("#qr-size").val(qr_pixel_size+"px");
 		resize(qr_pixel_size);
@@ -1501,8 +1511,10 @@ $(document).ready(function(){
 		}
 	})
 	$("#btn-size-min").click(function(){
-		if(qr_pixel_size != 5){
+		if(qr_pixel_size > 10){
 			qr_pixel_size -= 5;
+		} else if(qr_pixel_size != 1){
+			qr_pixel_size -= 1;
 		}
 		$("#qr-size").val(qr_pixel_size+"px");
 		resize(qr_pixel_size);
@@ -1567,6 +1579,7 @@ $(document).ready(function(){
 		$("body").css("background-color","#fff");
 		$(this).addClass("active");
 		extractInfo();
+		extract_info_mode = true;
 	})
 
 	$("#btn-extract-show-rs, #btn-extract-show-error").click(function(){
@@ -1601,6 +1614,7 @@ $(document).ready(function(){
 		} else {
 			$("#box-tools-analysis").hide();
 		}
+		extract_info_mode = false;
 	})
 
 	/****************************
@@ -2204,7 +2218,9 @@ $(document).ready(function(){
 		if(document.body.clientWidth > 900){
 			$("#header-menu").css({"display":""});
 			$(".left-box").css({"left":"","display":""});
-			$(".right-box").css({"right":"","display":""});
+			if(!extract_info_mode){
+				$(".right-box").css({"right":"","display":""});
+			}
 			$(".float-nav, .menu-bar").removeClass("active");
 		}
 	})
