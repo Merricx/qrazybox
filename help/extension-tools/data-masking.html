@@ -37,22 +37,15 @@
 
 	<div class="help">
 		<div class="breadcrumbs noselect">
-			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Data Unmasking</h6>
+			<h6><a href="../index.html">Help</a> <span>&rsaquo;</span> <a href="index.html">Extension Tools</a> <span>&rsaquo;</span> Data Masking</h6>
 		</div>
 
-		<h2>Data Unmasking</h2>
+		<h2>Data Masking</h2>
 		<br>
-		<p><b>Data Unmasking</b> is a simple tool to unmask modules of your current work according to the mask pattern that being used. It can be used when you want to analyze QR code module by module manually.<br><br>
-		This tool is <i>toggleable</i> like <a href="brute-force-format-info-pattern.html">Brute-force Format Info Pattern</a>. Activating this tool will add new toolbox under main toolbox in Editor mode where you can manage the tool settings there.</p>
+		<p><b>Data Masking</b> is a simple tool to mask/unmask (performing XOR operation) modules of your current work according to the specified mask pattern. It can be used when you want to analyze QR code that not masked normally or when the QR code is already unmasked.<br><br>
+		Selecting this tool will open new dialog and you should select mask pattern from 0 to 7 that you want mask/unmask on your current work.
 		<center>
-			<img src="../img/data-unmasking-toolbox.png">
-		</center>
-		<p><b>1. Mask Pattern : </b> Set the mask pattern that will be used to unmask QR code (change this will affect current Format info pattern).</p>
-		<p><b>2. Mask Pattern Area : </b> Option whether to show Mask pattern area or not (the affected modules will be marked with green color).</p>
-		<p><b>3. Unmask Data : </b> Toggle between unmask/mask data of QR code.</p>
-		<br>
-		<center>
-			<img src="../img/data-unmasking-diff.png" style="width:640px;height:auto;">
+			<img src="../img/data-masking.png">
 		</center>
 		<div class="space"></div>
 		<div class="nav">

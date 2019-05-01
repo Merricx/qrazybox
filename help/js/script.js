@@ -21,7 +21,7 @@ var sidebarMenu =
 				<a href="../extension-tools/extract-qr-information.html"><li>Extract QR Information</li></a>\
 				<a href="../extension-tools/reed-solomon-decoder.html"><li>Reed-Solomon Decoder</li></a>\
 				<a href="../extension-tools/brute-force-format-info-pattern.html"><li>Brute-force Format Info Pattern</li></a>\
-				<a href="../extension-tools/data-unmasking.html"><li>Data Unmasking</li></a>\
+				<a href="../extension-tools/data-masking.html"><li>Data Masking</li></a>\
 				<a href="../extension-tools/padding-bits-recovery.html"><li>Padding Bits Recovery</li></a>\
 			</ul>\
 			<a href="../examples/index.html"><li>Examples</li></a>\
