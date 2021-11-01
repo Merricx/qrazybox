@@ -12,6 +12,49 @@
 
 var result = {message:"",error:[]};
 
+EXT_ENCODING = [
+	"ISO/IEC 8859-1 (Latin-1)",
+	"ISO/IEC 8859-1 (Latin-1)",
+	"ISO/IEC 8859-1 (Latin-1)",
+	"ISO/IEC 8859-1 (Latin-1)",
+	"ISO/IEC 8859-2 (Latin-2)",
+	"ISO/IEC 8859-3 (Latin-3)",
+	"ISO/IEC 8859-4 (Latin-4)",
+	"ISO/IEC 8859-5 (Latin/Cyrillic)",
+	"ISO/IEC 8859-6 (Latin/Arabic)",
+	"ISO/IEC 8859-7 (Latin/Greek)",
+	"ISO/IEC 8859-8 (Latin/Hebrew)",
+	"ISO/IEC 8859-9 (Latin-5)",
+	"ISO/IEC 8859-10 (Latin-6)",
+	"ISO/IEC 8859-11 (Latin/Thai)",
+	"",
+	"ISO/IEC 8859-13 (Latin-7)",
+	"ISO/IEC 8859-14 (Latin-8/Celtic)",
+	"ISO/IEC 8859-15 (Latin-9)",
+	"ISO/IEC 8859-16 (Latin-10)",
+	"",
+	"Shift JIS",
+	"Windows-1250",
+	"Windows-1251",
+	"Windows-1252",
+	"Windows-1256",
+	"UTF-16",
+	"UTF-8",
+	"US-ASCII",
+	"Big5",
+	"GB18030",
+	"EUC-KR"
+]
+
+function getExtendedEncoding(code){
+
+	if(code > EXT_ENCODING.length){
+		return EXT_ENCODING[0];
+	} else {
+		return EXT_ENCODING[code];
+	}
+}
+
 function hammingDistance(s1, s2){
 	if(s1.length != s1.length){
 		console.log("[ERROR]: inconsistent string lengths");
@@ -429,6 +472,19 @@ function recoverPaddingBits(data_array){
     		var character_count = parseInt(data_bits.substring(4,12), 2);
     		var offset = character_count*13;
     		offset += 12;
+
+		} else if(encoding_mode == "0111"){
+
+			if(data_bits.substring(4,5) == "0"){
+				offset += 12;
+			} else if(data_bits.substring(4,6) == "10"){
+				offset += 20;
+			} else if(data_bits.substring(4,7) == "110"){
+				offset += 28;
+			} else {
+				return "ERROR: Invalid ECI Assignment Number";
+			}
+			
 
     	} else if(encoding_mode == "0000"){
     		break;
@@ -917,6 +973,40 @@ function QRDecode(data){
     	} else if(mode == 0b1000){
     		//TODO: Kanji mode
     		break;
+		} else if(mode == 0b0111){
+			// ECI Mode
+			result.mode.push("ECI Mode (0111)");
+
+			if(data_bits.substring(0,1) == "0"){
+
+				temp_data += "["+data_bits.substring(0, 8)+"]";
+				special_encoding = parseInt(data_bits.substring(0,8), 2);
+				data_bits = data_bits.substring(8);
+
+				result.count.push(special_encoding);
+				result.decoded.push(getExtendedEncoding(special_encoding));
+
+			} else if(data_bits.substring(0,2) == "10"){
+
+				temp_data += "["+data_bits.substring(0, 16)+"]";
+				special_encoding = parseInt(data_bits.substring(0,16), 2);
+				data_bits = data_bits.substring(16);
+
+				result.count.push(special_encoding);
+				result.decoded.push(getExtendedEncoding(special_encoding));
+			} else if(data_bits.substring(0,3) == "110"){
+
+				temp_data += "["+data_bits.substring(0, 24)+"]";
+				special_encoding = parseInt(data_bits.substring(0,24), 2);
+				data_bits = data_bits.substring(24);
+
+				result.count.push(special_encoding);
+				result.decoded.push(getExtendedEncoding(special_encoding));
+			} else {
+				console.log("[ERROR]: Invalid ECI Assignment Number");
+				result.error.push("[ERROR]: Invalid ECI Assignment Number");
+				break;
+		}
     	} else {
     		console.log("[ERROR]: Invalid Encoding mode", mode);
     		result.error.push("Invalid Encoding mode");
@@ -1118,7 +1208,23 @@ function readDataBits(data_bits){
     		break;
     	} else if(mode == 0b1000){
     		//TODO: Kanji mode
+			console.log("Unsupported encoding: Kanji Mode");
     		break;
+		} else if(mode == 0b0111){
+			// ECI Mode
+			if(data_bits.substring(0,1) == "0"){
+				special_encoding = data_bits.substring(0,8);
+				data_bits = data_bits.substring(8);
+			} else if(data_bits.substring(0,2) == "10"){
+				special_encoding = data_bits.substring(0,16);
+				data_bits = data_bits.substring(16);
+			} else if(data_bits.substring(0,3) == "110"){
+				special_encoding = data_bits.substring(0,24);
+				data_bits = data_bits.substring(24);
+			} else {
+				console.log("[ERROR]: Invalid ECI Assignment Number");
+				break;
+			}
     	} else {
     		console.log("[ERROR]: Invalid Encoding mode");
     		break;
