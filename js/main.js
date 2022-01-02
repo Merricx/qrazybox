@@ -6,7 +6,7 @@
 ****************************************
 */
 
-var APP_VERSION = '0.3.3';
+var APP_VERSION = '0.4.0';
 
 var qr_version = 1;										//Current QR version (1-9)
 var qr_pixel_size = 10;									//Current view size of QR code (pixel per module)
@@ -32,6 +32,9 @@ var is_data_module = [];								//Store data that separate between data module a
 
 var history_array = [];									//Store history information and its qr_array data
 var active_history = -1;								//Current active history
+
+const maxSupportedSize = 100;
+const maxVersion = 50;
 
 /***
 *
@@ -571,7 +574,7 @@ function importFromImage(src, cb){
 
 		var qrArray = qRCodeMatrix.bits.bits;
 		var size = qRCodeMatrix.bits.width;
-		if(size > 53){
+		if(size > maxSupportedSize){
 			alert("QR version is unsupported");
 			return;
 		}
@@ -1462,7 +1465,7 @@ $(document).ready(function(){
 	$("#btn-version-plus").click(function(){
 		if(changed_state){
 			if(confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!")){
-				if(qr_version != 9){
+				if(qr_version != maxVersion){
 					qr_version += 1;
 					qr_size = 17+(qr_version*4);
 					$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -1470,7 +1473,7 @@ $(document).ready(function(){
 				}
 			}
 		} else {
-			if(qr_version != 9){
+			if(qr_version != maxVersion){
 				qr_version += 1;
 				qr_size = 17+(qr_version*4);
 				$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
