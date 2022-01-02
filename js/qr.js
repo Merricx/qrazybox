@@ -65,9 +65,9 @@ function generate_timing_pattern_h(t, xStart, yStart, xEnd){
 }
 
 
-let versions = [];
+let versions_size = [];
 for(let i=0;i<40;i++){
-    versions.push(
+    versions_size.push(
         [21 + i*4, 21 + i*4]
     )
 }
@@ -114,6 +114,7 @@ let alignment_lookup = [
     [6, 26, 54, 82, 110, 138, 166],
     [6, 30, 58, 86, 114, 142, 170]
 ];
+
 
 /*
     Alignment patterns are boxes sized 5x5 that are
@@ -168,10 +169,79 @@ function add_alignment_patterns(t, index){
     console.log(alignment_locs);
 }
 
+// from table.js  version_information_table ( left most bit is still position 17 )
+var version_information_table_bit = [
+	[0,0,0,1,1,1,1,1,0,0,1,0,0,1,0,1,0,0],			//7
+	[0,0,1,0,0,0,0,1,0,1,1,0,1,1,1,1,0,0],			//8	
+	[0,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,1],			//9
+	[0,0,1,0,1,0,0,1,0,0,1,1,0,1,0,0,1,1],         //10
+	[0,0,1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0],         //11
+	[0,0,1,1,0,0,0,1,1,1,0,1,1,0,0,0,1,0],         //12
+	[0,0,1,1,0,1,1,0,0,0,0,1,0,0,0,1,1,1],         //13
+	[0,0,1,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1],         //14
+	[0,0,1,1,1,1,1,0,0,1,0,0,1,0,1,0,0,0],         //15
+	[0,1,0,0,0,0,1,0,1,1,0,1,1,1,1,0,0,0],         //16
+	[0,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,1],         //17
+	[0,1,0,0,1,0,1,0,1,0,0,0,0,1,0,1,1,1],         //18
+	[0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,1,0],         //19
+	[0,1,0,1,0,0,1,0,0,1,1,0,1,0,0,1,1,0],         //20
+	[0,1,0,1,0,1,0,1,1,0,1,0,0,0,0,0,1,1],         //21
+	[0,1,0,1,1,0,1,0,0,0,1,1,0,0,1,0,0,1],         //22
+	[0,1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0,0],         //23
+	[0,1,1,0,0,0,1,1,1,0,1,1,0,0,0,1,0,0],         //24
+	[0,1,1,0,0,1,0,0,0,1,1,1,1,0,0,0,0,1],         //25
+	[0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1],         //26
+	[0,1,1,0,1,1,0,0,0,0,1,0,0,0,1,1,1,0],         //27
+	[0,1,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0],         //28
+	[0,1,1,1,0,1,0,0,1,1,0,0,1,1,1,1,1,1],         //29
+	[0,1,1,1,1,0,1,1,0,1,0,1,1,1,0,1,0,1],         //30
+	[0,1,1,1,1,1,0,0,1,0,0,1,0,1,0,0,0,0],         //31
+	[1,0,0,0,0,0,1,0,0,1,1,1,0,1,0,1,0,1],         //32
+	[1,0,0,0,0,1,0,1,1,0,1,1,1,1,0,0,0,0],         //33
+	[1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0,1,0],         //34
+	[1,0,0,0,1,1,0,1,1,1,1,0,0,1,1,1,1,1],         //35
+	[1,0,0,1,0,0,1,0,1,1,0,0,0,0,1,0,1,1],         //36
+	[1,0,0,1,0,1,0,1,0,0,0,0,1,0,1,1,1,0],         //37
+	[1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,1,0,0],         //38
+	[1,0,0,1,1,1,0,1,0,1,0,1,0,0,0,0,0,1],         //39
+	[1,0,1,0,0,0,1,1,0,0,0,1,1,0,1,0,0,1]		   //40
+];
+
+function add_version_info(t, version){
+
+	if (version >= 7)	{
+		for (step=0 ; step < 3 ; step++ )
+		{
+			x=0;
+			for(let i = 17 - step; i>=0 ; i -=  3){
+					// Bottom Left
+					draw_square(t,  4*version + 6 + step, x ,1, version_information_table_bit[version - 7][i]);
+					// Top Right
+					draw_square(t,  x,  4*version + 6 + step ,1, version_information_table_bit[version - 7][i]);
+
+				x++;
+
+			}
+		}
+	}
+	return t;
+}
+
+// https://www.thonky.com/qr-code-tutorial/format-version-information
+function add_dark_module(t, version){
+
+	//dark module is always (8, 4*version + 9)
+	draw_square(t,  4*version + 9, 8 ,1, BLACK_COLOR);
+
+	return t;
+}
+
+
+
 function generate_qr(version){
     console.log(`Generating ${version}`)
     let t = [];
-    let sizes = versions[version-1];
+    let sizes = versions_size[version-1];
     let x_max = sizes[0];
     let y_max = sizes[1];
 
@@ -193,5 +263,9 @@ function generate_qr(version){
 
     add_alignment_patterns(t, version-1);
 
-    return t;
+    
+	add_dark_module(t,version);
+	add_version_info(t,version);
+
+	return t;
 }
