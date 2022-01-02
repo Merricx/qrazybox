@@ -1595,6 +1595,8 @@ $(document).ready(function(){
 			decodeFromBase64(image, function(decodedData){
 				if(decodedData != "error decoding QR Code"){
 					$("#decode-message").val(decodedData);
+					//resize for text based on QR version
+					$("#decode-message").css("height", (17+4*qr_version)*3+"px");
 				}
 			});
 		}
