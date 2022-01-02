@@ -34,7 +34,7 @@ var history_array = [];									//Store history information and its qr_array dat
 var active_history = -1;								//Current active history
 
 const maxSupportedSize = 177;    // max is 177 for v40
-const maxVersion = 40;		// max is not 50, but image load does not support v40 anyway and maybe less
+const maxVersion = 40;		// max is not 50
 
 /***
 *
