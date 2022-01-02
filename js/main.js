@@ -300,17 +300,30 @@ function getInfoBits(){
 ***/
 function generateResult(){
 
-	var c = document.getElementById("qr-result");
-	var size = 17+(qr_version*4);
-	c.width = qr_pixel_size*size;
+	var	c =	document.getElementById("qr-result");
+	var	size = 17+(qr_version*4);
+	var	ctx	= c.getContext("2d");
+
+	c.width	= qr_pixel_size*size;
 	c.height = qr_pixel_size*size;
-	var ctx = c.getContext("2d");
-	ctx.fillStyle = "#000";
 	
-	for(var i=0; i < qr_array.length; i++){
-		for(var j=0; j < qr_array[i].length; j++){
-			var x = qr_pixel_size*j;
-			var y = qr_pixel_size*i;
+	// add quiet zone border and white fill
+	c.width	+= (qr_pixel_size*4) * 2;
+	c.height +=	(qr_pixel_size*4) *	2;
+	ctx.fillStyle =	"#fff";
+	ctx.fillRect(0,0,c.width,c.height);
+
+	ctx.fillStyle =	"#000";
+	
+	for(var	i=0; i < qr_array.length; i++){
+		for(var	j=0; j < qr_array[i].length; j++){
+			var	x =	qr_pixel_size*j;
+			var	y =	qr_pixel_size*i;
+			
+			//shift due to quiet zone 
+			x += qr_pixel_size*4;
+			y += qr_pixel_size*4;
+
 			if(qr_array[i][j] == 1){
 				ctx.fillStyle = "#000";
 				ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
