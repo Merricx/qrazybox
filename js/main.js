@@ -33,8 +33,8 @@ var is_data_module = [];								//Store data that separate between data module a
 var history_array = [];									//Store history information and its qr_array data
 var active_history = -1;								//Current active history
 
-const maxSupportedSize = 100;
-const maxVersion = 50;
+const maxSupportedSize = 177;    // max is 177 for v40
+const maxVersion = 40;		// max is not 50, but image load does not support v40 anyway and maybe less
 
 /***
 *
@@ -42,7 +42,15 @@ const maxVersion = 50;
 *	
 ***/
 function generateTable(version){
-	qr_array = JSON.parse(JSON.stringify(qr_templates[version-1]));
+	qr_array = JSON.parse(JSON.stringify(generate_qr(version)));
+	if (version > 9 && version <= 20){
+		qr_pixel_size = 5;
+	} else if (version > 20 && version <=35){
+		qr_pixel_size = 2;
+	} else if (version > 35 ){
+		qr_pixel_size = 1;
+	}
+	
 	changed_state = false;
 
 	var element = "";
@@ -909,6 +917,8 @@ function recoverPadding(){
 		}
 		elem += "</tr>";
 		$("#qr-dummy").append(elem);
+		resize(qr_pixel_size);
+
 	}
 
 	for(var i=0; i < result.after.length; i++){
