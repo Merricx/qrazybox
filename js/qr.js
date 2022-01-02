@@ -208,32 +208,26 @@ var version_information_table_bit = [
 ];
 
 function add_version_info(t, version){
-
-	if (version >= 7)	{
-		for (step=0 ; step < 3 ; step++ )
-		{
-			x=0;
-			for(let i = 17 - step; i>=0 ; i -=  3){
-					// Bottom Left
-					draw_square(t,  4*version + 6 + step, x ,1, version_information_table_bit[version - 7][i]);
-					// Top Right
-					draw_square(t,  x,  4*version + 6 + step ,1, version_information_table_bit[version - 7][i]);
-
-				x++;
-
-			}
-		}
-	}
-	return t;
+    if (version >= 7)	{
+        for (step=0 ; step < 3 ; step++ ){
+            x=0;
+            for(let i = 17 - step; i>=0 ; i -=  3){
+                // Bottom Left
+                draw_square(t,  4*version + 6 + step, x ,1, version_information_table_bit[version - 7][i]);
+                // Top Right
+                draw_square(t,  x,  4*version + 6 + step ,1, version_information_table_bit[version - 7][i]);
+                x++;
+            }
+        }
+    }
+    return t;
 }
 
 // https://www.thonky.com/qr-code-tutorial/format-version-information
 function add_dark_module(t, version){
-
-	//dark module is always (8, 4*version + 9)
-	draw_square(t,  4*version + 9, 8 ,1, BLACK_COLOR);
-
-	return t;
+    //dark module is always (8, 4*version + 9)
+    draw_square(t,  4*version + 9, 8 ,1, BLACK_COLOR);
+    return t;
 }
 
 
@@ -262,10 +256,8 @@ function generate_qr(version){
     generate_timing_pattern_h(t, 8, 6, x_max-9);
 
     add_alignment_patterns(t, version-1);
+    add_dark_module(t,version);
+    add_version_info(t,version);
 
-    
-	add_dark_module(t,version);
-	add_version_info(t,version);
-
-	return t;
+    return t;
 }
