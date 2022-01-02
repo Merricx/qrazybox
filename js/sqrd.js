@@ -870,6 +870,12 @@ function QRDecode(data){
 
     	if(mode == 0b0001){
     		var length_indicator = 10;
+		if ( version > 9 && version <= 26 ){
+			 length_indicator = 12;
+		} else if ( version > 26 ){
+			 length_indicator = 14;
+		}
+
     		var num = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -908,6 +914,12 @@ function QRDecode(data){
 
     	} else if(mode == 0b0010){
     		var length_indicator = 9;
+		if ( version > 9 && version <= 26 ){
+			 length_indicator = 11;
+		} else if ( version > 26 ){
+			 length_indicator = 13;
+		}
+
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -950,6 +962,10 @@ function QRDecode(data){
 
     	} else if(mode == 0b0100){
     		var length_indicator = 8;
+		if ( version > 9 ){
+			 length_indicator = 16;
+		}
+
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
