@@ -10,6 +10,8 @@ var APP_VERSION = '0.4.0';
 
 var qr_version = 1;										//Current QR version (1-9)
 var qr_pixel_size = 10;									//Current view size of QR code (pixel per module)
+var qr_pixel_size_togglesave =	10;						//Last toggle view size	of QR code (pixel per module)
+
 var qr_size = 17+(qr_version*4);						//Current size of QR code
 
 var qr_array = [];										//Main array to store QR data
@@ -380,6 +382,12 @@ function toggleResult(){
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-decode-mode").addClass("active");
 
+		//resize for decode ( minimum 2px module width needed for standard device decoding )
+		qr_pixel_size_togglesave = qr_pixel_size;
+		if (qr_pixel_size == 1 ) 	{
+			$("#btn-size-plus").trigger("click");
+		}
+
 		generateResult();
 		$("#btn-switch-mode").addClass("active");
 		$("#div-tool-work, #box-history").hide();
@@ -400,6 +408,18 @@ function toggleResult(){
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-editor-mode").addClass("active");
 
+		//restore to previous encode mode pixel size
+		if (qr_pixel_size - qr_pixel_size_togglesave >= 0){
+			for (i = qr_pixel_size - qr_pixel_size_togglesave  ; i > 0 ; i-- ){
+				$("#btn-size-min").trigger("click");
+			}
+		}
+		else {
+			for (i = qr_pixel_size_togglesave - qr_pixel_size  ; i > 0 ; i-- ){
+				$("#btn-size-plus").trigger("click");
+			}
+		}
+		
 		$("#qr-result").hide();
 		$(".qr-tab").show();	
 		$("#btn-switch-mode").removeClass("active");
