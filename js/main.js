@@ -26,6 +26,7 @@ var show_grey = true;									//Show grey modules in Decode mode
 var extract_info_mode = false;							//Is Extract QR Information active?
 var brute_force_mode = false;							//Is Brute-force Format Info active?
 var analysis_mode = false;								//Is Data Analysis tool active?
+var	masking_mode =	false;								//Is Masking active?
 
 var qr_temp_array = [];									//Temporary variable to handle qr_array duplicates
 var qr_data_block = [];									//Array to store data block in "Data Analysis tool"
@@ -1744,6 +1745,14 @@ $(document).ready(function(){
 
 		$("#data-masking-slider div.active").removeClass("active");
 		$("#data-masking-slider div[data="+current_mask+"]").addClass("active");
+
+		if($(this).hasClass("active")){
+			masking_mode =	false;
+			$(this).removeClass("active");
+		} else {
+			masking_mode =	true;
+			$(this).addClass("active");
+		}
 
 		$("#div-data-masking").show();
 		$("#div-tools").hide();
