@@ -301,43 +301,46 @@ function getInfoBits(){
 *	Load Waidotto QR text format 
 *		 https://github.com/waidotto/strong-qr-decoder
 ***/
-function loadtxt2qrarray(lines) {
+function loadTxt2Array(lines) {
     let sz = lines.length;
 
-	var is_data_module = getDataModule(lines); //getDataModule use lines.lenght only :D
+	var data = [];
 
-	for(let i=0;i<sz;i++) {		
-		for (let j=0; j<sz ; j++ )	{		
-			if ( true || is_data_module[i][j]){
-				switch ( lines[i][j] )
-				{
-					case 'X':
-					case 'x':
-					case 'O':
-					case 'o':
-					case '#':
-					case '1':
-						qr_array[i][j] = 1;
-						break;
-					
-					case '_':
-					case ' ':
-					case '0':
-						qr_array[i][j] = 0;
-						break;
-						
-					case '?':
-						qr_array[i][j] = -1 ; //grey
-						break;
+	for(let i=0;i<sz;i++) {
+		data[i] = [];
 
-					default:
-						throw "Error invalid text QR caracters"
-				}
+		for (let j=0; j<sz ; j++ )	{
+			switch ( lines[i][j] )
+			{
+				case 'X':
+				case 'x':
+				case 'O':
+				case 'o':
+				case '#':
+				case '1':
+					data[i].push(1);
+					break;
+				
+				case '_':
+				case ' ':
+				case '0':
+					data[i].push(0);
+					break;
+			
+				case '?':
+					data[i].push(-1) ; //grey
+					break;
+
+				default:
+					throw "Error invalid text QR caracters"
 			}
 		}
     }
+
+	return data;
 	
 }
+
 
 
 /***
@@ -345,7 +348,7 @@ function loadtxt2qrarray(lines) {
 *	Create text format compatible with Strong Decoder based	on qr_array	values
 *		from https://github.com/saitouena/qrazybox/commit/b64a0580be81e0d091c544abae3fff5e246dc09c
 ***/
-function dump_qr_array() {
+function dumpQRArray() {
     let sz = qr_array.length;
 	dump_qr = "";
     for(let i=0;i<sz;i++) {
@@ -412,7 +415,7 @@ function generateResult(){
 	$("#qr-result-dump").attr('cols', qr_version*4 +17 );
 	$("#qr-result-dump").css( 'font-family', 'Courier New');
 	$("#qr-result-dump").css("font-size",  "7px");
-	$("#qr-result-dump").val( dump_qr_array() );
+	$("#qr-result-dump").val( dumpQRArray() );
 
 	$("#qr-result").show();
 	$("#qr-table").hide();
@@ -1511,10 +1514,11 @@ $(document).ready(function(){
 				const lines = file.split(/\r\n|\n/);
 				$("#hidden-txt").val(lines.join('\n'));
 				$("#div-new").hide();
-				var version = (lines[0].length-17)/4;
-				generateTable( version );
-				loadtxt2qrarray(lines);
-				updateQRArray(qr_array);
+				qr_size = lines[0].length;
+				qr_version = (qr_size-17)/4;
+				generateTable( qr_version );
+				data = loadTxt2Array(lines);
+				updateQRArray(data);
 				clearHistory();
 				updateHistory("Load	from image");
 				refreshTable();
