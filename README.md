@@ -12,7 +12,8 @@ Main Features
 - Decode and read unscannable QR Code
 - Save and load existing work for later use
 - Import/export QR Code from/to Image file
-- Currently support up to QR Code Version 9 (53x53)
+- Export QR code to Text file
+- Currently support up to QR Code Version 40 (177x177)
 - Support both Error and Erasure Correction using universal Reed-Solomon decoder
 - Extract valuable information although from badly damaged QR Code
 - Simulate data unmasking for manual data analysis
