@@ -305,7 +305,7 @@ function dump_qr_array() {
     let sz = qr_array.length;
 	dump_qr = "";
     for(let i=0;i<sz;i++) {
-		let line = qr_array[i].map(x => x===1 ? 'X' : '_').join('');
+		let line = qr_array[i].map(x => ( x===1 ? '#' : ( x===0 ? '_' : ( show_grey ?  '?' : '_' ) ) ) ).join('');
 		console.log(line);
 		dump_qr += line + "\n"
     }
