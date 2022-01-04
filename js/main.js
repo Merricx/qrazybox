@@ -298,6 +298,50 @@ function getInfoBits(){
 
 /***
 *
+*	Load Waidotto QR text format 
+*		 https://github.com/waidotto/strong-qr-decoder
+***/
+function loadtxt2qrarray(lines) {
+    let sz = lines.length;
+
+	var is_data_module = getDataModule(lines); //getDataModule use lines.lenght only :D
+
+	for(let i=0;i<sz;i++) {		
+		for (let j=0; j<sz ; j++ )	{		
+			if ( true || is_data_module[i][j]){
+				switch ( lines[i][j] )
+				{
+					case 'X':
+					case 'x':
+					case 'O':
+					case 'o':
+					case '#':
+					case '1':
+						qr_array[i][j] = 1;
+						break;
+					
+					case '_':
+					case ' ':
+					case '0':
+						qr_array[i][j] = 0;
+						break;
+						
+					case '?':
+						qr_array[i][j] = -1 ; //grey
+						break;
+
+					default:
+						throw "Error invalid text QR caracters"
+				}
+			}
+		}
+    }
+	
+}
+
+
+/***
+*
 *	Create text format compatible with Strong Decoder based	on qr_array	values
 *		from https://github.com/saitouena/qrazybox/commit/b64a0580be81e0d091c544abae3fff5e246dc09c
 ***/
@@ -1449,6 +1493,35 @@ $(document).ready(function(){
 				})
 			}
 			reader.readAsDataURL(this.files[0]);
+		}
+	})
+
+	$("#new-btn-import-txt").click(function(){
+		$("#import-txt").click();
+		return false;
+	})
+
+	$("#import-txt").change(function(){
+		if(this.files && this.files[0]){
+			var	reader = new FileReader();
+
+			reader.onload = function (e) {
+		        const file = e.target.result;
+  
+				const lines = file.split(/\r\n|\n/);
+				$("#hidden-txt").val(lines.join('\n'));
+				$("#div-new").hide();
+				var version = (lines[0].length-17)/4;
+				generateTable( version );
+				loadtxt2qrarray(lines);
+				updateQRArray(qr_array);
+				clearHistory();
+				updateHistory("Load	from image");
+				refreshTable();
+				changed_state =	true;
+
+			};
+			reader.readAsText(this.files[0]);
 		}
 	})
 
