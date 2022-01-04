@@ -298,12 +298,30 @@ function getInfoBits(){
 
 /***
 *
+*	Create text format compatible with Strong Decoder based	on qr_array	values
+*		from https://github.com/saitouena/qrazybox/commit/b64a0580be81e0d091c544abae3fff5e246dc09c
+***/
+function dump_qr_array() {
+    let sz = qr_array.length;
+	dump_qr = "";
+    for(let i=0;i<sz;i++) {
+		let line = qr_array[i].map(x => x===1 ? 'X' : '_').join('');
+		console.log(line);
+		dump_qr += line + "\n"
+    }
+	
+	return dump_qr;
+
+}
+
+/***
+*
 *	generate QR code made from canvas based on qr_array values
 *	
 ***/
 function generateResult(){
 
-	var	c =	document.getElementById("qr-result");
+	var	c =	document.getElementById("qr-result-canvas");
 	var	size = 17+(qr_version*4);
 	var	ctx	= c.getContext("2d");
 
@@ -345,7 +363,13 @@ function generateResult(){
 			}
 		}
 	}
-	
+
+	$("#qr-result-dump").attr('rows', qr_version*4 +17 );
+	$("#qr-result-dump").attr('cols', qr_version*4 +17 );
+	$("#qr-result-dump").css( 'font-family', 'Courier New');
+	$("#qr-result-dump").css("font-size",  "7px");
+	$("#qr-result-dump").val( dump_qr_array() );
+
 	$("#qr-result").show();
 	$("#qr-table").hide();
 	$("#qr-overlay").hide();
@@ -857,7 +881,7 @@ function bruteForceFormatInfo(){
 			qr_format_array = format_information_bits[i][j].split("").reverse();
 			saveInfoTable(qr_size);
 			generateResult();
-			var image = document.getElementById("qr-result").toDataURL();
+			var image = document.getElementById("qr-result-canvas").toDataURL();
 			if(i == 3 && j == 7){
 				decodeFromBase64(image, function(data){
 					brute_result.push(data);
@@ -1590,7 +1614,7 @@ $(document).ready(function(){
 			$("#div-brute-force-loader").show();
 			bruteForceFormatInfo();
 		} else {
-			var image = document.getElementById("qr-result").toDataURL();
+			var image = document.getElementById("qr-result-canvas").toDataURL();
 			$("#decode-message").val("");
 			$("#div-decode").show();
 			decodeFromBase64(image, function(decodedData){
