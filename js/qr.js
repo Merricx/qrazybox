@@ -132,9 +132,9 @@ function add_version_info(t, version){
             x=0;
             for(let i = 17 - step; i>=0 ; i -=  3){
                 // Bottom Left
-                draw_square(t,  4*version + 6 + step, x ,1, version_information_table[version - 7].toString().split("")[i]);
+                draw_square(t,  4*version + 6 + step, x ,1, BLACK_COLOR * parseInt(version_information_table[version - 7].toString().split("")[i]));
                 // Top Right
-                draw_square(t,  x,  4*version + 6 + step ,1, version_information_table[version - 7].toString().split("")[i]);
+                draw_square(t,  x,  4*version + 6 + step ,1, BLACK_COLOR * parseInt(version_information_table[version - 7].toString().split("")[i]));
 
                 x++;
             }
