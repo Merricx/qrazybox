@@ -985,19 +985,17 @@ function showMaskPatternArea(){
 	resize(qr_pixel_size);
 }
 
-function recoverPadding(){
-	var data_array = JSON.stringify(qr_array);
-	var result =  recoverPaddingBits(JSON.parse(data_array));
-	var warning = false;
+function patchingRecovery(result){
+	var	warning	= 0;
 
 	$("#qr-dummy").html("");
-	$("#div-pad-rec-warning, #div-pad-rec-error").hide();
-	$("#div-pad-rec-data, #btn-pad-rec-apply").show()
+	$("#div-patch-rec-warning, #div-patch-rec-error").hide();
+	$("#div-patch-rec-data, #btn-patch-rec-apply").show()
 
 	if(typeof result == "string"){
-		$("#div-pad-rec-error").show();
-		$("#div-pad-rec-error textarea").val(result);
-		$("#div-pad-rec-warning, #div-pad-rec-data, #btn-pad-rec-apply").hide();
+		$("#div-patch-rec-error").show();
+		$("#div-patch-rec-error textarea").val(result);
+		$("#div-patch-rec-warning, #div-patch-rec-data,	#btn-patch-rec-apply").hide();
 		return;
 	}
 
@@ -1029,22 +1027,22 @@ function recoverPadding(){
 	for(var i=0; i < result.after.length; i++){
 		if(result.before.charAt(i) != "?"){
 			if(result.after.charAt(i) != result.before.charAt(i)){
-				warning = true;
-				break;
+				warning++;
 			}
 		}
 	}
 
 	if(warning){
-		$("#div-pad-rec-warning").show();
-		$("#div-pad-rec-warning textarea").val("There's one or more modules conflict with the already known module of original QR code. Correction may fail.")
+		$("#div-patch-rec-warning").show();
+		$("#div-patch-rec-warning textarea").val("There's are " + warning +" modules conflict with the already known module of original QR code. Correction may fail.")
 	}
 
-	$("#pad-rec-before").val(result.before);
-	$("#pad-rec-after").val(result.after);
+	$("#patch-rec-before").val(result.before);
+	$("#patch-rec-after").val(result.after);
 
 	qr_temp_array = Array.prototype.slice.call(result.result_array);
 }
+
 
 /***
 *
@@ -1900,21 +1898,23 @@ $(document).ready(function(){
 	****************************/
 
 	$("#tools-pad-recovery").click(function(){
-		recoverPadding();
-		$("#div-padding-recovery").show();
+		patchingRecovery(recoverPaddingBits(JSON.parse(JSON.stringify(qr_array))));
+		$("#div-patching-recovery-title").val("Padding Bits Recovery");
+		$("#div-patching-recovery").show();
+
 		$("#div-tools").hide();
 	})
 
-	$("#btn-pad-rec-apply").click(function(){
+	$("#btn-patching-rec-apply").click(function(){
 		qr_array = JSON.parse(JSON.stringify(qr_temp_array));
 		refreshTable();
 		updateHistory("Padding bits recovery");
-		$("#div-padding-recovery").hide();
+		$("#div-patching-recovery").hide();
 		changed_state = true;
 	})
 
-	$("#btn-pad-rec-cancel").click(function(){
-		$("#div-padding-recovery").hide();
+	$("#btn-patching-rec-cancel").click(function(){
+		$("#div-patching-recovery").hide();
 	})
 
 	/****************************
