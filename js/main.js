@@ -1899,7 +1899,7 @@ $(document).ready(function(){
 
 	$("#tools-pad-recovery").click(function(){
 		patchingRecovery(recoverPaddingBits(JSON.parse(JSON.stringify(qr_array))));
-		$("#div-patching-recovery-title").val("Padding Bits Recovery");
+		$("#div-patching-recovery-title").text("Padding Bits Recovery");
 		$("#div-patching-recovery").show();
 
 		$("#div-tools").hide();
