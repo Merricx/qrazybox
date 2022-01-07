@@ -1908,7 +1908,7 @@ $(document).ready(function(){
 	$("#btn-patching-rec-apply").click(function(){
 		qr_array = JSON.parse(JSON.stringify(qr_temp_array));
 		refreshTable();
-		updateHistory("Padding bits recovery");
+		updateHistory( $("#div-patching-recovery-title").val() );
 		$("#div-patching-recovery").hide();
 		changed_state = true;
 	})
