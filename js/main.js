@@ -1908,7 +1908,7 @@ $(document).ready(function(){
 	$("#btn-patch-rec-apply").click(function(){
 		qr_array = JSON.parse(JSON.stringify(qr_temp_array));
 		refreshTable();
-		updateHistory( $("#div-patching-recovery-title").val() );
+		updateHistory( $("#div-patching-recovery-title").text() );
 		$("#div-patching-recovery").hide();
 		changed_state = true;
 	})
