@@ -1845,14 +1845,6 @@ $(document).ready(function(){
 		$("#data-masking-slider div.active").removeClass("active");
 		$("#data-masking-slider div[data="+current_mask+"]").addClass("active");
 
-		if($(this).hasClass("active")){
-			masking_mode =	false;
-			$(this).removeClass("active");
-		} else {
-			masking_mode =	true;
-			$(this).addClass("active");
-		}
-
 		$("#div-data-masking").show();
 		$("#div-tools").hide();
 	})
@@ -1880,6 +1872,16 @@ $(document).ready(function(){
 
 		maskDataBits();
 		$("#div-data-masking").hide();
+
+		//masking toogle visual
+		if($("#tools-masking").hasClass("active")){
+			masking_mode =	false;
+			$("#tools-masking").removeClass("active");
+		} else {
+			masking_mode =	true;
+			$("#tools-masking").addClass("active");
+		}
+
 	})
 
 	$("#btn-mask-show-pattern-area").click(function(){
