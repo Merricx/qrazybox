@@ -176,7 +176,11 @@
 		<div class="qr-box">
 		<table id="qr-table" class="qr-tab"></table>
 		<table id="qr-overlay" class="qr-tab"></table>
-		<canvas id="qr-result" class="hide"></canvas>
+			<div id="qr-result" class="hide">
+				<canvas id="qr-result-canvas"></canvas>
+				<p>
+				<textarea id="qr-result-dump" readonly></textarea>
+			</div>
 		</div>
 		<div id="div-extract" class="div-extract hide">
 			
@@ -206,10 +210,13 @@
 		<div class="space"></div>
 		<button id="new-btn-new" class="big">New blank QR code</button>
 		<button id="new-btn-import-img" class="big">Import from Image</button>
+		<button id="new-btn-import-txt" class="big">Import from Text</button>
 		<div class="clear"></div>
 		<input type="file" class="invisible" id="import-img">
+		<input type="file" class="invisible" id="import-txt">
 		<canvas id="hidden-canvas" class="hide"></canvas>
 		<img src="#" id="hidden-img" class="hide">
+		<textarea id="hidden-txt" class="hide"></textarea>
 		<div class="clear"></div>
 		<div class="space small"></div>
 		<label for="import-img" class="hide"></label>
@@ -505,40 +512,40 @@
 	</div>
 	<!-- END DATA MASKING OVERLAY -->
 
-	<!-- START PADDING BITS RECOVERY OVERLAY -->
-	<div class="overlay hide" id="div-padding-recovery">
+	<!-- START PATCHING BITS RECOVERY OVERLAY -->
+	<div class="overlay hide" id="div-patching-recovery">
 		<center>
 			<div class="box large">
-				<h3>Padding Bits Recovery</h3>
+				<h3 id="div-patching-recovery-title"></h3>
 				<div class="space"></div>
 				<div class="preview-box left">
 					<table id="qr-dummy" class="qr-tab"></table>
 				</div>
 				<div class="left">
-					<div id="div-pad-rec-error" class="hide">
+					<div id="div-patch-rec-error" class="hide">
 						<h5 class="left">Error : </h5>
 						<textarea spellcheck="false" readonly style="width:100%;"></textarea>
 					</div>
-					<div id="div-pad-rec-data">
+					<div id="div-patch-rec-data">
 						<h5>Bits before recovery : </h5>
-						<textarea spellcheck="false" id="pad-rec-before" readonly style="width:100%;"></textarea>
+						<textarea spellcheck="false" id="patch-rec-before" readonly style="width:100%;"></textarea>
 						<h5>Bits after recovery : </h5>
-						<textarea spellcheck="false" id="pad-rec-after" readonly style="width:100%;"></textarea>
+						<textarea spellcheck="false" id="patch-rec-after" readonly style="width:100%;"></textarea>
 					</div>
-					<div id="div-pad-rec-warning" class="hide">
+					<div id="div-patch-rec-warning" class="hide">
 						<h5 class="left">Warning : </h5>
 						<textarea spellcheck="false" readonly style="width:100%;"></textarea>
 					</div>
 					<h6><i>Note : Recovered modules are marked with green color</i></h6>
 					<div class="space"></div>
-					<button id="btn-pad-rec-apply">Apply</button>
-					<button id="btn-pad-rec-cancel">Cancel</button>
+					<button id="btn-patch-rec-apply">Apply</button>
+					<button id="btn-patch-rec-cancel">Cancel</button>
 				</div>
 				<div class="clear"></div>
 			</div>
 		</center>
 	</div>
-	<!-- END PADDING BITS RECOVERY OVERLAY -->
+	<!-- END PATCHING BITS RECOVERY OVERLAY -->
 
 	<!-- START WARNING OVERLAY -->
 	<div class="warning hide">
@@ -553,6 +560,7 @@
 <script type="text/javascript" src="js/table.js"></script>
 <script type="text/javascript" src="js/sqrd.js"></script>
 <script type="text/javascript" src="js/reedsolomon.js"></script>
+<script type="text/javascript" src="js/qr.js"></script>
 <script type="text/javascript" src="js/jsqrcode/grid.js"></script>
 <script type="text/javascript" src="js/jsqrcode/version.js"></script>
 <script type="text/javascript" src="js/jsqrcode/detector.js"></script>

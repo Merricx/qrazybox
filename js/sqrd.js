@@ -429,10 +429,17 @@ function recoverPaddingBits(data_array){
     	var encoding_mode = data_bits.substring(0,4);
 
     	if(encoding_mode == "0001"){
-    		if(data_bits.substring(4,14).search(/\?/g) != -1)
+    		var length_indicator = 10;
+			if ( version > 9 && version <= 26 ){
+				 length_indicator = 12;
+			} else if ( version > 26 ){
+				 length_indicator = 14;
+			}
+		
+    		if(data_bits.substring(4,4+length_indicator).search(/\?/g) != -1)
     			return "ERROR: Unknown Character Count Indicator";
 
-    		var character_count = parseInt(data_bits.substring(4,14), 2);
+    		var character_count = parseInt(data_bits.substring(4,4+length_indicator), 2);
     		if(character_count % 3 == 0){
     			var offset = (character_count/3)*10;
     		} else if(character_count % 3 == 1) {
@@ -442,28 +449,38 @@ function recoverPaddingBits(data_array){
     			var offset = ((character_count-1)/3)*10;
     			offset += 4;
     		}
-    		offset += 14;
+    		offset += 4+length_indicator;
 
     	} else if(encoding_mode == "0010"){
-    		if(data_bits.substring(4,13).search(/\?/g) != -1)
+     		var length_indicator = 9;
+			if ( version > 9 && version <= 26 ){
+				 length_indicator = 11;
+			} else if ( version > 26 ){
+				 length_indicator = 13;
+			}
+    		if(data_bits.substring(4,4+length_indicator).search(/\?/g) != -1)
     			return "ERROR: Unknown Character Count Indicator";
 
-	    	var character_count = parseInt(data_bits.substring(4,13), 2);
+	    	var character_count = parseInt(data_bits.substring(4,4+length_indicator), 2);
     		if(character_count % 2 == 0){
     			var offset = (character_count/2)*11;
     		} else {
     			var offset = ((character_count-1)/2)*11;
     			offset += 6;
     		}
-    		offset += 13;
+    		offset += 4+length_indicator;
 
 	    } else if(encoding_mode == "0100"){
-    		if(data_bits.substring(4,12).search(/\?/g) != -1)
+     		var length_indicator = 8;
+			if ( version > 9 ){
+				 length_indicator = 16;
+			}
+			if(data_bits.substring(4,4+length_indicator).search(/\?/g) != -1)
     			return "ERROR: Unknown Character Count Indicator";
 
-	    	var character_count = parseInt(data_bits.substring(4,12), 2);
+	    	var character_count = parseInt(data_bits.substring(4,4+length_indicator), 2);
     		var offset = character_count*8;
-    		offset += 12;
+    		offset += 4+length_indicator;
 
     	} else if(encoding_mode == "1000"){
     		if(data_bits.substring(4,12).search(/\?/g) != -1)
@@ -870,6 +887,12 @@ function QRDecode(data){
 
     	if(mode == 0b0001){
     		var length_indicator = 10;
+		if ( version > 9 && version <= 26 ){
+			 length_indicator = 12;
+		} else if ( version > 26 ){
+			 length_indicator = 14;
+		}
+
     		var num = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -908,6 +931,12 @@ function QRDecode(data){
 
     	} else if(mode == 0b0010){
     		var length_indicator = 9;
+		if ( version > 9 && version <= 26 ){
+			 length_indicator = 11;
+		} else if ( version > 26 ){
+			 length_indicator = 13;
+		}
+
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -950,6 +979,10 @@ function QRDecode(data){
 
     	} else if(mode == 0b0100){
     		var length_indicator = 8;
+		if ( version > 9 ){
+			 length_indicator = 16;
+		}
+
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -1117,6 +1150,12 @@ function readDataBits(data_bits){
 
     	if(mode == 0b0001){
     		var length_indicator = 10;
+		if ( qr_version > 9 && qr_version <= 26 ){
+			 length_indicator = 12;
+		} else if ( qr_version > 26 ){
+			 length_indicator = 14;
+		}
+
     		var num = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -1152,6 +1191,12 @@ function readDataBits(data_bits){
 
     	} else if(mode == 0b0010){
     		var length_indicator = 9;
+		if ( qr_version > 9 && qr_version <= 26 ){
+			 length_indicator = 11;
+		} else if ( qr_version > 26 ){
+			 length_indicator = 13;
+		}
+
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";
@@ -1190,6 +1235,10 @@ function readDataBits(data_bits){
 
     	} else if(mode == 0b0100){
     		var length_indicator = 8;
+		if ( qr_version > 9 ){
+			 length_indicator = 16;
+		}
+		
     		var current_data = "";
     		length = parseInt(data_bits.substring(0, length_indicator), 2);
     		temp_data += "["+data_bits.substring(0, length_indicator)+"] [";

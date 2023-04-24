@@ -6,10 +6,12 @@
 ****************************************
 */
 
-var APP_VERSION = '0.3.3';
+var APP_VERSION = '0.4.0';
 
 var qr_version = 1;										//Current QR version (1-9)
 var qr_pixel_size = 10;									//Current view size of QR code (pixel per module)
+var qr_pixel_size_togglesave =	10;						//Last toggle view size	of QR code (pixel per module)
+
 var qr_size = 17+(qr_version*4);						//Current size of QR code
 
 var qr_array = [];										//Main array to store QR data
@@ -24,6 +26,7 @@ var show_grey = true;									//Show grey modules in Decode mode
 var extract_info_mode = false;							//Is Extract QR Information active?
 var brute_force_mode = false;							//Is Brute-force Format Info active?
 var analysis_mode = false;								//Is Data Analysis tool active?
+var	masking_mode =	false;								//Is Masking active?
 
 var qr_temp_array = [];									//Temporary variable to handle qr_array duplicates
 var qr_data_block = [];									//Array to store data block in "Data Analysis tool"
@@ -33,13 +36,24 @@ var is_data_module = [];								//Store data that separate between data module a
 var history_array = [];									//Store history information and its qr_array data
 var active_history = -1;								//Current active history
 
+const maxSupportedSize = 177;    // max is 177 for v40
+const maxVersion = 40;		// max is not 50
+
 /***
 *
 *	generate QR table based on qr_array
 *	
 ***/
 function generateTable(version){
-	qr_array = JSON.parse(JSON.stringify(qr_templates[version-1]));
+	qr_array = JSON.parse(JSON.stringify(generate_qr(version)));
+	if (version > 9 && version <= 20){
+		qr_pixel_size = 5;
+	} else if (version > 20 && version <=35){
+		qr_pixel_size = 2;
+	} else if (version > 35 ){
+		qr_pixel_size = 1;
+	}
+	
 	changed_state = false;
 
 	var element = "";
@@ -284,22 +298,100 @@ function getInfoBits(){
 
 /***
 *
+*	Load Waidotto QR text format 
+*		 https://github.com/waidotto/strong-qr-decoder
+***/
+function loadTxt2Array(lines) {
+    let sz = lines.length;
+
+	var data = [];
+
+	for(let i=0;i<sz;i++) {
+		data[i] = [];
+
+		for (let j=0; j<sz ; j++ )	{
+			switch ( lines[i][j] )
+			{
+				case 'X':
+				case 'x':
+				case 'O':
+				case 'o':
+				case '#':
+				case '1':
+					data[i].push(1);
+					break;
+				
+				case '_':
+				case ' ':
+				case '0':
+					data[i].push(0);
+					break;
+			
+				case '?':
+					data[i].push(-1) ; //grey
+					break;
+
+				default:
+					throw "Error invalid text QR caracters"
+			}
+		}
+    }
+
+	return data;
+	
+}
+
+
+
+/***
+*
+*	Create text format compatible with Strong Decoder based	on qr_array	values
+*		from https://github.com/saitouena/qrazybox/commit/b64a0580be81e0d091c544abae3fff5e246dc09c
+***/
+function dumpQRArray() {
+    let sz = qr_array.length;
+	dump_qr = "";
+    for(let i=0;i<sz;i++) {
+		let line = qr_array[i].map(x => ( x===1 ? '#' : ( x===0 ? '_' : ( show_grey ?  '?' : '_' ) ) ) ).join('');
+		console.log(line);
+		dump_qr += line + "\n"
+    }
+	
+	return dump_qr;
+
+}
+
+/***
+*
 *	generate QR code made from canvas based on qr_array values
 *	
 ***/
 function generateResult(){
 
-	var c = document.getElementById("qr-result");
-	var size = 17+(qr_version*4);
-	c.width = qr_pixel_size*size;
+	var	c =	document.getElementById("qr-result-canvas");
+	var	size = 17+(qr_version*4);
+	var	ctx	= c.getContext("2d");
+
+	c.width	= qr_pixel_size*size;
 	c.height = qr_pixel_size*size;
-	var ctx = c.getContext("2d");
-	ctx.fillStyle = "#000";
 	
-	for(var i=0; i < qr_array.length; i++){
-		for(var j=0; j < qr_array[i].length; j++){
-			var x = qr_pixel_size*j;
-			var y = qr_pixel_size*i;
+	// add quiet zone border and white fill
+	c.width	+= (qr_pixel_size*4) * 2;
+	c.height +=	(qr_pixel_size*4) *	2;
+	ctx.fillStyle =	"#fff";
+	ctx.fillRect(0,0,c.width,c.height);
+
+	ctx.fillStyle =	"#000";
+	
+	for(var	i=0; i < qr_array.length; i++){
+		for(var	j=0; j < qr_array[i].length; j++){
+			var	x =	qr_pixel_size*j;
+			var	y =	qr_pixel_size*i;
+			
+			//shift due to quiet zone 
+			x += qr_pixel_size*4;
+			y += qr_pixel_size*4;
+
 			if(qr_array[i][j] == 1){
 				ctx.fillStyle = "#000";
 				ctx.fillRect(x,y,qr_pixel_size,qr_pixel_size);
@@ -318,7 +410,13 @@ function generateResult(){
 			}
 		}
 	}
-	
+
+	$("#qr-result-dump").attr('rows', qr_version*4 +17 );
+	$("#qr-result-dump").attr('cols', qr_version*4 +17 );
+	$("#qr-result-dump").css( 'font-family', 'Courier New');
+	$("#qr-result-dump").css("font-size",  "7px");
+	$("#qr-result-dump").val( dumpQRArray() );
+
 	$("#qr-result").show();
 	$("#qr-table").hide();
 	$("#qr-overlay").hide();
@@ -356,6 +454,12 @@ function toggleResult(){
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-decode-mode").addClass("active");
 
+		//resize for decode ( minimum 2px module width needed for standard device decoding )
+		qr_pixel_size_togglesave = qr_pixel_size;
+		if (qr_pixel_size == 1 ) 	{
+			$("#btn-size-plus").trigger("click");
+		}
+
 		generateResult();
 		$("#btn-switch-mode").addClass("active");
 		$("#div-tool-work, #box-history").hide();
@@ -376,6 +480,18 @@ function toggleResult(){
 		$(".mode-indicator button").removeClass("active");
 		$("#mobile-editor-mode").addClass("active");
 
+		//restore to previous encode mode pixel size
+		if (qr_pixel_size - qr_pixel_size_togglesave >= 0){
+			for (i = qr_pixel_size - qr_pixel_size_togglesave  ; i > 0 ; i-- ){
+				$("#btn-size-min").trigger("click");
+			}
+		}
+		else {
+			for (i = qr_pixel_size_togglesave - qr_pixel_size  ; i > 0 ; i-- ){
+				$("#btn-size-plus").trigger("click");
+			}
+		}
+		
 		$("#qr-result").hide();
 		$(".qr-tab").show();	
 		$("#btn-switch-mode").removeClass("active");
@@ -571,7 +687,7 @@ function importFromImage(src, cb){
 
 		var qrArray = qRCodeMatrix.bits.bits;
 		var size = qRCodeMatrix.bits.width;
-		if(size > 53){
+		if(size > maxSupportedSize){
 			alert("QR version is unsupported");
 			return;
 		}
@@ -812,7 +928,7 @@ function bruteForceFormatInfo(){
 			qr_format_array = format_information_bits[i][j].split("").reverse();
 			saveInfoTable(qr_size);
 			generateResult();
-			var image = document.getElementById("qr-result").toDataURL();
+			var image = document.getElementById("qr-result-canvas").toDataURL();
 			if(i == 3 && j == 7){
 				decodeFromBase64(image, function(data){
 					brute_result.push(data);
@@ -869,19 +985,17 @@ function showMaskPatternArea(){
 	resize(qr_pixel_size);
 }
 
-function recoverPadding(){
-	var data_array = JSON.stringify(qr_array);
-	var result =  recoverPaddingBits(JSON.parse(data_array));
-	var warning = false;
+function patchingRecovery(result){
+	var	warning	= 0;
 
 	$("#qr-dummy").html("");
-	$("#div-pad-rec-warning, #div-pad-rec-error").hide();
-	$("#div-pad-rec-data, #btn-pad-rec-apply").show()
+	$("#div-patch-rec-warning, #div-patch-rec-error").hide();
+	$("#div-patch-rec-data, #btn-patch-rec-apply").show()
 
 	if(typeof result == "string"){
-		$("#div-pad-rec-error").show();
-		$("#div-pad-rec-error textarea").val(result);
-		$("#div-pad-rec-warning, #div-pad-rec-data, #btn-pad-rec-apply").hide();
+		$("#div-patch-rec-error").show();
+		$("#div-patch-rec-error textarea").val(result);
+		$("#div-patch-rec-warning, #div-patch-rec-data,	#btn-patch-rec-apply").hide();
 		return;
 	}
 
@@ -906,27 +1020,29 @@ function recoverPadding(){
 		}
 		elem += "</tr>";
 		$("#qr-dummy").append(elem);
+		resize(qr_pixel_size);
+
 	}
 
 	for(var i=0; i < result.after.length; i++){
 		if(result.before.charAt(i) != "?"){
 			if(result.after.charAt(i) != result.before.charAt(i)){
-				warning = true;
-				break;
+				warning++;
 			}
 		}
 	}
 
 	if(warning){
-		$("#div-pad-rec-warning").show();
-		$("#div-pad-rec-warning textarea").val("There's one or more modules conflict with the already known module of original QR code. Correction may fail.")
+		$("#div-patch-rec-warning").show();
+		$("#div-patch-rec-warning textarea").val("There's are " + warning +" modules conflict with the already known module of original QR code. Correction may fail.")
 	}
 
-	$("#pad-rec-before").val(result.before);
-	$("#pad-rec-after").val(result.after);
+	$("#patch-rec-before").val(result.before);
+	$("#patch-rec-after").val(result.after);
 
 	qr_temp_array = Array.prototype.slice.call(result.result_array);
 }
+
 
 /***
 *
@@ -1381,6 +1497,36 @@ $(document).ready(function(){
 		}
 	})
 
+	$("#new-btn-import-txt").click(function(){
+		$("#import-txt").click();
+		return false;
+	})
+
+	$("#import-txt").change(function(){
+		if(this.files && this.files[0]){
+			var	reader = new FileReader();
+
+			reader.onload = function (e) {
+		        const file = e.target.result;
+  
+				const lines = file.split(/\r\n|\n/);
+				$("#hidden-txt").val(lines.join('\n'));
+				$("#div-new").hide();
+				qr_size = lines[0].length;
+				qr_version = (qr_size-17)/4;
+				generateTable( qr_version );
+				data = loadTxt2Array(lines);
+				updateQRArray(data);
+				clearHistory();
+				updateHistory("Load	from image");
+				refreshTable();
+				changed_state =	true;
+
+			};
+			reader.readAsText(this.files[0]);
+		}
+	})
+
 	$("#menu-new").click(function(){
 		if(changed_state){
 			if(!confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!"))
@@ -1462,7 +1608,7 @@ $(document).ready(function(){
 	$("#btn-version-plus").click(function(){
 		if(changed_state){
 			if(confirm("Are you sure want to proceed?\nYour unsaved progress will be lost!")){
-				if(qr_version != 9){
+				if(qr_version != maxVersion){
 					qr_version += 1;
 					qr_size = 17+(qr_version*4);
 					$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -1470,7 +1616,7 @@ $(document).ready(function(){
 				}
 			}
 		} else {
-			if(qr_version != 9){
+			if(qr_version != maxVersion){
 				qr_version += 1;
 				qr_size = 17+(qr_version*4);
 				$("#qr-version").val(qr_size+"x"+qr_size+" (ver. "+qr_version+")");
@@ -1543,12 +1689,14 @@ $(document).ready(function(){
 			$("#div-brute-force-loader").show();
 			bruteForceFormatInfo();
 		} else {
-			var image = document.getElementById("qr-result").toDataURL();
+			var image = document.getElementById("qr-result-canvas").toDataURL();
 			$("#decode-message").val("");
 			$("#div-decode").show();
 			decodeFromBase64(image, function(decodedData){
 				if(decodedData != "error decoding QR Code"){
 					$("#decode-message").val(decodedData);
+					//resize for text based on QR version
+					$("#decode-message").css("height", (17+4*qr_version)*3+"px");
 				}
 			});
 		}
@@ -1724,6 +1872,16 @@ $(document).ready(function(){
 
 		maskDataBits();
 		$("#div-data-masking").hide();
+
+		//masking toogle visual
+		if($("#tools-masking").hasClass("active")){
+			masking_mode =	false;
+			$("#tools-masking").removeClass("active");
+		} else {
+			masking_mode =	true;
+			$("#tools-masking").addClass("active");
+		}
+
 	})
 
 	$("#btn-mask-show-pattern-area").click(function(){
@@ -1742,21 +1900,23 @@ $(document).ready(function(){
 	****************************/
 
 	$("#tools-pad-recovery").click(function(){
-		recoverPadding();
-		$("#div-padding-recovery").show();
+		patchingRecovery(recoverPaddingBits(JSON.parse(JSON.stringify(qr_array))));
+		$("#div-patching-recovery-title").text("Padding Bits Recovery");
+		$("#div-patching-recovery").show();
+
 		$("#div-tools").hide();
 	})
 
-	$("#btn-pad-rec-apply").click(function(){
+	$("#btn-patch-rec-apply").click(function(){
 		qr_array = JSON.parse(JSON.stringify(qr_temp_array));
 		refreshTable();
-		updateHistory("Padding bits recovery");
-		$("#div-padding-recovery").hide();
+		updateHistory( $("#div-patching-recovery-title").text() );
+		$("#div-patching-recovery").hide();
 		changed_state = true;
 	})
 
-	$("#btn-pad-rec-cancel").click(function(){
-		$("#div-padding-recovery").hide();
+	$("#btn-patch-rec-cancel").click(function(){
+		$("#div-patching-recovery").hide();
 	})
 
 	/****************************
