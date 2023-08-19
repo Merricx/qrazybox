@@ -308,15 +308,16 @@ function sanitizeQrTxt(lines) {
 		if(lines[i].length !== 0) {
 			linesOut.push(lines[i]);
 		}
-		else {
-			if(i+1 === lines.length) {
-				return linesOut;
-			}
-			else {
-				throw "Unexpected empty line file."
-			}
+		else if(i+1 !== lines.length) {
+			throw "Unexpected empty line file."
 		}
 	}
+	for(let i=0;i<linesOut.length;i++) {
+		if(linesOut[i].length !== linesOut.length) {
+			throw `QR line: ${i} width:${linesOut[i].length} does not match QR size: ${linesOut.length}`
+		}
+	}
+	return linesOut;
 }
 
 /***
