@@ -332,7 +332,7 @@ function loadTxt2Array(lines) {
 					break;
 
 				default:
-					throw "Error invalid text QR caracters"
+					throw `Error invalid text QR caracters: ${lines[i][j]}`
 			}
 		}
     }
