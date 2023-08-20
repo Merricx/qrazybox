@@ -298,10 +298,38 @@ function getInfoBits(){
 
 /***
 *
+* Sanitize and verify qr is square before parsing it
+*
+***/
+function sanitizeQrTxt(lines) {
+	const linesOut = [];
+
+	for(let i=0;i<lines.length;i++) {
+		if(lines[i].length !== 0) {
+			linesOut.push(lines[i]);
+		}
+		else if(i+1 !== lines.length) {
+			throw "Unexpected empty line file."
+		}
+	}
+	for(let i=0;i<linesOut.length;i++) {
+		if(linesOut[i].length !== linesOut.length) {
+			throw `QR line: ${i} width:${linesOut[i].length} does not match QR size: ${linesOut.length}`
+		}
+	}
+	return linesOut;
+}
+
+/***
+*
 *	Load Waidotto QR text format 
 *		 https://github.com/waidotto/strong-qr-decoder
 ***/
-function loadTxt2Array(lines) {
+function loadTxt2Array(linesIn) {
+	console.info(lines)
+    
+    var lines = sanitizeQrTxt(linesIn);
+    
     let sz = lines.length;
 
 	var data = [];
@@ -332,7 +360,7 @@ function loadTxt2Array(lines) {
 					break;
 
 				default:
-					throw "Error invalid text QR caracters"
+					throw `Error invalid text QR caracter: ${lines[i][j]}; from: ${i}x${j}`
 			}
 		}
     }
