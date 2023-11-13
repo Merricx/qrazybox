@@ -13,9 +13,9 @@
 var result = {message:"",error:[]};
 
 EXT_ENCODING = [
+	"Code page 437",
 	"ISO/IEC 8859-1 (Latin-1)",
-	"ISO/IEC 8859-1 (Latin-1)",
-	"ISO/IEC 8859-1 (Latin-1)",
+	"Code page 437",
 	"ISO/IEC 8859-1 (Latin-1)",
 	"ISO/IEC 8859-2 (Latin-2)",
 	"ISO/IEC 8859-3 (Latin-3)",
@@ -27,24 +27,31 @@ EXT_ENCODING = [
 	"ISO/IEC 8859-9 (Latin-5)",
 	"ISO/IEC 8859-10 (Latin-6)",
 	"ISO/IEC 8859-11 (Latin/Thai)",
-	"",
+	"Reversed",
 	"ISO/IEC 8859-13 (Latin-7)",
 	"ISO/IEC 8859-14 (Latin-8/Celtic)",
 	"ISO/IEC 8859-15 (Latin-9)",
 	"ISO/IEC 8859-16 (Latin-10)",
-	"",
+	"Reversed",
 	"Shift JIS",
 	"Windows-1250",
 	"Windows-1251",
 	"Windows-1252",
 	"Windows-1256",
-	"UTF-16",
+	"UTF-16BE",
 	"UTF-8",
-	"US-ASCII",
+	"ISO/IEC 646:1991 IRV (US-ASCII)",
 	"Big5",
-	"GB18030",
-	"EUC-KR"
+	"GB/T 2312",
+	"KS X 1001",
+	"GBK",
+	"GB 18030",
+	"UTF-16LE",
+	"UTF-32BE",
+	"UTF-32LE"
 ]
+EXT_ENCODING[170] = "ISO/IEC 646 INV";
+EXT_ENCODING[899] = "8-bit binary data";
 
 function getExtendedEncoding(code){
 
