@@ -913,20 +913,20 @@ function QRDecode(data){
     		for(var i=0; i < Math.floor((length + 2) / 3); i++){
     			if(i == Math.floor((length + 2) / 3) - 1){
     				if(length % 3 == 0){
-    					num += parseInt(data_bits.substring(0,10), 2);
+    					num += parseInt(data_bits.substring(0,10), 2).toString().padStart(3, "0");
     					temp_data += data_bits.substring(0,10);
                     	data_bits = data_bits.substring(10);
     				} else if(length % 3 == 1){
-    					num += parseInt(data_bits.substring(0,4), 2);
+    					num += parseInt(data_bits.substring(0,4), 2).toString();
     					temp_data += data_bits.substring(0,4);
                     	data_bits = data_bits.substring(4);
     				} else {
-    					num += parseInt(data_bits.substring(0,7), 2);
+    					num += parseInt(data_bits.substring(0,7), 2).toString().padStart(2, "0");
     					temp_data += data_bits.substring(0,7);
                     	data_bits = data_bits.substring(7);
     				}
     			} else {
-    				num += parseInt(data_bits.substring(0,10), 2);
+    				num += parseInt(data_bits.substring(0,10), 2).toString().padStart(3, "0");
     				temp_data += data_bits.substring(0,10);
                     data_bits = data_bits.substring(10);
     			}
