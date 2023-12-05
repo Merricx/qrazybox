@@ -1232,20 +1232,20 @@ function generateDataBlocks(){
 				if(k == Math.floor((data_length + 2) / 3) - 1){
 					if(data_length % 3 == 0){
 						temp_value = data_block.substring(0,10);
-    					temp_decoded = parseInt(data_block.substring(0,10), 2);
+    					temp_decoded = parseInt(data_block.substring(0,10), 2).toString().padStart(3, "0");
             			data_block = data_block.substring(10);
     				} else if(data_length % 3 == 1){
     					temp_value = data_block.substring(0,4);
-	    				temp_decoded = parseInt(data_block.substring(0,4), 2);
+	    				temp_decoded = parseInt(data_block.substring(0,4), 2).toString();
     	    			data_block = data_block.substring(4);
     				} else {
     					temp_value = data_block.substring(0,7);
-    					temp_decoded = parseInt(data_block.substring(0,7), 2);
+    					temp_decoded = parseInt(data_block.substring(0,7), 2).toString().padStart(2, "0");
         				data_block = data_block.substring(7);
     				}
 				} else {
 					temp_value = data_block.substring(0,10);
-					temp_decoded = parseInt(data_block.substring(0,10), 2);
+					temp_decoded = parseInt(data_block.substring(0,10), 2).toString().padStart(3, "0");
 					data_block = data_block.substring(10);
 				}
 
