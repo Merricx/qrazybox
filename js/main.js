@@ -1128,7 +1128,7 @@ function showQRTableOverlay(){
 			if($("#qr-"+i+"-"+j).hasClass("info") || $("#qr-"+i+"-"+j).hasClass("static")){
 				html += "<td class='invisible'></td>";
 			} else {
-				html += "<td index='"+i+"-"+j+"' style='opacity:0;'></td>";
+				html += "<td id='qr-overlay-"+i+"-"+j+"' style='opacity:0;'></td>";
 			}
 		}
 		html += "</tr>";
@@ -1354,7 +1354,7 @@ function generateDataBlocks(){
 	for(var i=0; i < qr_data_block.length; i++){
 		for(var j=0; j < qr_data_block[i].modules.length; j++){
 			var module = qr_data_block[i].modules[j];
-			$("#qr-overlay td[index="+module+"]").addClass("hoverable data-block-"+i);
+			$("#qr-overlay-"+module).addClass("hoverable data-block-"+i);
 		}
 		for(var j=0; j < qr_data_block[i].modules.length; j++){
 			var module = qr_data_block[i].modules[j].split('-');
@@ -1370,10 +1370,10 @@ function generateSeparator(i,j,cls){
 	i = parseInt(i);
 	j = parseInt(j);
 
-	var up = $("#qr-overlay td[index="+(i-1)+"-"+j+"]");
-	var down = $("#qr-overlay td[index="+(i+1)+"-"+j+"]");
-	var left = $("#qr-overlay td[index="+i+"-"+(j-1)+"]");
-	var right = $("#qr-overlay td[index="+i+"-"+(j+1)+"]");
+	var up = $("#qr-overlay-"+(i-1)+"-"+j);
+	var down = $("#qr-overlay-"+(i+1)+"-"+j);
+	var left = $("#qr-overlay-"+i+"-"+(j-1));
+	var right = $("#qr-overlay-"+i+"-"+(j+1));
 
 
 	if(!left.hasClass(cls)){
