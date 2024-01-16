@@ -1426,12 +1426,12 @@ function updateBlock(value, cls){
 		else
 			new_val = parseInt(new_val);
 
-		/*if(mask(mask_pattern, cord[0], cord[1])){
+		if(mask(mask_pattern, parseInt(cord[0]), parseInt(cord[1]))){
 			if(new_val == 1)
 				new_val = 0;
 			else if(new_val == 0)
 				new_val = 1;
-		}*/
+		}
 
 		qr_array[cord[0]][cord[1]] = new_val;
 	}
