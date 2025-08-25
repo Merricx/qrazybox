@@ -1002,7 +1002,7 @@ function QRDecode(data){
 
     		for(var i=0; i < length; i++){
     			data.push(String.fromCharCode(parseInt(data_bits.substring(0,8), 2)));
-    			temp_data += data_bits.substring(0,11);
+    			temp_data += data_bits.substring(0,8);
     			current_data += String.fromCharCode(parseInt(data_bits.substring(0,8), 2));
     			data_bits = data_bits.substring(8);
     		}
